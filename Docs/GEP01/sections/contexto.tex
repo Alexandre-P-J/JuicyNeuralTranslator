@@ -1,0 +1,118 @@
+\section{Contexto}
+Este documento es un trabajo del grado en ingeniería informática en la especialidad
+de computación. Se realiza en la facultad de informática de la universidad politécnica
+de Barcelona bajo la dirección de Javier Béjar Alonso, doctor en ingeniería informática.
+
+\subsection{Introducción}\label{intro}
+En las últimas décadas ha habido un esfuerzo continuo de investigación de modelos para la traducción
+automática.
+
+Los métodos clásicos consistian en sistemas de reglas definidas manualmente que se
+basaban en el conocimiento lingüístico pero su efectividad era muy limitada dada la complejidad del lenguaje
+natural.
+
+Con la aparición de corpus bilingües de gran tamaño, los modelos estadísticos se popularizaron
+por que a diferencia de los métodos basados en reglas, estos eran capaces de aprender
+estructuras latentes: como alineamientos de palabras y frases
+\cite{HistoryBrown1990ASA, HistoryKoehn2003Jan}. Pero dada su incapacidad para
+modelar dependencias entre palabras muy distanciadas, la calidad de traducción no era ideal.
+Los modelos basados en redes neuronales \cite{Historykalchbrenner-blunsom-2013, HistoryCho2014Jun,
+HistorySutskever2014Sep, HistoryBahdanau2014Sep} reemplazaron los métodos anteriores de
+traducción automática gracias al avance en procesamiento del lenguaje natural el campo
+del \textit{deep learning} \cite{HistoryTan2020Dec}.
+
+Las mejores arquitecturas de traducción neural hacían uso de modelos recurrentes complejos como
+\textit{LSTM} \cite{HistoryHochreiter1997} y \textit{GRU} \cite{HistoryChung2014Dec} o
+convolucionales \cite{HistoryGehring2016Nov}. Además tenían en común el uso
+de \textit{encoder-decoder} con algún tipo de mecanismo de atención \cite{HistoryBahdanau2014Sep} y
+eso mismo es lo que inspiró la arquitectura \textit{Transformer} \cite{Vaswani2017Jun},
+cuya arquitectura y variantes representan el estado del arte en traducción automática.
+
+Este trabajo tiene como objetivo la búsqueda, investigación y el desarrollo de modelos
+basados en transformers para la implementación de una herramienta
+empresarial de traducción de texto orientada a usuarios ajenos al \textit{machine learning}.
+
+\subsection{Conceptos y definiciones preliminares}
+El trabajo se va a centrar en la arquitectura transformer \cite{Vaswani2017Jun} y variantes 
+para la tarea de traducción automática. Sin embargo, el estudio de las arquitecturas
+forma parte de la porción teórica del proyecto y se explicarán segun sean empleadas durante el trabajo.
+Por otra parte es importante definir los siguientes conceptos:
+
+\subsubsection*{Modelos secuencia-secuencia}
+Los modelos secuencia-secuencia son aquellos entrenados para
+resolver tareas que requieren la entrada de una secuencia y el retorno de
+otra secuencia.
+En el caso de la traducción automática la secuencia de entrada podria ser
+un fragmento de texto escrito en inglés y la secuencia de salida el texto
+escrito en español.
+
+\subsubsection*{Modelos encoder-decoder}
+La arquitectura encoder-decoder es un patrón de alto nivel y tal como su nombre indica,
+utiliza uno o más encoders y decoders.
+Un encoder tiene la tarea de transformar datos a un espacio latente
+mientras que un decoder hace la operación inversa. Al tratarse de un concepto de alto nivel, la
+implementación depende del propio modelo.
+
+\subsubsection*{Mecanismos de atención}
+Los mecanismos de atención son una forma de codificar la importancia y relaciones de uno o más
+datos de la entrada. Un ejemplo seria el de las palabras en una oración: cada palabra tiene una
+importancia y unas relaciones con el resto de palabras de la oración.
+En el caso concreto del transformer original \cite{Vaswani2017Jun} el mecanismo de atención
+calcula numericamente la relación entre cada par de palabras, pero existen diversos métodos.
+
+\subsubsection*{\textit{Fine-tuning y Transfer learning}}
+\textit{Fine-tuning} consiste en re-entrenar (posiblemente con datos distintos) un modelo que ya ha
+sido entrenado anteriormente. Por otro lado, \textit{transfer learning} o transferencia de conocimiento
+consiste en re-entrenar un modelo para realizar una tarea distinta a la que fue entrenado anteriormente,
+con la intención de que el conocimiento del primer entrenamiento pueda ser aplicado en la nueva tarea.
+
+El proyecto se pretende usar \textit{fine-tuning} en un modelo de traducción para ajustar el registro
+o contexto de sus traducciones. También se aplicará \textit{transfer learning} para intentar que un modelo
+capaz de traducir dos lenguajes aprenda a traducir lenguajes distintos, transfiriendo conocimientos de los
+lenguajes con los que fue entrenado, a los nuevos.
+
+\subsubsection*{\textit{Model distillation}}
+Esta técnica consiste en la transferencia de conocimiento de un modelo complejo (o un conjunto de modelos)
+a un nuevo modelo.
+Es una técnica interesante por que el nuevo modelo puede ser más pequeño, simple y eficiente,
+además reduce el tiempo de entrenamiento considerablemente.
+Si el tiempo lo permite, se hará \textit{model distillation} de un modelo pre-entrenado de traducción
+hacia una arquitectura más eficiente.
+
+
+
+
+\subsection{Identificación del problema}\label{problem}
+La traducción automática tiene usos empresariales y particulares, sin embargo las opciones
+actuales tienen uno o más de los problemas mencionados a continuación:
+
+\subsubsection*{Coste económico}
+Google, Amazon, Microsoft y otras compañías ofrecen servicios de calidad pero el coste
+suele ser elevado y difícil de calcular
+\cite{GoogleTranslatePricing,AWSTranslatePricing,MicrosoftTranslatePricing}.
+
+\subsubsection*{Coste computacional}
+Las herramientas de traducción neuronal consumen muchos recursos.
+
+\subsubsection*{Inmutabilidad}
+Algunas empresas tienen necesidades de traducción que se limitan a registros de
+lenguaje y contextos especificos pero la mayoria de servicios usan modelos que no
+permiten ningún tipo de ajuste.  
+
+\subsubsection*{Accesibilidad}
+Existen modelos de calidad y con licencias permisivas que no contemplan la posibilidad de
+ser usados por gente ajena al \textit{machine learning}.
+
+
+\subsection{Actores implicados}
+El proyecto tiene diversos actores implicados que pueden agruparse en dos grupos dependiendo
+del tipo de interacción con el proyecto.
+
+Los actores que interactuan de forma directa con el proyecto son el director y el investigador.
+Javier Béjar Alonso es el director del proyecto y guiará al investigador a correcto desarrollo
+del trabajo. El investigador Alexandre Pérez Josende será responsable de planificar, investigar,
+desarrollar, experimentar y documentar el proyecto.
+
+Los actores que no interactuan con el trabajo pero se benefician, son compañías y particulares
+con necesidad de un sistema de traducción automático. Además los investigadores, que también reciben
+acceso a este trabajo, podrán hacer uso de la información y conclusiones que deriven del proyecto.

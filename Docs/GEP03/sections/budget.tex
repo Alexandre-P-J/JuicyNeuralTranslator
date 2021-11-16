@@ -1,0 +1,285 @@
+\section{Gestión económica}\label{budget}
+\subsection{Presupuesto}
+\subsubsection{Costes de personal}
+En esta sección se van a calcular los costes de personal asociados a cada una de las tareas
+definidas en \ref{desctasks}. A pesar de que todos los roles del personal se reparten entre
+el director y el autor de este trabajo, los costes se calcularán para cada una de las cuatro
+posiciones: jefe de proyecto, científico de datos, programador y \textit{tester}.
+El jefe del proyecto es el responsable de de la planificación y la ejecución del proyecto,
+el científico de datos estudiará e implementará los distintos modelos y técnicas de
+\textit{machine learning} necesarios, el programador diseñará y programará una herramienta
+que usará los modelos de traducción y el \textit{tester} verificará su correcto funcionamiento.
+
+El coste por hora para cada posición se ve resumido en la tabla \ref{costtable}, donde
+los sueldos brutos por hora se han obtenido asumiendo 1800 horas anuales. El coste de un
+trabajador se obtiene añadiendo un 30\% al sueldo bruto, correspondiente al coste
+de la seguridad social. 
+
+\begin{table}[ht]
+\begin{center}
+    
+    \begin{tabular}{ l r r }
+     Posición & Sueldo bruto & Coste \\
+     \hline
+     Jefe de proyecto & 25,28\euro/hora \cite{Projectmanagercost} & 32,86\euro/hora \\
+     Científico de datos & 19,60\euro/hora \cite{Datascientistcost} & 25,48\euro/hora \\
+     Programador & 16,20\euro/hora \cite{Programmercost} & 21,05\euro/hora \\
+     Tester & 11,30\euro/hora \cite{Testercost} & 14,70\euro/hora \\
+    \end{tabular}
+    \caption{Sueldos brutos y costes por hora. [Elaboración propia]}\label{costtable}
+    
+\end{center}
+\end{table}
+
+En la tabla \ref{taskroledecompos} se descompone el tiempo de cada tarea en horas de desempeño por
+cada uno de los roles y se estima el coste económico según una suma ponderada del
+tiempo requerido de cada rol y su coste hora visto en la tabla \ref{costtable}.
+
+
+\newgeometry{a4paper,left=1in,right=1in,top=1in,bottom=1in,nohead}
+\begin{landscape}
+    \begin{table}
+    \centering
+    \begin{tabular}{  l  l  r  r  r  r  r  r  }
+        Id. & Tarea & J. de proyecto & C. de datos & Programador & Tester & \textbf{Total} & \textbf{Coste} \\
+        \hline
+        \hyperref[T01]{T01} & Contextualizar y definir el alcance & 15h & 0h & 0h & 0h & 15h & 492,90\euro\\
+        \hline
+        \hyperref[T02]{T02} & Planificar el trabajo & 5h & 0h & 0h & 0h & 5h & 164,30\euro\\
+        \hline
+        \hyperref[T03]{T03} & Estimar el presupuesto y analizar la sostenibilidad & 10h & 0h & 0h & 0h & 10h & 328,60\euro\\
+        \hline
+        \hyperref[T04]{T04} & Reuniones con el director & 5h & 0h & 0h & 0h & 5h & 164,30\euro\\
+        \hline
+        \hyperref[T05]{T05} & Revisión y edición del documento final & 2h & 1h & 1h & 1h & 5h & 126,95\euro\\
+        \hline
+        \hyperref[T06]{T06} & Investigar la arquitectura transformer & 0h & 15h & 0h & 0h & 15h & 382,20\euro\\
+        \hline
+        \hyperref[T07]{T07} & Investigar \textit{fine-tuning} y \textit{transfer learning} & 0h & 10h & 0h & 0h & 10h & 254,80\euro\\
+        \hline
+        \hyperref[T08]{T08} & Aprender sobre el tratamiento de datos en NLP & 0h & 10h & 0h & 0h & 10h & 254,80\euro\\
+        \hline
+        \hyperref[T09]{T09} & Estudiar y seleccionar las métricas de valoración & 0h & 5h & 0h & 0h & 5h & 127,40\euro\\
+        \hline
+        \hyperref[T10]{T10} & Investigar arquitecturas más eficientes de transformer & 0h & 10h & 0h & 0h & 10h & 254,80\euro\\
+        \hline
+        \hyperref[T11]{T11} & Investigar la técnica \textit{model distillation} & 0h & 5h & 0h & 0h & 5h & 127,40\euro\\
+        \hline
+        \hyperref[T12]{T12} & Implementar el pipeline de \textit{fine-tunning} & 0h & 10h & 0h & 0h & 10h & 254,80\euro\\
+        \hline
+        \hyperref[T13]{T13} & \textit{Fine-tunning} de un modelo & 0h & 100h & 0h & 0h & 100h & 1.960,00\euro\\
+        \hline
+        \hyperref[T14]{T14} & Implementar el pipeline de \textit{transfer learning} & 0h & 10h & 0h & 0h & 10h & 254,80\euro\\
+        \hline
+        \hyperref[T15]{T15} & \textit{Transfer learning} a un modelo & 0h & 100h & 0h & 0h & 100h & 1.960,00\euro\\
+        \hline
+        \hyperref[T16]{T16} & Entrenar un modelo más eficiente de transformer & 0h & 120h & 0h & 0h & 120h & 2.352,00\euro\\
+        \hline
+        \hyperref[T17]{T17} & Implementar una web con placeholders & 0h & 0h & 4h & 1h & 5h & 98,90\euro\\
+        \hline
+        \hyperref[T18]{T18} & Implementar la traducción de fragmentos de texto & 0h & 0h & 8h & 2h & 10h & 197,80\euro\\
+        \hline
+        \hyperref[T19]{T19} & Implementar un mecanismo de corrección & 0h & 5h & 8h & 2h & 15h & 325,20\euro\\
+        \hline
+        \hyperref[T20]{T20} & Implementar traducción de archivos de texto plano & 0h & 0h & 8h & 2h & 10h & 197,80\euro\\
+        \hline
+        \hyperref[T21]{T21} & Implementar traducción de archivos de texto enriquecido & 0h & 0h & 12h & 3h & 15h & 296,70\euro\\
+        \hline
+        \hyperref[T22]{T22} & Implementar soporte parcial de traducción de archivos pdf & 0h & 0h & 12h & 3h & 15h & 296,70\euro\\
+        \hline
+        \hyperref[T23]{T23} & Pulir el proyecto para su uso empresarial \textit{in-house} & 0h & 0h & 4h & 1h & 5h & 98,90\euro\\
+        \hline
+        \hyperref[T24]{T24} & Redactar la memoria del trabajo & 5h & 40h & 15h & 0h & 60h & 1.499,25\euro\\
+        \hline
+        \hyperref[T25]{T25} & Preparar la defensa del trabajo & 10h & 0h & 0h & 0h & 10h & 328,60\euro\\
+        \hline
+    \end{tabular}
+    \caption{Desempeño de los distintos roles y coste por tarea. [Elaboración propia]}\label{taskroledecompos}
+    \end{table}
+\end{landscape}
+\restoregeometry
+
+Finalmente, para estimar el coste del personal, se calcula el coste como el producto del desempeño
+total en horas de cada rol por su coste hora.
+
+\begin{table}[ht]
+    \begin{center}
+        \begin{tabular}{ l r r }
+         Posición & Tiempo & Coste \\
+         \hline
+         Jefe de proyecto & 52h & 1.708,72\euro \\
+         Científico de datos & 441h & 8.643,60\euro \\
+         Programador & 72h & 1.166,40\euro \\
+         Tester & 15h & 169,50\euro \\
+         \hline
+         Total & 580h & 11.688,22\euro
+        \end{tabular}
+        \caption{Costes de personal del trabajo. [Elaboración propia]}\label{rolcosttable}
+    \end{center}
+\end{table}
+
+
+\subsubsection{Costes genéricos}
+\paragraph{Internet:} El coste de internet es de 90\euro\ mensuales y se utilizará durante los 5 meses de
+duración del trabajo con un desempeño diario medio de 4,57 horas diarias.
+\begin{figure}[ht]
+    \begin{align*}
+        Coste_{Internet} = 5 \cdot 90 \cdot \frac{4.57}{24} = 85.69\text{\euro}
+    \end{align*}
+    \caption{Estimación del coste de internet.  [Elaboración propia]}
+\end{figure}
+
+\paragraph{Transporte:} En el transcurso del trabajo se efectuarán diversas reuniones con el director. La mayoria de ellas
+se realizarán en linea, pero dado que existe la posibilidad de realizar reuniones presenciales, se hará una estimación
+a la alza del coste de los transportes asumiendo que todas las reuniones se efectuan presencialmente.
+
+Utilizo transporte público con la tarifa T-Casual de 2 zonas con un coste de 22,40\euro\ cada 10 transportes
+\cite{Tcasualcost}. Se consumirán 2 viajes por reunión cada dos semanas durante las 18 semanas que dura el trabajo.
+\begin{figure}[H]
+    \begin{align*}
+        Coste_{Transporte} = \frac{22.40}{10} \cdot 2 \cdot \frac{18}{2} = 40,32\text{\euro}
+    \end{align*}
+    \caption{Estimación del coste de transporte.  [Elaboración propia]}
+\end{figure}
+
+\paragraph{Electricidad:}
+El precio medio del kWh durante la primera mitad de octubre del 2021 se situa en 0,3678\euro\ \cite{CosteLuz} y se utilizará como
+estimación al alza del precio de la luz de los siguientes meses ya que actualmente el precio del kwH se encuentra
+en máximos históricos.
+
+La fuente de alimentación del ordenador que se usará es de 750W pero la mayoría del uso no se realizará bajo carga
+máxima y por lo tanto se espera un consumo inferior. Sin embargo a falta de información que me permita acotar
+este valor o estimar el consumo de otros periféricos, asumiré que el consumo eléctrico es de 750Wh durante las
+580 horas estimadas de duración del proyecto.
+\begin{figure}[ht]
+    \begin{align*}
+        Coste_{Electricidad} = 0.3678 \cdot \frac{750}{1000} \cdot 580 = 160.00\text{\euro}
+    \end{align*}
+    \caption{Estimación del coste eléctrico.  [Elaboración propia]}
+\end{figure}
+
+\paragraph{Agua:}
+El coste del agua medio en Catalunya es de \( 2.69\text{\euro}/m^{3} \) \cite{CosteAgua}. Para calcular el coste del agua para
+la elaboración del proyecto, asumiré un uso de 123 litros al dia correspondientes al consumo medio de un habitante
+en Catalunya \cite{ConsumoAgua}.
+
+Debido a que el proyecto será mi principal ocupación durante los proximo meses y 
+la dedicación al proyecto no tiene una relación clara con el consumo de agua, asignare el coste integro del consumo
+diario de agua al proyecto para los 127 dias de duración del trabajo \ref{desctasks}.
+\begin{figure}[ht]
+    \begin{align*}
+        Coste_{Agua} = 123 \cdot 127 \cdot \frac{2.69}{1000} = 42.02\text{\euro}
+    \end{align*}
+    \caption{Estimación del coste del agua.  [Elaboración propia]}
+\end{figure}
+
+
+\begin{figure}[ht]
+    \paragraph{Espacio de trabajo:}
+    La modalidad del trabajo es de colaboración con la facultad y una condición necesaria para realizar el proyecto
+    es la de ser un estudiante matriculado. Como tal, la facultad me facilita espacios de trabajo gratuitos.
+    
+    Sin embargo, voy a suponer el alquiler de una oficina compartida, en ese caso el coste sería de 50\euro\
+    al mes durante los 5 meses de duración del trabajo.
+    \begin{align*}
+        Coste_{\textit{Espacio de trabajo}} = 50 \cdot 5 = 250\text{\euro}
+    \end{align*}
+    \caption{Estimación del coste del espacio de trabajo.  [Elaboración propia]}
+\end{figure}
+
+\begin{figure}[H]
+\paragraph{Amortización de la maquinaria local:}
+La elaboración del proyecto requiere de un ordenador \hyperref[R06]{R06} y debe considerarse su 
+amortización.
+El recurso tiene un precio original de 2.000\euro\ y una expectativa de vida de 6 años, además creo que al final
+de su vida tendrá un valor de al menos 200\euro. Asumiré una amortización lineal y debido a que durante los 5 meses
+de duración del proyecto dedicaré el recurso casi exclusivamente al proyecto, asigno el coste íntegro al trabajo.
+    \begin{align*}
+        Coste_{\textit{Maquinaria local}} = \frac{2000-200}{6} \cdot \frac{1}{12} \cdot 5 = 125\text{\euro}
+    \end{align*}
+    \caption{Estimación de la amortización de la maquinaria local.  [Elaboración propia]}
+\end{figure}
+
+\paragraph{Coste de maquinaria remota:}
+Los recursos computacionales remotos \hyperref[R07]{R07} són gratuitos gracias a servicios como
+Google Colab o Kaggle Kernel.
+Se contempla el riesgo de no disponer de recursos suficientes, en cuyo caso se estima el coste en
+la sección \ref{maquinariardepago}.
+
+\paragraph{Software:} Todo el software es gratuito y por lo tanto no incurrirá ningún coste.
+
+\subsubsection{Costes de contingencia}
+En el cálculo de los costes se ha decidido realizar estimaciones a la alza siempre que no fuera posible acotar
+un coste con exactitud. Tanto el cómputo de horas del personal como los costes genéricos siguen este
+criterio además de ser razonablemente detallados.
+Es por ello que se ha decidido reservar un ratio de contingencia de solo el 10\% sobre el total.
+
+\subsubsection{Costes asociados al riesgo}
+En la sección \ref{riskmanagement} se detallan los riesgos a considerar durante el transcurso del trabajo y se plantean
+diversas soluciones para mitigarlos. Debido a la extensión del proyecto, una buena forma de ajustar la planificación
+si aparecen obstáculos, es acotar algunas de las tareas que desde un principio se plantean con la posibilidad de 
+ser aplazables para una futura ampliación.
+
+Es por ello que no se incrementarán las horas requeridas para el proyecto, en su lugar se
+replanteará la planificación y esto no supone un aumento del coste de personal.
+Por otro lado, el riesgo de carecer de recursos computacionales necesarios de forma gratuita requeriria la contratación
+de servicios de pago.
+
+\paragraph{Coste de maquinaria remota de pago:}\label{maquinariardepago}
+Los recursos computacionales de pago són la solución planteada para resolver una posible insuficiencia de recursos
+gratuitos.
+Existen muchas opciones, pero los costes exactos són difíciles de calcular por que el uso de ancho de banda,
+espacio en el disco, operaciones en el disco, rendimiento y otras características incurren en el precio final en la mayoria
+de servicios.
+
+Google, Microsoft, AWS, Linode y otros proveedores ofrecen tarifas segmentadas según
+las prestaciones y estas tienen precios parecidos. Asumiré la contratación de un servicio con un coste de 3\euro\ la hora.
+Las tareas que requieren de recursos de procesamiento \hyperref[R07]{R07}, suman un total de
+130 horas o 80 horas si se decide por aplazar la tarea \hyperref[T16]{T16} como una ampliación futura.
+\begin{figure}[H]
+    \begin{align*}
+        Coste_{\textit{Computo remoto}} = 3 \cdot [200, 320] = [600, 960]\text{\euro}
+    \end{align*}
+    \caption{Estimación del coste de la maquinaria remota de pago.  [Elaboración propia]}
+\end{figure}
+Se considerará el coste de 960\euro\ ya que a diferencia de la estimación menor, esta contempla la posibilidad de
+realizar el proyecto sin necesidad de ajustes en la planificación.
+
+
+\begin{table}[H]
+    \subsubsection{Coste total}
+    \begin{center}
+        \begin{tabular}{ l r }
+         Concepto & Importe \\
+         \hline
+         Costes de personal (CPA) & 11.688,22\euro \\
+         Costes genéricos (CG) & 703,03\euro \\
+         \textbf{CPA+CG} & 12.391,25\euro \\
+         Contingencia del 10\% & 1.239,13\euro \\
+         \textbf{CPA+CG+Contingencia} & 13.630,38\euro \\
+         Costes asociados al riesgo & 960,00\euro \\ 
+         \hline \hline
+         \textbf{Total} & 14.590,38\euro
+        \end{tabular}
+        \caption{Coste total del trabajo. [Elaboración propia]}\label{totalcosttable}
+    \end{center}
+\end{table}
+
+\subsection{Control de gestión}
+Existe la posibilidad de que los cálculos de la gestión económica no sean certeros.
+Se han realizado estimaciones a la alza, definido un margen de contingencia y aproximado el coste de los riesgos,
+pero es necesario un modelo para medir las desviaciones entre los costes estimados y el real.
+
+Los costes de personal (CPA) són susceptibles a desviaciones debido a la eficiencia del personal, es menos
+habitual que se deba a errores en el coste por hora o tarifa. Por otro lado, los costes genéricos (CG) y asociados
+al riesgo de este proyecto, són susceptibles a variaciones en las tarifas y menos sensibles a la eficiencia o el
+tiempo, ya que en la estimación de estos costes juegan un papel más constante.
+
+Para medir las desviaciones se va a calcular la diferencia entre la estimación
+del coste y el coste real para cada uno de los costes.
+\begin{figure}[H]
+    \begin{align*}
+        \textit{Desviación}_{Coste} = \textit{Coste estimado} - \textit{Coste real}
+    \end{align*}
+    \caption{Desviación de la estimación de los costes económicos.  [Elaboración propia]}
+\end{figure}

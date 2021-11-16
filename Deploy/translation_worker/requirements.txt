@@ -1,0 +1,6 @@
+hiredis
+celery[redis]
+torch
+transformers
+sentencepiece
+spacy

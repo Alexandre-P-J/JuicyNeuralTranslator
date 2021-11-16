@@ -1,0 +1,84 @@
+version: "3.7"
+services:
+
+  redis:
+    image: redis
+    hostname: redis
+    restart: unless-stopped
+    #ports:
+    #  - "6379:6379"
+    networks:
+      - workers
+
+  postgresql:
+    image: postgres:13
+    hostname: postgresql
+    restart: unless-stopped
+    volumes:
+      - ./database:/var/lib/postgresql/data:rw
+    #ports:
+    #  - 5432:5432
+    environment:
+      - POSTGRES_DB=postgres_db
+      - POSTGRES_USER=admin_db
+      - POSTGRES_PASSWORD=admin_12345678
+    networks:
+      - database
+
+  translation_worker:
+    build:
+      context: .
+      target: translation_worker
+    command: sh /opt/translation_worker/run.sh
+    hostname: translation_worker
+    restart: unless-stopped
+    volumes:
+      - ./translation_worker:/opt/translation_worker:ro
+    networks:
+      - workers
+    depends_on:
+      - redis
+
+  file_worker:
+    build:
+      context: .
+      target: file_worker
+    command: sh /opt/file_worker/run.sh
+    hostname: file_worker
+    restart: unless-stopped
+    volumes:
+      - ./file_worker:/opt/file_worker:ro
+      - ./storage:/opt/storage:rw
+    networks:
+      - workers
+    environment:
+      - STORAGE_MOUNT_DIR=${STORAGE_MOUNT_DIR:-/opt/storage}
+    depends_on:
+      - redis
+
+  web:
+    build:
+      context: .
+      target: web
+    command: sh /opt/web/run.sh
+    container_name: web
+    hostname: web
+    volumes:
+      - ./web:/opt/web:ro
+      - ./storage:/opt/storage:rw
+    ports:
+      - 5000:5000
+    networks:
+      - database
+      - workers
+    environment:
+      - STORAGE_MOUNT_DIR=${STORAGE_MOUNT_DIR:-/opt/storage}
+    depends_on:
+      - redis
+      - translation_worker
+      - file_worker
+      - postgresql
+
+networks:
+  database:
+  workers:

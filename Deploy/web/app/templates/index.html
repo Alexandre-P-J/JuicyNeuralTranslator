@@ -1,0 +1,63 @@
+{% extends "layout.html" %}
+
+
+{% block head %}
+    {{ super() }}
+    <title>Translator</title>
+{% endblock %}
+
+{% block content %}
+    <div class="container central">
+        <div class="input-method">
+            <button id="input-method-text" class="btn btn-text-source" disabled>
+                <i class="fas fa-align-left"></i>
+                Translate text
+            </button>
+            <button id="input-method-files" class="btn btn-text-source">
+                <i class="fas fa-file-upload"></i>
+                Translate files
+            </button>
+        </div>
+        <div class="row slice-container">
+            <div class="col-md slice">
+                <div class="top">
+                    <select id="lang-selector1" class="lang-selector" method="GET" action="/">
+                        {% for lang in source_langs %}
+                            {% if lang == default_source_lang %}
+                                <option value="{{lang}}" selected>{{lang}}</option>"
+                            {% else %}
+                                <option value="{{lang}}">{{lang}}</option>"
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                <textarea id="in-text" name="in-text" class="translation-text" spellcheck="false" placeholder="Type here"></textarea>
+                <div id="in-file" name="in-file" class="translation-file">
+                    <div id="in-file-title">Choose a document</div>
+                    <div id="in-file-types">
+                        Upload a <i class="far fa-file-alt"></i>.txt,
+                        <i class="far fa-file-word"></i>.docx or
+                        <i class="far fa-file-pdf"></i>.pdf
+                    </div>
+                    <input id='in-file-input' type='file' hidden/>
+                    <button id="in-file-button" class="btn btn-primary">Browse your computer</button>
+                    <div id="in-file-err"></div>
+                </div>
+            </div>
+            <div class="col-md slice">
+                <div class="top">
+                    <select id="lang-selector2" class="lang-selector" name="langs" method="GET" action="/">
+                    </select>
+                </div>
+                <textarea id="out-text" name="out-text" class="translation-text" spellcheck="false" disabled></textarea>
+                <div id="out-file" name="out-file" class="translation-file">
+                    <div id="out-file-spinner" class="spinner-border" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                    <a id="out-file-button" class="btn btn-primary out-file-button" href="" download>Download translation</a>
+                </div>
+            </div>
+        </div>
+        <button id="correction-button" name="correction-button" class="btn btn-lg btn-primary btn-block" type="button">Submit Correction</button>
+    </div>
+{% endblock %}

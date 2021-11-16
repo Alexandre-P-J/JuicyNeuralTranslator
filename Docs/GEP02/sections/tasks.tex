@@ -1,0 +1,191 @@
+% Les tasques s’han identificat i descrit de manera excellent i es constata que:
+% a) El nivell de detall es fa a nivell tasca (i no a nivell fases o grups de 
+%    tasques) i les explicacions son completes;
+% b) Inclou estimacions en hores per cada tasca;
+% c) Es descriu la seva seqüència lògica i s’han explicitat formalment les
+%    dependències de precedència;
+% d) inclou els recursos (humans i materials) que seran necessaris;
+% e) inclou una taula resum de les tasques.
+
+\section{Descripción de las tareas}\label{desctasks}
+La carga académica de este trabajo corresponde a 18 créditos. La normativa
+de la FIB estima una equivalencia de 30 horas por crédito, que según mi experiencia
+personal, es una estimación a la alza.
+
+Se ha decidido realizar la lectura del trabajo en el turno de enero por ser la más
+temprana posible y se calcula una duración de 580 horas, 40 horas más que la
+estimación de la normativa. El trabajo empieza el 13 de septiembre
+de 2021 hasta el 17 de enero de 2022, la semana previa al período de lectura.
+
+La dedicación diara promedio es de 4.57 o 4 horas y 34 minutos, cuya distribución dependerá
+de la carga de trabajo y examenes de otras asignaturas.
+
+\subsection{Definición de las tareas}
+Se enumeran a continuación las tareas junto con una descripción. En \ref{gantt} se muestra la planificación teniendo
+en cuenta las dependencias y paralelismos entre tareas.
+\paragraph{T01.\quad Contextualizar y definir el alcance:}\label{T01}
+Decidir el contexto del proyecto, su alcance y la metodologia a seguir con ayuda
+del director.
+\paragraph{T02.\quad Planificar el trabajo:}\label{T02}
+Describir las tareas a realizar, planificar el desarrollo siguiendo la
+metodología elegida y formalizar los riesgos y obstáculos.
+\paragraph{T03.\quad Estimar el presupuesto y analizar la sostenibilidad:}\label{T03}
+Identificar y estimar los costes además de los mecanismos de control para controlar las
+desviaciones. También se deben autoevaluar la sostenibilidad y sus dimensiones economica,
+ambiental y social.
+\paragraph{T04.\quad Reuniones con el director:}\label{T04}
+Se efectuará una reunión con el director cada dos semanas en la que se validará el trabajo
+y se asignarán nuevas tareas.
+\paragraph{T05.\quad Revisión y edición del documento final:}\label{T05}
+Integrar todas las partes y efectuar una revisión exhaustiva del documento. Seguidamente
+editar y rectificar.
+\paragraph{T06.\quad Investigar la arquitectura transformer:}\label{T06}
+Investigar la arquitectura transformer original y los modelos pre-entrenados que se van
+a usar durante el proyecto.
+\paragraph{T07.\quad Investigar \textit{fine-tuning} y \textit{transfer learning}:}\label{T07}
+Investigar ambas técnicas en el contexto del trabajo y consultar estudios previos sobre
+la aplicación de estas técnicas en la traducción automática.
+\paragraph{T08.\quad Aprender sobre el tratamiento de datos en NLP:}\label{T08}
+Es imprescindible entender las técnicas de adquisición y procesamiento de datos. Esta será
+una parte importante del \textit{pipeline} y debe hacerse de forma rigurosa.
+\paragraph{T09.\quad Estudiar y seleccionar las métricas para la valoración de modelos:}\label{T09}
+Se deben decidir que métricas se usarán para valorar la bondad de los modelos de traducción.
+Un buen entendimiento de las métricas ayudará durante todo el proceso y permitirá obtener
+buenos resultados.
+\paragraph{T10.\quad Investigar arquitecturas más eficientes de transformer:}\label{T10}
+Estudiar arquitecturas más recientes de transformer y contemplar la posibilidad de
+implementar un modelo de mayor rendimiento.
+\paragraph{T11.\quad Investigar la técnica model \textit{distillation}:}\label{T11}
+Si se decide implementar un transformer más eficiente sería ideal usar esta técnica para
+reducir el tiempo de entrenamiento necesario.
+\paragraph{T12.\quad Implementar el \textit{pipeline} de \textit{fine-tunning}:}\label{T12}
+Programar todo lo necesario para entrenar un modelo pre-entrenado y validar su calidad.
+\paragraph{T13.\quad \textit{Fine-tunning} de un modelo:}\label{T13}
+Aplicar \textit{fine-tunning} a un modelo pre-entrenado usando el \textit{pipeline} programado
+anteriormente con un corpus que permita ajustar el modelo de traducción a un contexto del lenguaje
+más específico.
+\paragraph{T14.\quad Implementar el \textit{pipeline} de \textit{transfer learning}:}\label{T14}
+Programar todo lo necesario para realizar \textit{transfer learning} y validar los resultados.
+\paragraph{T15.\quad \textit{Transfer learning} a un modelo:}\label{T15}
+Aplicar esta técnica sobre un modelo pre-entrenado para que sea capaz de traducir otro
+par de lenguas.
+\paragraph{T16.\quad Entrenar un modelo más eficiente de transformer mediante \textit{model distillation}:}\label{T16}
+La tarea consiste en implementar una versión más eficiente de transformer y aplicar
+\textit{model distillation} con el objetivo de replicar el funcionamiento de un modelo pre-entrenado
+en uno de mayor rendimiento.
+\paragraph{T17.\quad Implementar una web con \textit{placeholders}:}\label{T17}
+Programar una versión preliminar con \textit{placeholders} de la aplicación web.
+\paragraph{T18.\quad Implementar la traducción de fragmentos de texto:}\label{T18}
+La aplicación web debe ser capaz de traducir fragmentos de texto.
+\paragraph{T19.\quad Implementar un mecanismo de corrección:}\label{T19}
+Las traducciones de fragmentos de texto deberán tener un mecanismo de corrección de errores.
+Se almacenarán las correcciones en una base de datos para un posterior
+refinamiento de los modelos.
+\paragraph{T20.\quad Implementar traducción de archivos de texto plano:}\label{T20}
+La aplicación web permitirá subir archivos y traducir el formato txt.
+\paragraph{T21.\quad Implementar traducción de archivos de texto enriquecido:}\label{T21}
+Dar soporte a archivos de texto enriquecido de tamaño arbitrario mediante la interfaz
+de subida de archivos.
+\paragraph{T22.\quad Implementar soporte parcial de traducción de archivos pdf:}\label{T22}
+Dar soporte parcial a archivos pdf de tamaño arbitrario mediante la interfaz
+de subida de archivos.
+\paragraph{T23.\quad Pulir el proyecto y prepararlo para su uso empresarial \textit{in-house}:}\label{T23}
+Documentar y pulir la estructura del proyecto para facilitar su implementación \textit{in-house}
+en una empresa arbitraria.
+\paragraph{T24.\quad Redactar la memoria del trabajo:}\label{T24}
+Redactar la memoria de la investigación y desarrollo llevado a cabo.
+\paragraph{T25.\quad Preparar la defensa del trabajo:}\label{T25}
+Componer y practicar una presentación para defender frente al tribunal del trabajo.
+
+
+\subsection{Recursos}
+\subsubsection{Materiales y software}
+\paragraph{R01.\quad Latex y Markdown:}\label{R01} La memoria se redacta en latex y la documentación en Markdown.
+\paragraph{R02.\quad Thunderbird y Google Meet:}\label{R02} Thunderbird permite gestionar
+correos electrónicos y calendarios. Google Meet facilitará realizar reuniones en linea.
+\paragraph{R03.\quad Git con Github:}\label{R03} Git es un software de control de versiones que junto con Github
+permitirá almacenar el código en la nube.
+\paragraph{R04.\quad IDE:}\label{R04} El proyecto usará una IDE para facilitar el desarrollo.
+\paragraph{R05.\quad Python y librerias diversas:}\label{R05} El lenguaje de programación principal será python y 
+se usará Pytorch y otras librerias de visualización, web, tokenización y lectura de texto enriquecido entre otras.
+\paragraph{R06.\quad Hardware local:}\label{R06} Ordenador de mesa con procesador i7 4790K, 16GB ram y tarjeta gráfica
+Nvidia 980Ti.
+\paragraph{R07.\quad Hardware remoto:}\label{R07} Google colab y Kaggle kernel son opciones viables para llevar a cabo el entrenamiento
+de modelos que requieren más memoria de la que dispone mi tarjeta gráfica.
+Si fuera necesario se contrataría un servicio de pago como AWS, Linode, Azure o Google
+cloud entre otras.
+
+\subsubsection{Humanos}
+\paragraph{R08.\quad Investigador:}\label{R08}
+El principal recurso humano es el investigador, Alexandre Pérez Josende,
+encargado de estudiar las distintas tecnologias y técnicas que empleará en la
+implementación de una herramienta web de traducción.
+
+\paragraph{R09.\quad Director:}\label{R09}
+El director Javier Béjar Alonso guiará al investigador en su tarea.
+
+\newgeometry{a4paper,left=1in,right=1in,top=1in,bottom=1in,nohead}
+\begin{landscape}
+    \begin{table}
+    \subsection{Dependencias y estimación temporal}\label{estimaciontemporal}
+    \centering
+    \begin{tabular}{ | c | l | c | c | c | }
+        \hline
+        Id. & Tarea & Tiempo & Dependencias & Recursos \\
+        \hline
+        \hyperref[T01]{T01} & Contextualizar y definir el alcance & 15h & - & \hyperref[R01]{R01}, \hyperref[R06]{R06}, \hyperref[R08]{R08} \\
+        \hline
+        \hyperref[T02]{T02} & Planificar el trabajo & 5h & - & \hyperref[R01]{R01}, \hyperref[R06]{R06}, \hyperref[R08]{R08} \\
+        \hline
+        \hyperref[T03]{T03} & Estimar el presupuesto y analizar la sostenibilidad & 10h & - & \hyperref[R01]{R01}, \hyperref[R06]{R06}, \hyperref[R08]{R08} \\
+        \hline
+        \hyperref[T04]{T04} & Reuniones con el director & 5h & - & \hyperref[R02]{R02}, \hyperref[R06]{R06}, \hyperref[R08]{R08}, \hyperref[R09]{R09} \\
+        \hline
+        \hyperref[T05]{T05} & Revisión y edición del documento final & 5h & - & \hyperref[R01]{R01}, \hyperref[R06]{R06}, \hyperref[R08]{R08} \\
+        \hline
+        \hyperref[T06]{T06} & Investigar la arquitectura transformer & 15h & - & \hyperref[R06]{R06}, \hyperref[R08]{R08} \\
+        \hline
+        \hyperref[T07]{T07} & Investigar \textit{fine-tuning} y \textit{transfer learning} & 10h & - & \hyperref[R06]{R06}, \hyperref[R08]{R08} \\
+        \hline
+        \hyperref[T08]{T08} & Aprender sobre el tratamiento de datos en NLP & 10h & - & \hyperref[R06]{R06}, \hyperref[R08]{R08} \\
+        \hline
+        \hyperref[T09]{T09} & Estudiar y seleccionar las métricas para la valoración de
+        modelos & 5h & \hyperref[T06]{T06} & \hyperref[R06]{R06}, \hyperref[R08]{R08} \\
+        \hline
+        \hyperref[T10]{T10} & Investigar arquitecturas más eficientes de transformer & 10h & \hyperref[T06]{T06}, \hyperref[T09]{T09} & \hyperref[R06]{R06}, \hyperref[R08]{R08} \\
+        \hline
+        \hyperref[T11]{T11} & Investigar la técnica \textit{model distillation} & 5h & - & \hyperref[R06]{R06}, \hyperref[R08]{R08} \\
+        \hline
+        \hyperref[T12]{T12} & Implementar el pipeline de \textit{fine-tunning} & 10h & \hyperref[T06]{T06}, \hyperref[T07]{T07} & \hyperref[R03]{R03}, \hyperref[R04]{R04}, \hyperref[R05]{R05}, \hyperref[R06]{R06}, \hyperref[R08]{R08} \\
+        \hline
+        \hyperref[T13]{T13} & \textit{Fine-tunning} de un modelo & 40h & \hyperref[T06]{T06}, \hyperref[T07]{T07}, \hyperref[T12]{T12} & \hyperref[R03]{R03}, \hyperref[R04]{R04}, \hyperref[R05]{R05}, \hyperref[R06]{R06}, \hyperref[R07]{R07}, \hyperref[R08]{R08} \\
+        \hline
+        \hyperref[T14]{T14} & Implementar el pipeline de \textit{transfer learning} & 10h & \hyperref[T06]{T06}, \hyperref[T07]{T07} & \hyperref[R03]{R03}, \hyperref[R04]{R04}, \hyperref[R05]{R05}, \hyperref[R06]{R06}, \hyperref[R08]{R08} \\
+        \hline
+        \hyperref[T15]{T15} & \textit{Transfer learning} a un modelo & 40h & \hyperref[T06]{T06}, \hyperref[T07]{T07}, \hyperref[T14]{T14} & \hyperref[R03]{R03}, \hyperref[R04]{R04}, \hyperref[R05]{R05}, \hyperref[R06]{R06}, \hyperref[R07]{R07}, \hyperref[R08]{R08} \\
+        \hline
+        \hyperref[T16]{T16} & Entrenar un modelo más eficiente de transformer & 50h & \hyperref[T06]{T06}, \hyperref[T11]{T11} & \hyperref[R03]{R03}, \hyperref[R04]{R04}, \hyperref[R05]{R05}, \hyperref[R06]{R06}, \hyperref[R07]{R07}, \hyperref[R08]{R08} \\
+        \hline
+        \hyperref[T17]{T17} & Implementar una web con placeholders & 5h & - & \hyperref[R03]{R03}, \hyperref[R04]{R04}, \hyperref[R05]{R05}, \hyperref[R06]{R06}, \hyperref[R08]{R08} \\
+        \hline
+        \hyperref[T18]{T18} & Implementar la traducción de fragmentos de texto & 10h & \hyperref[T17]{T17} & \hyperref[R03]{R03}, \hyperref[R04]{R04}, \hyperref[R05]{R05}, \hyperref[R06]{R06}, \hyperref[R08]{R08} \\
+        \hline
+        \hyperref[T19]{T19} & Implementar un mecanismo de corrección & 15h & \hyperref[T17]{T17}, \hyperref[T18]{T18} & \hyperref[R03]{R03}, \hyperref[R04]{R04}, \hyperref[R05]{R05}, \hyperref[R06]{R06}, \hyperref[R08]{R08} \\
+        \hline
+        \hyperref[T20]{T20} & Implementar traducción de archivos de texto plano & 10h & \hyperref[T17]{T17} & \hyperref[R03]{R03}, \hyperref[R04]{R04}, \hyperref[R05]{R05}, \hyperref[R06]{R06}, \hyperref[R08]{R08} \\
+        \hline
+        \hyperref[T21]{T21} & Implementar traducción de archivos de texto enriquecido & 15h & \hyperref[T17]{T17} & \hyperref[R03]{R03}, \hyperref[R04]{R04}, \hyperref[R05]{R05}, \hyperref[R06]{R06}, \hyperref[R08]{R08} \\
+        \hline
+        \hyperref[T22]{T22} & Implementar soporte parcial de traducción de archivos pdf & 15h & \hyperref[T17]{T17} & \hyperref[R03]{R03}, \hyperref[R04]{R04}, \hyperref[R05]{R05}, \hyperref[R06]{R06}, \hyperref[R08]{R08} \\
+        \hline
+        \hyperref[T23]{T23} & Pulir el proyecto para su uso empresarial \textit{in-house} & 5h & \hyperref[T18]{T18}, \hyperref[T19]{T19}, \hyperref[T20]{T21}, \hyperref[T22]{T22} & \hyperref[R01]{R01}, \hyperref[R03]{R03}, \hyperref[R04]{R04}, \hyperref[R05]{R05}, \hyperref[R06]{R06}, \hyperref[R08]{R08} \\
+        \hline
+        \hyperref[T24]{T24} & Redactar la memoria del trabajo & 40h & - & \hyperref[R01]{R01}, \hyperref[R06]{R06}, \hyperref[R08]{R08} \\
+        \hline
+        \hyperref[T25]{T25} & Preparar la defensa del trabajo & 10h & - & \hyperref[R01]{R01}, \hyperref[R06]{R06}, \hyperref[R08]{R08} \\
+        \hline
+    \end{tabular}
+    \caption{Tiempo, dependencias y recursos por tarea. [Elaboración propia]}
+    \end{table}
+\end{landscape}
+\restoregeometry
