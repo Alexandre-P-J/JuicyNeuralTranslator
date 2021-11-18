@@ -68,6 +68,7 @@ def replace_text(in_path, out_path):
         for i in range(text_pdf.getNumPages()):
             p1 = text_pdf.getPage(i)
             p0 = back_pdf.getPage(i)
+            #print(p0.get('/Rotate'))
             p0.mergePage(p1)
             output_pdf.addPage(p0)
 
@@ -75,7 +76,7 @@ def replace_text(in_path, out_path):
             output_pdf.write(out)
 
 
-path = "/home/pyro/Projects/TFG/Docs/GEP02/Entrega.pdf"
-#path = "/home/pyro/Downloads/AD-tema2-21-22.pdf"
+#path = "/home/pyro/Downloads/Practica5-AD-21-22.pdf"
+path = "/home/pyro/Downloads/AD-tema2-21-22.pdf"
 
 replace_text(path, "out.pdf")
