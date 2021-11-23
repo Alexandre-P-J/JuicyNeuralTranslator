@@ -1,14 +1,7 @@
-from tasks import app
+from tasks import app, STORAGE_DIR, unique_filename
 from celery.result import allow_join_result
 import os
-import uuid
-
-STORAGE_DIR = os.getenv("STORAGE_MOUNT_DIR")
-
-
-def unique_filename() -> str:
-    return str(uuid.uuid4().hex)
-
+from tasks.pdf import replace_text, translate_callable
 
 @app.task(name='process_txt')
 def process_txt(filename, from_lang, to_lang):
@@ -24,3 +17,11 @@ def process_txt(filename, from_lang, to_lang):
             with open(os.path.join(STORAGE_DIR, new_filename), "w") as output:
                 output.write(translated)
                 return new_filename
+
+@app.task(name='process_pdf')
+def process_pdf(filename, from_lang, to_lang):
+    new_filename = unique_filename() + ".pdf"
+    replace_text(os.path.join(STORAGE_DIR, filename),
+                 os.path.join(STORAGE_DIR, new_filename),
+                 translate_callable(app, from_lang, to_lang))
+    return new_filename

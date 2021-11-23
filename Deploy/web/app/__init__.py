@@ -98,8 +98,13 @@ def upload():
         else:
             filename = unique_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            task_name = "process_txt"
+            if filename_extension(file.filename) == ".docx":
+                task_name = "process_docx"
+            elif filename_extension(file.filename) == ".pdf":
+                task_name = "process_pdf"
             result = celery_app.send_task(
-                name="process_txt",
+                name=task_name,
                 queue="file",
                 kwargs={"filename": filename, "from_lang": request.form.get("from_lang"),
                         "to_lang": request.form.get("to_lang")})

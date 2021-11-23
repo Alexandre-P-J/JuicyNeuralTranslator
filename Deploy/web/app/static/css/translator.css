@@ -131,8 +131,6 @@ body {
     border-style: solid;
     border-radius: 0px 0px 2px 2px;
     border-width: 1px;
-    text-align: justify;
-    white-space: pre-line;
 }
 
 .translation-text:disabled {

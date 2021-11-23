@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Iterable, List, Set, Type, Tuple, Callable
+from typing import Iterable, List, Optional, Set, Type, Tuple, Callable
 from spacy.language import Language
 
 
@@ -53,42 +53,51 @@ class Model(ABC):
         spacy_nlp = Language()
         spacy_nlp.add_pipe('sentencizer')
 
-        def sentencecizer(text: str) -> Tuple[List[str], List[str]]:
+        def split_begining_spacing(text: str) -> Tuple[str, str]:
+            for i, c in enumerate(text):
+                if not c.isspace():
+                    return text[:i], text[i:]
+            return text, ""
+
+        def sentencecizer(text: str) -> Tuple[List[str], List[Tuple[bool, str]]]:
             doc = spacy_nlp(text)
             sentences = []
-            joints = []
+            info = []
             for i, sent in enumerate(doc.sents):
-                first_token = str(sent[0])
-                if first_token.isspace():
-                    joints.append(first_token)
-                    sentences.append(str(sent[1:]))
+                sent = str(sent)
+                spacing, rest = split_begining_spacing(sent)
+                spacing = spacing if spacing or (i == 0) else " "
+                if rest:
+                    info.append((True, spacing))
+                    sentences.append(rest)
                 else:
-                    joints.append(" " if i != 0 else "")
-                    sentences.append(str(sent))
-            return sentences, joints
+                    info.append((False, spacing))
+            return sentences, info
         return sentencecizer
 
     @staticmethod
-    def unpack(batch: List[str], sentencecizer: Callable[[str], Tuple[List[str], List[str]]]) -> Tuple[List[str], List[int], List[str]]:
-        sizes = [1] * len(batch)
+    def unpack(batch: List[str], sentencecizer: Callable) -> Tuple[List[str], List[List[Tuple[bool, str]]]]:
+        infos = []
         result = []
-        joints = []
-        for i, text in enumerate(batch):
-            splits, splits_joints = sentencecizer(text)
+        for text in batch:
+            splits, info = sentencecizer(text)
             result.extend(splits)
-            joints.extend(splits_joints)
-            sizes[i] = len(splits)
-        return result, sizes, joints
+            infos.append(info)
+        return result, infos
 
     @staticmethod
-    def pack(batch: List[str], sizes: List[int], joints: List[str]) -> List[str]:
-        result = batch
-        for start, size in enumerate(sizes):
-            end = start + size
-            merge = ""
-            for joint, part in zip(joints[start:end], result[start:end]):
-                merge += joint + part
-            result[start:end] = [merge]
+    def pack(batch: List[str], infos: List[List[Tuple[bool, str]]]) -> List[str]:
+        result = []
+        index = 0
+        for info in infos:
+            current_text = ""
+            for has_text, spacing in info:
+                if has_text:
+                    current_text += spacing + batch[index]
+                    index += 1
+                else:
+                    current_text += spacing
+            result.append(current_text)
         return result
 
     @classmethod

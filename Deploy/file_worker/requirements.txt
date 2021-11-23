@@ -1,2 +1,6 @@
 hiredis
 celery[redis]
+PyPDF2
+reportlab
+ftfy
+pdfminer.six

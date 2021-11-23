@@ -107,6 +107,6 @@ def replace_text(in_path, out_path):
 
 
 #path = "/home/pyro/Downloads/Practica5-AD-21-22.pdf"
-path = "/home/pyro/Downloads/AD-tema2-21-22.pdf"
+path = "/home/pyro/Documents/AD/Teoria02.pdf"
 
 replace_text(path, "out.pdf")

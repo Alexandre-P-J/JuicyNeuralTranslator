@@ -22,13 +22,13 @@ class EnEsFT(Model):
 
     @classmethod
     def batch_translate(cls, texts: List[str], source: str, target: str) -> List[str]:
-        unpacked, sizes, joints = cls.unpack(texts, cls.__sentencizer)
-
-        input_ids = cls.__tokenizer(
-            unpacked, padding=True, truncation=True, return_tensors="pt"
-        ).input_ids
-        outputs = cls.__model.generate(input_ids)
-        decoded = cls.__tokenizer.batch_decode(
-            outputs, skip_special_tokens=True)
-
-        return cls.pack(decoded, sizes, joints)
+        unpacked, metadata = cls.unpack(texts, cls.__sentencizer)
+        if unpacked:
+            input_ids = cls.__tokenizer(
+                unpacked, padding=True, truncation=True, return_tensors="pt"
+            ).input_ids
+            outputs = cls.__model.generate(input_ids)
+            decoded = cls.__tokenizer.batch_decode(
+                outputs, skip_special_tokens=True)
+            return cls.pack(decoded, metadata)
+        return texts
