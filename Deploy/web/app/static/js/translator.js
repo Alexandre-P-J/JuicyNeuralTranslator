@@ -86,7 +86,7 @@ $(function () {
             success: function (response) {
                 $("#in-file-err").val("");
                 data = JSON.parse(response);
-                if (data["ok"]) {
+                if (data["success"]) {
                     file_uuid = data["result"];
                     file_uuid_timer = clearTimeout(file_uuid_timer);
                     file_uuid_timer = setTimeout(file_translate_uuid_request, file_uuid_req_delay);
@@ -169,7 +169,7 @@ function text_translate_request() {
         query_id: ++lang_req,
         success: function (response) {
             data = JSON.parse(response);
-            if (this.query_id >= trans_req) {
+            if ((this.query_id >= trans_req) && data["success"]) {
                 clearTimeout(translation_uuid_timer);
                 translation_uuid = data["result"];
                 translation_uuid_timer = setTimeout(text_translate_uuid_request, text_uuid_req_delay);
@@ -191,15 +191,18 @@ function text_translate_uuid_request() {
         type: "POST",
         success: function (response) {
             data = JSON.parse(response);
-            if (data["ok"]) {
+            if (data["ready"] && data["success"]) {
                 last_translation = data["result"];
                 $("#out-text").val(last_translation);
                 $("#out-text").prop("disabled", false);
                 $("#correction-button").hide();
             }
-            else {
+            else if (!data["ready"]) {
                 clearTimeout(translation_uuid_timer);
                 translation_uuid_timer = setTimeout(text_translate_uuid_request, text_uuid_req_delay);
+            }
+            else {
+                console.log("ERROR");
             }
         },
         error: function (error) {
@@ -232,16 +235,19 @@ function file_translate_uuid_request() {
         type: "POST",
         success: function (response) {
             data = JSON.parse(response);
-            if (data["ok"]) {
+            if (data["ready"] && data["success"]) {
                 link = data["result"];
                 clearTimeout(file_uuid_timer);
                 $("#out-file-button").attr("href", link);
                 $("#out-file-spinner").hide();
                 $("#out-file-button").show();
             }
-            else {
+            else if (!data["ready"]) {
                 clearTimeout(file_uuid_timer);
                 file_uuid_timer = setTimeout(file_translate_uuid_request, file_uuid_req_delay);
+            }
+            else {
+                console.log("FileError");
             }
         },
         error: function (error) {

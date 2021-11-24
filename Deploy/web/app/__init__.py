@@ -67,8 +67,10 @@ def text_translate():
         task_id = request.form["task_id"]
         result = AsyncResult(task_id, app=celery_app)
         if result.successful():
-            return json.dumps({'ok': True, 'result': result.get()})
-        return json.dumps({'ok': False})
+            return json.dumps({'ready': True, 'success': True, 'result': result.get()})
+        elif result.failed():
+            return json.dumps({'ready': True, 'success': False})
+        return json.dumps({'ready': False})
     else:
         in_text = request.form["in-text"]
         from_lang = request.form["from_lang"]
@@ -77,7 +79,7 @@ def text_translate():
             name="translate_one",
             queue="translation_high",
             kwargs={"text": in_text, "from_lang": from_lang, "to_lang": to_lang})
-        return json.dumps({'ok': False, 'result': translation.id})
+        return json.dumps({'success': True, 'result': translation.id})
 
 
 @app.route('/upload', methods=['POST'])
@@ -87,14 +89,16 @@ def upload():
         result = AsyncResult(task_id, app=celery_app)
         if result.successful():
             filename = result.get()
-            return json.dumps({'ok': True, 'result': "/download/"+filename})
-        return json.dumps({'ok': False})
+            return json.dumps({'ready': True, 'success': True, 'result': "/download/"+filename})
+        elif result.failed():
+            return json.dumps({'ready': True, 'success': False})
+        return json.dumps({'ready': False})
     else:
         if 'file' not in request.files:
-            return json.dumps({'ok': False})
+            return json.dumps({'success': False})
         file = request.files['file']
         if not allowed_filetype(file.filename):
-            return json.dumps({'ok': False, "filename_err": True})
+            return json.dumps({'success': False, "filename_err": True})
         else:
             filename = unique_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
@@ -108,7 +112,7 @@ def upload():
                 queue="file",
                 kwargs={"filename": filename, "from_lang": request.form.get("from_lang"),
                         "to_lang": request.form.get("to_lang")})
-            return json.dumps({'ok': True, 'result': result.id})
+            return json.dumps({'success': True, 'result': result.id})
 
 
 @app.route('/download/<file>')
@@ -126,7 +130,7 @@ def text_correct():
     out_text = request.form['out-text']
     correct_text = request.form['correct-text']
     DB.save_correction(from_lang, to_lang, in_text, out_text, correct_text)
-    return json.dumps({'ok': True})
+    return json.dumps({'success': True})
 
 
 if __name__ == "__main__":
