@@ -2,6 +2,9 @@ from tasks import app, STORAGE_DIR, unique_filename
 from celery.result import allow_join_result
 import os
 from tasks.pdf import replace_text, translate_callable
+from docx import Document
+from tasks.docx import fold, unfold
+
 
 @app.task(name='process_txt')
 def process_txt(filename, from_lang, to_lang):
@@ -18,10 +21,26 @@ def process_txt(filename, from_lang, to_lang):
                 output.write(translated)
                 return new_filename
 
+
 @app.task(name='process_pdf')
 def process_pdf(filename, from_lang, to_lang):
     new_filename = unique_filename() + ".pdf"
     replace_text(os.path.join(STORAGE_DIR, filename),
                  os.path.join(STORAGE_DIR, new_filename),
                  translate_callable(app, from_lang, to_lang))
+    return new_filename
+
+
+@app.task(name='process_docx')
+def process_docx(filename, from_lang, to_lang):
+    document = Document(os.path.join(STORAGE_DIR, filename))
+    texts = unfold(document)
+    result = app.send_task(
+        name="translate_multiple",
+        queue="translation_low",
+        kwargs={"texts": texts, "from_lang": from_lang, "to_lang": to_lang})
+    new_filename = unique_filename() + ".docx"
+    with allow_join_result():
+        document = fold(document, result.get())
+        document.save(os.path.join(STORAGE_DIR, new_filename))
     return new_filename
