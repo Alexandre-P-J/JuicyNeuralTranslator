@@ -14,7 +14,7 @@ class CaEs(Model):
 
     @classmethod
     def get_target_langs(cls) -> Set[str]:
-        return {"Spanish (Standard)"}
+        return {"Spanish (Standard) [ca-es]"}
 
     @classmethod
     def batch_translate(cls, texts: List[str], source: str, target: str) -> List[str]:
