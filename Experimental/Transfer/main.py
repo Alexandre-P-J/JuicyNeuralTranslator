@@ -1,5 +1,5 @@
 import numpy as np
-from transformers import AutoModelForSeq2SeqLM, DataCollatorForSeq2Seq, Seq2SeqTrainingArguments, Seq2SeqTrainer, AutoTokenizer
+from transformers import AutoModelForSeq2SeqLM, DataCollatorForSeq2Seq, Seq2SeqTrainingArguments, Seq2SeqTrainer, MarianTokenizer
 from datasets import Dataset, load_metric
 import random
 from Data.Books_CaEn import Books_CaEn_Dataset
@@ -13,7 +13,8 @@ random.seed(1234)
 base_model_name = "Helsinki-NLP/opus-mt-es-en"
 bleu_metric = load_metric("sacrebleu")
 chrf_metric = load_metric("chrf")
-tokenizer = AutoTokenizer.from_pretrained(base_model_name)
+tokenizer = MarianTokenizer(vocab="Tokenizer/vocab.json", source_spm="Tokenizer/source.spm",
+                            target_spm="Tokenizer/target.spm", source_lang="ca", target_lang="en")
 model = AutoModelForSeq2SeqLM.from_pretrained(base_model_name)
 prefix = ""
 max_input_length = 128
@@ -21,7 +22,7 @@ max_target_length = 128
 source_lang = "ca"
 target_lang = "en"
 batch_size = 16
-num_epoch = 3
+num_epoch = 5
 
 
 def freeze_output_embeddings(model):
@@ -30,6 +31,7 @@ def freeze_output_embeddings(model):
         p.requires_grad = False
     model.set_output_embeddings(out_embeddings)
     return model
+
 
 def load_splits(shuffle=True, train_p=0.6, val_p=0.2, test_p=0.2):
     with Books_CaEn_Dataset() as a, GlobalVoices_CaEn_Dataset() as b, OpenSubtitles_CaEn_Dataset() as c, QED_CaEn_Dataset() as d:
