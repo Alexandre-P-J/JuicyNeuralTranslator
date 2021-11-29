@@ -1,7 +1,7 @@
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM, MarianTokenizer
 
 #tokenizer = AutoTokenizer.from_pretrained("Helsinki-NLP/opus-mt-ca-en")
-tokenizer = MarianTokenizer(vocab="original/vocab.json", source_spm="original/source.spm", target_spm="original/target.spm", source_lang="ca", target_lang="en")
+tokenizer = MarianTokenizer.from_pretrained("Helsinki-NLP/opus-mt-ca-en")
 model = AutoModelForSeq2SeqLM.from_pretrained("Helsinki-NLP/opus-mt-ca-en")
 
 def freeze_output_embeddings(model):
@@ -36,7 +36,12 @@ import itertools
 
 with Books_CaEn_Dataset() as a, GlobalVoices_CaEn_Dataset() as b, OpenSubtitles_CaEn_Dataset() as c, QED_CaEn_Dataset() as d:
     data = itertools.chain(a.translations(), b.translations(), c.translations(), d.translations())
-    #data = list(data)
+    for d in data:
+        d["ca"] = d["ca"].strip()
+        d["en"] = d["en"].strip()
+        if (d["ca"] == "") or (d["en"] == ""):
+            print("BAD")
+            print(d)
 
 
 

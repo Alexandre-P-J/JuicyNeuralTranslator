@@ -1,8 +1,10 @@
 from transformers import MarianMTModel, MarianTokenizer
 
-src_text = ["We must mitigate poverty"]
+src_text = ["Bon dia! el meu nom es Alex", "llaminadura",
+            "Si us plau, per a evitar malentesos, signeu sempre els vostres missatges al final de la vostra intervenció amb el codi"]
 
-model_name = 'opus-mt-finetuned-en-to-es/checkpoint-31000'
+model_name = 'opus-mt-transfer-ca-to-en/checkpoint-58000'
+#model_name ="Helsinki-NLP/opus-mt-es-en"
 tokenizer = MarianTokenizer.from_pretrained(model_name)
 
 model = MarianMTModel.from_pretrained(model_name)

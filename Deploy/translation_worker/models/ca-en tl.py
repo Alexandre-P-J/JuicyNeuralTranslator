@@ -1,20 +1,24 @@
 from models import Model
 from typing import List, Set
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
+import pathlib
 
 
-class EsEn(Model):
-    __model = AutoModelForSeq2SeqLM.from_pretrained("Helsinki-NLP/opus-mt-es-en")
-    __tokenizer = AutoTokenizer.from_pretrained("Helsinki-NLP/opus-mt-es-en")
+class CaEnTL(Model):
+    __folder = pathlib.Path(__file__).parent.resolve()
+    __model_path = str(pathlib.Path.joinpath(
+        __folder, "Checkpoints/ca-en/checkpoint-95000"))
+    __model = AutoModelForSeq2SeqLM.from_pretrained(__model_path)
+    __tokenizer = AutoTokenizer.from_pretrained(__model_path)
     __sentencizer = Model.get_spacy_sentencecizer()
 
     @classmethod
     def get_source_langs(cls) -> Set[str]:
-        return {"Spanish (Standard)"}
+        return {"Catalan (Standard)"}
 
     @classmethod
     def get_target_langs(cls) -> Set[str]:
-        return {"English (Standard) [es-en]"}
+        return {"English (Standard) [Transfer from es-en to ca-en]"}
 
     @classmethod
     def batch_translate(cls, texts: List[str], source: str, target: str) -> List[str]:

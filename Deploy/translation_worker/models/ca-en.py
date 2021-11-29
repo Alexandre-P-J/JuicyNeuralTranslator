@@ -3,7 +3,7 @@ from typing import List, Set
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 
 
-class EnEs(Model):
+class CaEn(Model):
     __model = AutoModelForSeq2SeqLM.from_pretrained("Helsinki-NLP/opus-mt-ca-en")
     __tokenizer = AutoTokenizer.from_pretrained("Helsinki-NLP/opus-mt-ca-en")
     __sentencizer = Model.get_spacy_sentencecizer()
