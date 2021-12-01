@@ -1,0 +1,10 @@
+ES-EN model
+TATOEBA CA-EN:
+{'eval_loss': 2.3408687114715576, 'eval_BLEU': 9.8092, 'eval_chr-F': 29.0792, 'eval_gen_len': 14.4591, 'eval_runtime': 78.8692, 'eval_samples_per_second': 23.533, 'eval_steps_per_second': 1.471}
+TATOEBA ES-EN:
+{'eval_loss': 5.162095069885254, 'eval_BLEU': 0.749, 'eval_chr-F': 15.6506, 'eval_gen_len': 10.3943, 'eval_runtime': 5721.7931, 'eval_samples_per_second': 37.416, 'eval_steps_per_second': 2.339}
+
+CA-EN transfer from ES-EN model:
+TATOEBA CA-EN:
+
+TATOEBA ES-EN:
