@@ -1,8 +1,14 @@
-ES-EN model
+ES-EN model Huggingface:
 TATOEBA CA-EN:
-{'eval_loss': 2.3408687114715576, 'eval_BLEU': 9.8092, 'eval_chr-F': 29.0792, 'eval_gen_len': 14.4591, 'eval_runtime': 78.8692, 'eval_samples_per_second': 23.533, 'eval_steps_per_second': 1.471}
+{'eval_loss': 2.3259971141815186, 'eval_BLEU': 9.6952, 'eval_chr-F': 28.3868, 'eval_gen_len': 14.0098, 'eval_runtime': 158.0315, 'eval_samples_per_second': 10.321, 'eval_steps_per_second': 0.645}
 TATOEBA ES-EN:
-{'eval_loss': 5.162095069885254, 'eval_BLEU': 0.749, 'eval_chr-F': 15.6506, 'eval_gen_len': 10.3943, 'eval_runtime': 5721.7931, 'eval_samples_per_second': 37.416, 'eval_steps_per_second': 2.339}
+{'eval_loss': 0.6026059985160828, 'eval_BLEU': 60.6793, 'eval_chr-F': 74.9145, 'eval_gen_len': 10.2411, 'eval_runtime': 853.2719, 'eval_samples_per_second': 19.435, 'eval_steps_per_second': 1.215}
+
+CA-EN model Huggingface:
+TATOEBA CA-EN:
+{'eval_loss': 0.9886807799339294, 'eval_BLEU': 48.7704, 'eval_chr-F': 65.7556, 'eval_gen_len': 9.4985, 'eval_runtime': 66.2353, 'eval_samples_per_second': 24.624, 'eval_steps_per_second': 1.54}
+TATOEBA ES-EN:
+{'eval_loss': 2.3238627910614014, 'eval_BLEU': 17.6634, 'eval_chr-F': 36.9217, 'eval_gen_len': 12.0808, 'eval_runtime': 1178.8446, 'eval_samples_per_second': 14.067, 'eval_steps_per_second': 0.88}
 
 CA-EN transfer from ES-EN model:
 TATOEBA CA-EN:

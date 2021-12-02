@@ -6,13 +6,13 @@ from Data.Books_CaEn import Books_CaEn_Dataset
 from Data.GlobalVoices_CaEn import GlobalVoices_CaEn_Dataset
 from Data.OpenSubtitles_CaEn import OpenSubtitles_CaEn_Dataset
 from Data.QED_CaEn import QED_CaEn_Dataset
-from Data.Tatoeba_CaEn import Tatoeba_CaEn_Dataset
-from Data.Tatoeba_EsEn import Tatoeba_EsEn_Dataset
+from Data.TatoebaChallenge_CaEn import TatoebaChallenge_CaEn_Dataset
+from Data.TatoebaChallenge_EsEn import TatoebaChallenge_EsEn_Dataset
 import itertools
 
 random.seed(1234)
 
-base_model_name = "Helsinki-NLP/opus-mt-es-en"
+base_model_name = "Helsinki-NLP/opus-mt-ca-en"
 bleu_metric = load_metric("sacrebleu")
 chrf_metric = load_metric("chrf")
 tokenizer = MarianTokenizer.from_pretrained(base_model_name)
@@ -33,14 +33,14 @@ def freeze_output_embeddings(model):
     return model
 
 def load_ca_en_tatoeba_challenge():
-    with Tatoeba_CaEn_Dataset() as a:
+    with TatoebaChallenge_CaEn_Dataset() as a:
         data = filter_data(a.translations())
         random.shuffle(data)
         return Dataset.from_dict({"translation": data})
 
 def load_es_en_tatoeba_challenge():
-    with Tatoeba_EsEn_Dataset() as a:
-        # rewrite so it matches ca,en.
+    with TatoebaChallenge_EsEn_Dataset() as a:
+        # rewrite so it matches target and source
         data = [{source_lang:m["es"], target_lang:m["en"]} for m in a.translations()]
         data = filter_data(data)
         random.shuffle(data)
