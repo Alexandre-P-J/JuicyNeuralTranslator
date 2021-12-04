@@ -2,14 +2,13 @@ import numpy as np
 from transformers import AutoModelForSeq2SeqLM, DataCollatorForSeq2Seq, Seq2SeqTrainingArguments, Seq2SeqTrainer, AutoTokenizer
 from datasets import Dataset, load_metric
 import random
-from Data.JRC_Acquis_EnEs import JRC_Acquis_EnEs_Dataset
+from Data.TatoebaChallenge_EsEn import TatoebaChallenge_EsEn_Dataset
 from Data.SciELO_EnEs import SciELO_EnEs_Dataset
-from Data.TatoebaTest_EnEs import TatoebaTest_EnEs_Dataset
 
 random.seed(1234)
 
 finetuning_dataset = SciELO_EnEs_Dataset
-model_name = "/home/pyro/Projects/TFG/Checkpoints/en-es-SciELO/run3/opus-mt-finetuned-en-to-es/checkpoint-31000"#"Helsinki-NLP/opus-mt-en-es"
+model_name = "Helsinki-NLP/opus-mt-en-es"
 bleu_metric = load_metric("sacrebleu")
 chrf_metric = load_metric("chrf")
 tokenizer = AutoTokenizer.from_pretrained(model_name)
@@ -20,12 +19,12 @@ max_target_length = 128
 source_lang = "en"
 target_lang = "es"
 batch_size = 16
-num_epoch = 3
+num_epoch = 5
 
 
 def load_splits(DatasetCLS, shuffle=True, train_p=0.6, val_p=0.2, test_p=0.2):
     with DatasetCLS() as d:
-        data = list(d.translations())
+        data = filter_data(d.translations())
         if shuffle:
             random.shuffle(data)
         total = len(data)
@@ -41,6 +40,12 @@ def load_splits(DatasetCLS, shuffle=True, train_p=0.6, val_p=0.2, test_p=0.2):
             {"translation": data[test_interval[0]:test_interval[1]]})
         return train, val, test
 
+def filter_data(data):
+    data = [{source_lang: d[source_lang].strip(), target_lang:d[target_lang].strip()}
+            for d in data]
+    data = [d for d in data if ((d[source_lang] != "") and
+                                (d[target_lang] != ""))]
+    return data
 
 def preprocess_function(examples):
     inputs = [prefix + ex[source_lang] for ex in examples["translation"]]
@@ -99,7 +104,7 @@ test_tokenized = test.map(preprocess_function, batched=True)
 
 args = Seq2SeqTrainingArguments(
     f"opus-mt-finetuned-{source_lang}-to-{target_lang}",
-    evaluation_strategy="no",#"epoch",
+    evaluation_strategy="epoch",
     learning_rate=2e-5,
     per_device_train_batch_size=batch_size,
     per_device_eval_batch_size=batch_size,
@@ -119,16 +124,17 @@ trainer = Seq2SeqTrainer(
     compute_metrics=compute_metrics
 )
 
-trainer.train(model_name) # start from interrupted train
+# # TRAINING
+#trainer.train(model_name) # start from interrupted train
 #trainer.train()
 
 # TEST
-_, _, metrics = trainer.predict(test_dataset=test_tokenized)
+metrics = trainer.evaluate(eval_dataset=test_tokenized)
 print(f"TEST:\n{metrics}")
 
 # EXTRA TEST: METRICS WITH TATOEBA
 _, _, tatoeba_test = load_splits(
-    TatoebaTest_EnEs_Dataset, train_p=0, val_p=0, test_p=1)
+    TatoebaChallenge_EsEn_Dataset, train_p=0, val_p=0, test_p=1)
 tatoeba_test_tokenized = tatoeba_test.map(preprocess_function, batched=True)
-_, _, metrics = trainer.predict(test_dataset=tatoeba_test_tokenized)
+metrics = trainer.evaluate(eval_dataset=tatoeba_test_tokenized)
 print(f"TATOEBA:\n{metrics}")
