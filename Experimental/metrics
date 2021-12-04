@@ -1,28 +1,6 @@
 //////////////////////////////////////////
 /////////////// FINETUNING ///////////////
 //////////////////////////////////////////
-# ORIGINAL MODEL EN-ES
-EN-ES original on Tatoeba Test:
-{'eval_loss': 0.699881911277771, 'eval_BLEU': 54.896, 'eval_chr-F': 72.039, 'eval_gen_len': 9.2649, 'eval_runtime': 227.3386, 'eval_samples_per_second': 43.987, 'eval_steps_per_second': 2.749}
-EN-ES original on JRK_Aquis Test:
-{'eval_loss': 0.7972118258476257, 'eval_BLEU': 55.2022, 'eval_chr-F': 73.5936, 'eval_gen_len': 36.8166, 'eval_runtime': 10022.7543, 'eval_samples_per_second': 10.077, 'eval_steps_per_second': 0.63}
-EN-ES original on SciELO Test:
-{'eval_loss': 1.3268274068832397, 'eval_BLEU': 40.1954, 'eval_chr-F': 67.1326, 'eval_gen_len': 40.2621, 'eval_runtime': 7440.7661, 'eval_samples_per_second': 11.19, 'eval_steps_per_second': 0.699}
-
-# RUN2 FINE-TUNED ON JRK_Aquis EN-ES
-EN-ES checkpoint 37500 (run2 final) on JRK_Aquis Test:
-{'eval_loss': 0.6277616620063782, 'eval_BLEU': 58.6209, 'eval_chr-F': 75.654, 'eval_gen_len': 36.6521, 'eval_runtime': 9347.6561, 'eval_samples_per_second': 10.804, 'eval_steps_per_second': 0.675}
-EN-ES checkpoint 37500 (run2 final) on Tatoeba Test:
-{'eval_loss': 1.2478957176208496, 'eval_BLEU': 38.3772, 'eval_chr-F': 59.846, 'eval_gen_len': 10.1018, 'eval_runtime': 243.6839, 'eval_samples_per_second': 41.037, 'eval_steps_per_second': 2.565}
-
-# RUN3 FINE-TUNED ON SciELO EN-ES
-EN-ES checkpoint 31000 (run3 final SciELO) on Tatoeba Test:
-{'eval_loss': 0.7602416276931763, 'eval_BLEU': 49.4816, 'eval_chr-F': 68.2854, 'eval_gen_len': 9.559, 'eval_runtime': 222.7947, 'eval_samples_per_second': 44.884, 'eval_steps_per_second': 2.805}
-EN-ES checkpoint 31000 (run3 final SciELO) on SciELO
-{'eval_loss': 1.1090686321258545, 'eval_BLEU': 42.9048, 'eval_chr-F': 68.8366, 'eval_gen_len': 40.3196, 'eval_runtime': 7494.8772, 'eval_samples_per_second': 11.109, 'eval_steps_per_second': 0.694}
-
-###############################################
-###############################################
 # ORIGINAL EN-ES
 SciELO Test
 {'eval_loss': 1.3268274068832397, 'eval_BLEU': 40.1954, 'eval_chr-F': 67.1326, 'eval_gen_len': 40.2621, 'eval_runtime': 7380.1097, 'eval_samples_per_second': 11.282, 'eval_steps_per_second': 0.705}
@@ -30,10 +8,12 @@ Tatoeba challenge
 {'eval_loss': 0.6677169799804688, 'eval_BLEU': 56.9578, 'eval_chr-F': 73.6682, 'eval_gen_len': 9.8371, 'eval_runtime': 403.7111, 'eval_samples_per_second': 41.076, 'eval_steps_per_second': 2.569}
 
 # FINE-TUNED (SciELO) EN-ES
+Last SciELO epoch Eval
+{'eval_loss': 1.1000547409057617, 'eval_BLEU': 43.0387, 'eval_chr-F': 68.9894, 'eval_gen_len': 40.3343, 'eval_runtime': 7479.1499, 'eval_samples_per_second': 11.133, 'eval_steps_per_second': 0.696}
 SciELO Test
-
+{'eval_loss': 1.1033543348312378, 'eval_BLEU': 43.0197, 'eval_chr-F': 68.9007, 'eval_gen_len': 40.3101, 'eval_runtime': 7688.0882, 'eval_samples_per_second': 10.83, 'eval_steps_per_second': 0.677}
 Tatoeba challenge
-
+{'eval_loss': 0.7542015910148621, 'eval_BLEU': 49.8269, 'eval_chr-F': 68.939, 'eval_gen_len': 10.1284, 'eval_runtime': 435.6015, 'eval_samples_per_second': 38.069, 'eval_steps_per_second': 2.381}
 
 //////////////////////////////////////////
 //////////////// TRANSFER ////////////////

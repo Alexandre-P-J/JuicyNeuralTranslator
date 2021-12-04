@@ -128,11 +128,15 @@ trainer = Seq2SeqTrainer(
 #trainer.train(model_name) # start from interrupted train
 #trainer.train()
 
-# TEST
+# # LAST EPOCH EVAL
+metrics = trainer.evaluate(eval_dataset=val_tokenized)
+print(f"LAST EPOCH EVAL:\n{metrics}")
+
+# # TEST
 metrics = trainer.evaluate(eval_dataset=test_tokenized)
 print(f"TEST:\n{metrics}")
 
-# EXTRA TEST: METRICS WITH TATOEBA
+# # EXTRA TEST: METRICS WITH TATOEBA
 _, _, tatoeba_test = load_splits(
     TatoebaChallenge_EsEn_Dataset, train_p=0, val_p=0, test_p=1)
 tatoeba_test_tokenized = tatoeba_test.map(preprocess_function, batched=True)
