@@ -1,0 +1,26 @@
+\section{Justificación y vía de resolución}
+La traducción neuronal basada en la arquitectura transformer consume una gran cantidad de recursos,
+por ese motivo, el modelo de distribución cliente-servidor es ideal para desacoplar el cálculo del
+servicio de traducción. Ejecutando los modelos de traducción en un servidor optimizado acordemente,
+se elimina la necesidad del usuario de disponer de una máquina de altas prestaciones. Es por ello
+en el caso de implementar una herramienta nueva, o adaptar una solución existente, sería adecuado
+que funcionara vía web.
+
+Existen diversos servicios web que proporcionan traducción automática de calidad, pero las soluciones
+existentes tienen un coste economico elevado, difícil de estimar y no escalable a un grado
+empresarial con necesidad de traducir mucho contenido \cite{GoogleTranslatePricing,AWSTranslatePricing,MicrosoftTranslatePricing}.
+Además no permiten el ajuste de los modelos para traducir contextos o registros del lenguaje
+específicos, una funcionalidad necesaria en muchos escenarios reales como por ejemplo el de la oficina
+europea de patentes \cite{PatentOffice2020Jul}.
+
+Por otra parte, en los últimos años han aparecido iniciativas como OpusMT
+\cite{HelsinkiTiedemannThottingal2020} con el objetivo de distribuir corpus de texto y modelos de
+traducción pre-entrenados. Estos modelos van orientados a investigadores en el campo del
+\textit{machine learning} y serán de vital importancia para la elaboración del proyecto.
+
+Es preciso implementar una solución nueva dado que no esta en mi conocimiento ninguna
+herramienta abierta que permita la traducción de texto y archivos usable a nivel empresarial
+y con la capacidad de ajustar y añadir nuevos modelos. Pero también se utilizarán modelos
+pre-entrenados ya que serán un buen punto de partida para aplicar técnicas de
+\textit{fine-tuning} y \textit{transfer learning}.
+
