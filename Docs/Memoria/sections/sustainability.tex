@@ -12,13 +12,13 @@ para evaluar el impacto en las distintas dimensiones de la sostenibilidad y cons
 són una herramienta clave para detectar problemas de sostenibilidad y poder resolverlos.
 
 \section{Dimensión económica}
-\textbf{¿Has estimado el coste de la realización del proyecto (recursos humanos y materiales)?}
+\subsubsection{¿Has estimado el coste de la realización del proyecto (recursos humanos y materiales)?}
 
 En la sección \ref{budget} se estima el coste de los distintos recursos humanos para cada
 tarea y se calculan los costes genéricos, que principalmente són materiales.
 Además se define un margen de contingencia y otros costes asociados al riesgo y los obstáculos.
 
-\textbf{¿Cómo se resuelve actualmente el problema que quieres abordar (estado del arte)?
+\subsubsection{¿Cómo se resuelve actualmente el problema que quieres abordar (estado del arte)?
 ¿En qué mejorará económicamente tu solución a las existentes?}
 
 El método de resolución que se plantea en este trabajo es el estado del arte actual.
@@ -28,7 +28,7 @@ hacer accesible una solución \textit{in-house} para empresas con necesidad de t
 volumenes de contenido.
 
 \section{Dimensión ambiental}
-\textbf{¿Has estimado el impacto ambiental que tendrá la realización del proyecto? ¿Te has
+\subsubsection{¿Has estimado el impacto ambiental que tendrá la realización del proyecto? ¿Te has
 planteado minimizar el impacto, por ejemplo, reutilizando recursos?}
 
 El trabajo ejerce un impacto sobre el medio ambiente de diversas formas, algunos de estos
@@ -50,7 +50,7 @@ entrenar los modelos de traducción.
 Por último, el uso de transporte público y la consumición de recursos y servicios sostenibles
 reducen mi impacto como individuo y principal fuerza de trabajo del proyecto. 
 
-\textbf{¿Cómo se resuelve actualmente el problema que quieres abordar (estado del arte)?
+\subsubsection{¿Cómo se resuelve actualmente el problema que quieres abordar (estado del arte)?
 ¿En qué mejorará ambientalmente tu solución a las existentes?}
 
 Actualmente los servicios de traducción automática se alojan en centros de datos y
@@ -64,14 +64,14 @@ Esto se convertirá en una reducción en el consumo eléctrico y al mismo tiempo
 
 
 \section{Dimensión social}
-\textbf{Qué crees que te va a aportar a nivel personal la realización de este proyecto?}
+\subsubsection{Qué crees que te va a aportar a nivel personal la realización de este proyecto?}
 
 El trabajo de fin de grado es hasta la fecha el proyecto de \textit{machine learning} más
 complejo y extenso que he realizado, además tiene un fuerte componente de investigación
 así como de desarrollo práctico. Considero que ganaré cierto grado de madurez
 en el campo y me permitirá afrontar proyectos de mayor envergadura en el futuro.
 
-\textbf{¿Cómo se resuelve actualmente el problema que quieres abordar (estado del arte)?
+\subsubsection{¿Cómo se resuelve actualmente el problema que quieres abordar (estado del arte)?
 ¿En qué mejorará socialmente (calidad de vida) tu solución a las existentes?}
 
 Actualmente la mayoría de servicios de traducción automática se limitan a fragmentos y documentos
@@ -86,7 +86,7 @@ el uso de modelos que representan el estado del arte.
 Se permitirá añadir, corregir y ajustar los modelos para la traducción en registros y contextos
 específicos.
 
-\textbf{¿Existe una necesidad real del proyecto?}
+\subsubsection{¿Existe una necesidad real del proyecto?}
 
 La traducción es una tarea esencial en el ámbito personal y empresarial. Las prestaciones que se proponen
 suponen una mejora sustancial sobre las soluciones existentes y existe una necesidad real en empresas
@@ -96,18 +96,18 @@ e individuos con un gran volumen de contenido que necesita ser traducido automá
 \section{Identificación de leyes y regulaciones}
 El trabajo tiene un componente práctico que consiste en la implementación de una herramienta de traducción web.
 Existen diversas regulaciones que se deberian tener en cuenta si el proyecto se expone al público, a continuación se enumeran:
-\paragraph{Tratamiento y protección de datos:}
+\subsubsection{Tratamiento y protección de datos}
 En España los datos personales estan regulados por la agencia de protección de datos. En el caso del traductor web existen vias por las que datos de carácter personal podrían ser tratados o almacenados en el sistema. Los fragmentos de texto podrían contener información personal, en el caso de los ficheros de texto, docx y pdf es todavía más evidente, ya que no sería raro que un documento contuviera datos como: el DNI, fotos, datos bancarios u otros.
 
 Además, aunque los fragmentos de texto no se almacenen, los ficheros y las correcciones ofrecidas por los usuarios podrían ser persistentes y se deberá dar de alta un archivo en plataforma de la agencia de protección de datos, también se deberá informar al usuario interesado sobre el uso de sus datos y pedir su consentimiento.
 
-\paragraph{\textit{Cookies} y seguimiento:}
+\subsubsection{\textit{Cookies} y seguimiento}
 Actualmente es común introducir \textit{cookies} y otras herramientas de seguimiento para fines publicitarios o para la analítica web. Un ejemplo es \textit{Google analytics}. El proyecto no incorpora ningun tipo de herramienta de seguimiento o \textit{cookie}, pero si se optara por ello, sería necesario informar al usuario y pedir su consentimiento.
 
-\paragraph{No responsabilidad:}
+\subsubsection{No responsabilidad}
 Especialmente en la traducción de documentos pero también en la traducción de fragmentos de texto, se deberá informar al usuario que el traductor web se desentiende de cualquier responsabilidad derivada de la traducción de un texto o documento. En el caso de la traducción de textos legales o de importancia, existe la figura de traductor jurado, cuyo papel es el de traducir estos documentos. No se debería usar un traductor automático en estos casos.
 
-\paragraph{Licencias:}
+\subsubsection{Licencias}
 En cualquier proyecto de software es común el uso de librerías y otras herramientas sujetas a una licencia. Se deberán considerar las siguientes licencias procedentes mayoritariamente de librerías de python:
 \begin{itemize}
     \item Apache 2.0 \cite{Apache2license}: transformers, datasets, sentencepiece, sacrebleu
@@ -120,10 +120,10 @@ Se ha usado software libre y licencias poco restrictivas, en general no debería
 \section{Integración de conocimientos y disciplinas}
 El proyecto trabaja diversas competencias técnicas e integra distintas disciplinas trabajadas a lo largo del grado en ingeniería informática. Las competencias se enumeran a continuación:
 
-\paragraph{CCO1.3:}\textit{Definir, evaluar y seleccionar plataformas de desarrollo y producción hardware y software para el desarrollo de aplicaciones y servicios informáticos de diversa complejidad.}% Bastante
-\paragraph{CCO2.1:}\textit{Demostrar conocimiento de los fundamentos, de los paradigmas y de las técnicas propias de los sistemas inteligentes, y analizar, diseñar y construir sistemas, servicios y aplicaciones informáticas que usen estas técnicas en cualquier ámbito de aplicación.}%Bastante
-\paragraph{CCO2.4:}\textit{Demostrar conocimiento y desarrollar técnicas de aprendizaje computacional; diseñar e implementar aplicaciones y sistemas que las usen, incluyendo las que se dedican a la extracción automática de información y conocimiento a partir de grandes volúmenes de datos.}%En profundidad
-\paragraph{CCO2.6:}\textit{Diseñar e implementar aplicaciones gráficas, de realidad virtual, de realidad aumentad y videojuegos.}%Un poco
+\subsubsection{CCO1.3}\textit{Definir, evaluar y seleccionar plataformas de desarrollo y producción hardware y software para el desarrollo de aplicaciones y servicios informáticos de diversa complejidad.}% Bastante
+\subsubsection{CCO2.1}\textit{Demostrar conocimiento de los fundamentos, de los paradigmas y de las técnicas propias de los sistemas inteligentes, y analizar, diseñar y construir sistemas, servicios y aplicaciones informáticas que usen estas técnicas en cualquier ámbito de aplicación.}%Bastante
+\subsubsection{CCO2.4}\textit{Demostrar conocimiento y desarrollar técnicas de aprendizaje computacional; diseñar e implementar aplicaciones y sistemas que las usen, incluyendo las que se dedican a la extracción automática de información y conocimiento a partir de grandes volúmenes de datos.}%En profundidad
+\subsubsection{CCO2.6}\textit{Diseñar e implementar aplicaciones gráficas, de realidad virtual, de realidad aumentad y videojuegos.}%Un poco
 \\
 
 Para afrontar las competencias técnicas mencionadas ha sido indispensable el conocimiento adquirido en diversas asignaturas durante el grado, además se ha integrado y profundizado el conocimiento de las distintas disciplinas para generar soluciones propias a los distintos retos que supone el trabajo.

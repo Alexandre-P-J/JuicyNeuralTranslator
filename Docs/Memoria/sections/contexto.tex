@@ -38,7 +38,7 @@ para la tarea de traducción automática. Sin embargo, el estudio de las arquite
 forma parte de la porción teórica del proyecto y se explicarán segun sean empleadas durante el trabajo.
 Por otra parte es importante definir los siguientes conceptos:
 
-\paragraph{Modelos secuencia-secuencia:}
+\subsubsection{Modelos secuencia-secuencia}
 Los modelos secuencia-secuencia son aquellos entrenados para
 resolver tareas que requieren la entrada de una secuencia y el retorno de
 otra secuencia.
@@ -46,21 +46,21 @@ En el caso de la traducción automática la secuencia de entrada podria ser
 un fragmento de texto escrito en inglés y la secuencia de salida el texto
 traducido al español.
 
-\paragraph{Modelos encoder-decoder:}
+\subsubsection{Modelos encoder-decoder}
 La arquitectura encoder-decoder es un patrón de alto nivel y tal como su nombre indica,
 utiliza uno o más encoders y decoders.
 Un encoder tiene la tarea de transformar datos a un espacio latente
 mientras que un decoder hace la operación inversa. Al tratarse de un concepto de alto nivel, la
 implementación depende del propio modelo.
 
-\paragraph{Mecanismos de atención:}
+\subsubsection{Mecanismos de atención}
 Los mecanismos de atención son una forma de codificar la importancia y relaciones de uno o más
 datos de la entrada. Un ejemplo seria el de las palabras en una oración: cada palabra tiene una
 importancia y unas relaciones con el resto de palabras de la oración.
 En el caso concreto del transformer original \cite{Vaswani2017Jun} el mecanismo de atención
 calcula numericamente la relación entre cada par de palabras, pero existen diversos métodos.
 
-\paragraph{\textit{Fine-tuning y Transfer learning}:}
+\subsubsection{\textit{Fine-tuning y Transfer learning}}
 \textit{Fine-tuning} consiste en re-entrenar (posiblemente con datos distintos) un modelo que ya ha
 sido entrenado anteriormente. Por otro lado, \textit{transfer learning} o transferencia de conocimiento
 consiste en re-entrenar un modelo para realizar una tarea distinta a la que fue entrenado anteriormente,
@@ -71,7 +71,7 @@ o contexto de sus traducciones. También se aplicará \textit{transfer learning}
 capaz de traducir dos lenguajes aprenda a traducir lenguajes distintos, transfiriendo conocimientos de los
 lenguajes con los que fue entrenado, a los nuevos.
 
-\paragraph{\textit{Model distillation}:}
+\subsubsection{\textit{Model distillation}}
 Esta técnica consiste en la transferencia de conocimiento de un modelo complejo (o un conjunto de modelos)
 a un nuevo modelo.
 Es una técnica interesante porque el nuevo modelo puede ser más pequeño, simple y eficiente,
@@ -86,20 +86,20 @@ hacia una arquitectura más eficiente.
 La traducción automática tiene usos empresariales y particulares, sin embargo las opciones
 actuales tienen uno o más de los problemas mencionados a continuación:
 
-\paragraph{Coste económico:}
+\subsubsection{Coste económico}
 Google, Amazon, Microsoft y otras compañías ofrecen servicios de calidad pero el coste
 suele ser elevado y difícil de calcular
 \cite{GoogleTranslatePricing,AWSTranslatePricing,MicrosoftTranslatePricing}.
 
-\paragraph{Coste computacional:}
+\subsubsection{Coste computacional}
 Las herramientas de traducción neuronal consumen muchos recursos.
 
-\paragraph{Inmutabilidad:}
+\subsubsection{Inmutabilidad}
 Algunas empresas tienen necesidades de traducción que se limitan a registros de
 lenguaje y contextos específicos, pero la mayoría de servicios usan modelos que no
 permiten ningún tipo de ajuste.
 
-\paragraph{Accesibilidad:}
+\subsubsection{Accesibilidad}
 Existen modelos de calidad y con licencias permisivas que no contemplan la posibilidad de
 ser usados por gente ajena al \textit{machine learning}.
 
