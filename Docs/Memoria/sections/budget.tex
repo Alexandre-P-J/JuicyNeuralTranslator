@@ -67,13 +67,13 @@ tiempo requerido de cada rol y su coste hora visto en la tabla \ref{costtable}.
         \hline
         \hyperref[T12]{T12} & Implementar el pipeline de \textit{fine-tunning} & 0h & 10h & 0h & 0h & 10h & 254,80\euro\\
         \hline
-        \hyperref[T13]{T13} & \textit{Fine-tunning} de un modelo & 0h & 100h & 0h & 0h & 100h & 1.960,00\euro\\
+        \hyperref[T13]{T13} & \textit{Fine-tunning} de un modelo & 0h & 100h & 0h & 0h & 100h & 2.548,00\euro\\
         \hline
         \hyperref[T14]{T14} & Implementar el pipeline de \textit{transfer learning} & 0h & 10h & 0h & 0h & 10h & 254,80\euro\\
         \hline
-        \hyperref[T15]{T15} & \textit{Transfer learning} a un modelo & 0h & 100h & 0h & 0h & 100h & 1.960,00\euro\\
+        \hyperref[T15]{T15} & \textit{Transfer learning} a un modelo & 0h & 100h & 0h & 0h & 100h & 2.548,00\euro\\
         \hline
-        \hyperref[T16]{T16} & Entrenar un modelo más eficiente de transformer & 0h & 120h & 0h & 0h & 120h & 2.352,00\euro\\
+        \hyperref[T16]{T16} & Entrenar un modelo más eficiente de transformer & 0h & 120h & 0h & 0h & 120h & 3.057,00\euro\\
         \hline
         \hyperref[T17]{T17} & Implementar una web con placeholders & 0h & 0h & 4h & 1h & 5h & 98,90\euro\\
         \hline
@@ -108,11 +108,11 @@ total en horas de cada rol por su coste hora.
          Posición & Tiempo & Coste \\
          \hline
          Jefe de proyecto & 52h & 1.708,72\euro \\
-         Científico de datos & 441h & 8.643,60\euro \\
-         Programador & 72h & 1.166,40\euro \\
-         Tester & 15h & 169,50\euro \\
+         Científico de datos & 441h & 11.236,68\euro \\
+         Programador & 72h & 1.515,60\euro \\
+         Tester & 15h & 220,50\euro \\
          \hline
-         Total & 580h & 11.688,22\euro
+         Total & 580h & 14.681,50\euro
         \end{tabular}
         \caption{Costes de personal del trabajo. [Elaboración propia]}\label{rolcosttable}
     \end{center}
@@ -252,20 +252,20 @@ realizar el proyecto sin necesidad de ajustes en la planificación.
         \begin{tabular}{ l r }
          Concepto & Importe \\
          \hline
-         Costes de personal (CPA) & 11.688,22\euro \\
+         Costes de personal (CPA) & 14.681,50\euro \\
          Costes genéricos (CG) & 703,03\euro \\
-         \textbf{CPA+CG} & 12.391,25\euro \\
-         Contingencia del 10\% & 1.239,13\euro \\
-         \textbf{CPA+CG+Contingencia} & 13.630,38\euro \\
+         \textbf{CPA+CG} & 15.384,53\euro \\
+         Contingencia del 10\% & 1.538,46\euro \\
+         \textbf{CPA+CG+Contingencia} & 16.922,99\euro \\
          Costes asociados al riesgo & 960,00\euro \\ 
          \hline \hline
-         \textbf{Total} & 14.590,38\euro
+         \textbf{Total} & 17.882,99\euro
         \end{tabular}
         \caption{Coste total del trabajo. [Elaboración propia]}\label{totalcosttable}
     \end{center}
 \end{table}
 
-\subsection{Control de gestión}
+\subsection{Control de gestión}\label{controlgestioneco}
 Existe la posibilidad de que los cálculos de la gestión económica no sean certeros.
 Se han realizado estimaciones a la alza, definido un margen de contingencia y aproximado el coste de los riesgos,
 pero es necesario un modelo para medir las desviaciones entre los costes estimados y el real.
@@ -279,10 +279,43 @@ Para medir las desviaciones se va a calcular la diferencia entre la estimación
 del coste y el coste real para cada uno de los costes.
 \begin{figure}[H]
     \begin{align*}
-        \textit{Desviación}_{Coste} = \textit{Coste estimado} - \textit{Coste real}
+        \textit{Desviación}_{\textit{Coste}} = \textit{Coste estimado} - \textit{Coste real}
     \end{align*}
     \caption{Desviación de la estimación de los costes económicos.  [Elaboración propia]}
 \end{figure}
 
 
 \subsection{Desviaciones del presupuesto inicial}
+\subsubsection{Desglose de desviaciones}
+\paragraph{Desviación del coste de personal:}
+En la sección \ref{desviaplan} se argumenta la decisión de descartar la tarea \hyperref[T16]{T16} y la necesidad de ajustar el tiempo dedicado a la tarea \hyperref[T22]{T22}.
+Ambas tareas incurren en costes de personal, concretamente la primera supone un decremento de 3.057,00\euro\ debido a su eliminación. Para la segunda se estima un incremento en el desempeño del programador del 50\%, correspondientes a 6h valoradas en 126,30\euro.
+Se calcula una desviación de 2.930,70\euro.
+\paragraph{Desviación de los costes genéricos:}
+La estimación de los costes genéricos ha resultado certera, sin embargo el coste del transporte, valorado en 40,32\euro, debe descartarse ya que todas las reuniones con el director se han realizado telemáticamente.
+\paragraph{Desviación del coste de contingencia:}
+El 10\% sobre el total del coste de personal (CPA) y genéricos (CG), ha resultado ser innecesario ya que los costes reales són inferiores a la estimación a la alza. La desviación del coste de contingencia es de 1.538,46\euro.
+\paragraph{Desviación del coste asociado al riesgo:}
+Durante la elaboración del presupuesto se estimó un coste de 960,00\euro\ reservado para la contratación de maquinaria remota en el entrenamiento de los modelos de traducción. Afortunadamente el proyecto no ha necesitado procesamiento remoto y no se ha usado este fondo.
+
+\subsubsection{Desviación total}
+La desviación presupuestaria se calcula como la diferencia entre la estimación y el coste real tal como se definió en el apartado \ref{controlgestioneco}.
+\begin{table}[H]
+    \begin{center}
+        \begin{tabular}{ l r r r}
+         Concepto & Estimación & Real & Desviación \\
+         \hline
+         Costes de personal (CPA) & 14.681,50\euro & 11.750,80\euro & 2.930,70\euro \\
+         Costes genéricos (CG) & 703,03\euro & 662,71\euro & 40,32\euro \\
+         \textbf{CPA+CG} & 15.384,53\euro & 12.413,51\euro & 2.971,02\euro \\
+         Contingencia del 10\% & 1.538,46\euro & 0,00\euro & 1.538,46\euro \\
+         \textbf{CPA+CG+Contingencia} & 16.922,99\euro & 12.413,51\euro & 4.509,48\euro \\
+         Costes asociados al riesgo & 960,00\euro & 0,00\euro & 960,00\euro \\ 
+         \hline \hline
+         \textbf{Total} & 17.882,99\euro & 12.413,51\euro & 5.469,48\euro
+        \end{tabular}
+        \caption{Desviación total del presupuesto. [Elaboración propia]}\label{totaldesvictable}
+    \end{center}
+\end{table}
+
+En el cuadro \ref{totaldesvictable} se aprecia una desviación positiva del coste de elaboración del trabajo debido a la decisión de estimar los costes al alza además de reservar fondos de contingencia y asociados al riesgo. Se ha comprobado que los costes reales són inferiores a la estimación a la alza tal como se planteó.

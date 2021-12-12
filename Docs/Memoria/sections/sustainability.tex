@@ -94,6 +94,43 @@ e individuos con un gran volumen de contenido que necesita ser traducido automá
 
 
 \subsection{Identificación de leyes y regulaciones}
+El trabajo tiene un componente práctico que consiste en la implementación de una herramienta de traducción web.
+Existen diversas regulaciones que se deberian tener en cuenta si el proyecto se expone al público, a continuación se enumeran:
+\paragraph{Tratamiento y protección de datos:}
+En España los datos personales estan regulados por la agencia de protección de datos. En el caso del traductor web existen vias por las que datos de carácter personal podrían ser tratados o almacenados en el sistema. Los fragmentos de texto podrían contener información personal, en el caso de los ficheros de texto, docx y pdf es todavía más evidente, ya que no sería raro que un documento contuviera datos como: el DNI, fotos, datos bancarios u otros.
+
+Además, aunque los fragmentos de texto no se almacenen, los ficheros y las correcciones ofrecidas por los usuarios podrían ser persistentes y se deberá dar de alta un archivo en plataforma de la agencia de protección de datos, también se deberá informar al usuario interesado sobre el uso de sus datos y pedir su consentimiento.
+
+\paragraph{\textit{Cookies} y seguimiento:}
+Actualmente es común introducir \textit{cookies} y otras herramientas de seguimiento para fines publicitarios o para la analítica web. Un ejemplo es \textit{Google analytics}. El proyecto no incorpora ningun tipo de herramienta de seguimiento o \textit{cookie}, pero si se optara por ello, sería necesario informar al usuario y pedir su consentimiento.
+
+\paragraph{No responsabilidad:}
+Especialmente en la traducción de documentos pero también en la traducción de fragmentos de texto, se deberá informar al usuario que el traductor web se desentiende de cualquier responsabilidad derivada de la traducción de un texto o documento. En el caso de la traducción de textos legales o de importancia, existe la figura de traductor jurado, cuyo papel es el de traducir estos documentos. No se debería usar un traductor automático en estos casos.
+
+\paragraph{Licencias:}
+En cualquier proyecto de software es común el uso de librerías y otras herramientas sujetas a una licencia. Se deberán considerar las siguientes licencias procedentes mayoritariamente de librerías de python:
+\begin{itemize}
+    \item Apache 2.0 \cite{Apache2license}: transformers, datasets, sentencepiece, sacrebleu
+    \item BSD 3-Clause \cite{BSD3Clause}: hiredis, redis, celery, PyPDF2, reportlab, torch, flask
+    \item MIT \cite{MITLicense}: ftfy, pdfminer.six, python-docx, spacy, gunicorn, sqlalchemy
+    \item PostgreSQL License \cite{Postgreslicense}: postgresql
+\end{itemize}
+Se ha usado software libre y licencias poco restrictivas, en general no debería haber ningún problema de distribución o comercialización siempre que se incluya una licencia mencionando estas dependencias.
 
 \subsection{Integración de conocimientos y disciplinas}
- 
+El proyecto trabaja diversas competencias técnicas e integra distintas disciplinas trabajadas a lo largo del grado en ingeniería informática. Las competencias se enumeran a continuación:
+
+\paragraph{CCO1.3:}\textit{Definir, evaluar y seleccionar plataformas de desarrollo y producción hardware y software para el desarrollo de aplicaciones y servicios informáticos de diversa complejidad.}% Bastante
+\paragraph{CCO2.1:}\textit{Demostrar conocimiento de los fundamentos, de los paradigmas y de las técnicas propias de los sistemas inteligentes, y analizar, diseñar y construir sistemas, servicios y aplicaciones informáticas que usen estas técnicas en cualquier ámbito de aplicación.}%Bastante
+\paragraph{CCO2.4:}\textit{Demostrar conocimiento y desarrollar técnicas de aprendizaje computacional; diseñar e implementar aplicaciones y sistemas que las usen, incluyendo las que se dedican a la extracción automática de información y conocimiento a partir de grandes volúmenes de datos.}%En profundidad
+\paragraph{CCO2.6:}\textit{Diseñar e implementar aplicaciones gráficas, de realidad virtual, de realidad aumentad y videojuegos.}%Un poco
+\\
+
+Para afrontar las competencias técnicas mencionadas ha sido indispensable el conocimiento adquirido en diversas asignaturas durante el grado, además se ha integrado y profundizado el conocimiento de las distintas disciplinas para generar soluciones propias a los distintos retos que supone el trabajo.
+
+No hubiera sido posible afrontar los conceptos tratados sin un firme entendimiento de los fundamentos matemáticos del álgebra y cálculo estudiados en \textbf{Matematicas 1 y 2}, además de los fundamentos adquiridos en la asignatura de \textbf{Probabilidad y estadística}.
+La asignatura de \textbf{Inteligencia artificial} ha ampliado la perspectiva de los paradigmas del area y \textbf{Aprendizaje automático} ha introducido los distintos métodos y consideraciones que deben aplicarse al tratar con \textit{datasets}. También se han aprendido distintas técnicas de visualización de datos y los modelos clásicos de \textit{machine learning} y su funcionamiento.
+La asignatura de \textbf{Búsqueda y análisis de información masiva} fue la primera introducción al procesamiento del lenguaje natural y las distintas técnicas de tratamiento y segmentación de texto.
+
+Otras disciplinas como la \textbf{Administración de sistemas operativos} ampliaron mis conocimientos de gestión de software y la creación y mantenimiento de sistemas de producción para aplicaciones informáticas. \textbf{Software libre y desarrollo social} complementó los conocimientos de sistemas y la importancia del software libre y la sostenibilidad.
+Los conocimientos sobre arquitectura web se obtuvieron con la asignatura de \textbf{Aplicaciones distribuidas} y la optimización e importancia del paralelismo, en aplicaciones distribuidas o de alto rendimiento, se aprendió con la asignatura de \textbf{Paralelismo}. Por último, el diseño de interfaces y las distintas directivas para la interacción con sistemas informáticos se estudiaron en la asignatura de \textbf{Interacción y diseño de interfaces}.
