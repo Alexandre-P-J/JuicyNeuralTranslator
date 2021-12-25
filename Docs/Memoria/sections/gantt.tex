@@ -8,7 +8,7 @@
 \newgeometry{a4paper,left=1in,right=1in,top=1in,bottom=1in,nohead}
 \begin{landscape}
   \begin{figure}
-  \section{Diagrama de Gantt}\label{gantt}
+  \section{Diagrama Gantt de la planificación inicial}\label{gantt}
   \definecolor{barblue}{RGB}{153,204,254}
   \definecolor{groupblue}{RGB}{51,102,254}
   \definecolor{linkred}{RGB}{165,0,33}
@@ -109,10 +109,179 @@
 \section{Desviaciones de la planificación inicial}\label{desviaplan}
 Tal como se menciona en el apartado \ref{desvmethod} la metodología empleada ha facilitado la realización y el seguimiento de las tareas, por otra parte, la planificación y el diagrama de Gantt han sido imprescindibles para la gestión del desempeño a lo largo del transcurso del trabajo.
 
-Hasta la fecha, no ha habido ninguna desviación en la planificación, sin embargo se prevé descartar la tarea \hyperref[T16]{T16} asociada al objetivo de carácter opcional que consiste en desarrollar un modelo más eficiente de transformer mediante \textit{model distillation}. Este cambio se contemplaba desde antes de formalizar la planificación y por ello se definieron las tareas \hyperref[T10]{T10} y \hyperref[T11]{T11} dedicadas a investigar la técnica en cuestión y evaluar si era posible realizar la tarea.
-La conclusión que se ha obtenido es que la arquitectura \textit{MarianMT} sobre la que se parte ya es óptima. Además, las arquitecturas candidatas para \textit{model distillation} destacan con tareas que requieren un mayor número de tokens, como por ejemplo, el resumen de textos, tal como se explica en el apartado \ref{transfvariants}. Por último, debido a que quedan cuatro semanas para la compleción de la memoria y queda mucho trabajo de redacción, tampoco es realista afrontar este experimento y se considera más apropiado dedicar el tiempo necesario a preparar la memoria y la presentación del proyecto.
+No ha habido ninguna desviación en la planificación hasta el hito de seguimiento. Posteriormente, se decidió descartar la tarea \hyperref[T16]{T16} asociada al objetivo de carácter opcional que consiste en desarrollar un modelo más eficiente de transformer mediante \textit{model distillation}. Este cambio se contemplaba desde antes de formalizar la planificación y por ello se definieron las tareas \hyperref[T10]{T10} y \hyperref[T11]{T11} dedicadas a investigar la técnica en cuestión y evaluar si era posible realizar la tarea.
+La conclusión que se obtuvo es que la arquitectura \textit{MarianMT} sobre la que se parte ya es óptima. Además, las arquitecturas candidatas para \textit{model distillation} destacan con tareas que requieren un mayor número de tokens, como por ejemplo, el resumen de textos, tal como se explica en el apartado \ref{transfvariants}. No es realista afrontar este último experimento y se considera más apropiado dedicar el tiempo necesario a preparar la memoria y la presentación del proyecto.
 
-De todos los riesgos enumerados en el apartado \ref{riskmanagement} solo el obstaculo asociado a problemas de programación y librerias ha aflorado.
-Concretamente el soporte para la traducción de documentos PDF \hyperref[T22]{T22} consumió más tiempo del esperado, pero no se han visto afectados los plazos definidos en la planificación inicial. Otras tareas como el entrenamiento de modelos de traducción han requerido menos dedicación ya que una vez investigadas las técnicas \hyperref[T07]{T07} e implementado el \textit{pipeline} \hyperref[T12]{T12} \hyperref[T14]{T14}, los períodos de entrenamiento eran suficientemente largos como para avanzar otras tareas al mismo tiempo.
+El soporte para la traducción de documentos PDF \hyperref[T22]{T22} consumió más tiempo del esperado, otras tareas como el entrenamiento de modelos de traducción han requerido menos atención directa ya que una vez investigadas las técnicas \hyperref[T07]{T07} e implementado el \textit{pipeline} \hyperref[T12]{T12} \hyperref[T14]{T14}, los períodos de entrenamiento eran suficientemente largos como para avanzar otras tareas al mismo tiempo. Aun así, las tareas de entrenamiento y de investigación \hyperref[T06]{T06}, \hyperref[T08]{T08}, \hyperref[T09]{T09} así como la redacción de la memoria \hyperref[T24]{T24} han requerido más horas de las calculadas en la planificación inicial. En ningún caso el incremento de dedicación en las tareas anteriores ha requerido una modificación de la planificación.
 
-La planificación esta completa hasta la semana del 13/12 y aplicando la desviación mencionada anteriormente se concluye que el proyecto ha llegado a su fin. La próxima etapa transcurrirá en las 4 semanas restantes y consistirá en la redacción de la memoria \hyperref[T24]{T24}, su revisión \hyperref[T05]{T05} y la preparación de la defensa \hyperref[T25]{T25}. El futuro de las reuniones con el director \hyperref[T04]{T04} se comentará en la sesión del 15/12 dedicada a la presentación del hito de seguimiento.
+Se ha actualizado la estimación temporal en el apartado \ref{estimaciontemporalfin} con los ajustes mencionadas anteriormente, además de la planificación final en el apartado \ref{ganttfinal}, cuya única actualización es la eliminación de la tarea \hyperref[T16]{T16}.
+
+
+
+\newgeometry{a4paper,left=1in,right=1in,top=1in,bottom=1in,nohead}
+\begin{landscape}
+    \begin{table}
+    \section{Estimación del tiempo y dependencias final}\label{estimaciontemporalfin}
+    \centering
+    \begin{tabular}{ | c | l | c | c | c | }
+        \hline
+        Id. & Tarea & Tiempo & Dependencias & Recursos \\
+        \hline
+        \hyperref[T01]{T01} & Contextualizar y definir el alcance & 15h & - & \hyperref[R01]{R01}, \hyperref[R06]{R06}, \hyperref[R08]{R08} \\
+        \hline
+        \hyperref[T02]{T02} & Planificar el trabajo & 5h & - & \hyperref[R01]{R01}, \hyperref[R06]{R06}, \hyperref[R08]{R08} \\
+        \hline
+        \hyperref[T03]{T03} & Estimar el presupuesto y analizar la sostenibilidad & 10h & - & \hyperref[R01]{R01}, \hyperref[R06]{R06}, \hyperref[R08]{R08} \\
+        \hline
+        \hyperref[T04]{T04} & Reuniones con el director & 5h & - & \hyperref[R02]{R02}, \hyperref[R06]{R06}, \hyperref[R08]{R08}, \hyperref[R09]{R09} \\
+        \hline
+        \hyperref[T05]{T05} & Revisión y edición del documento final & 5h & - & \hyperref[R01]{R01}, \hyperref[R06]{R06}, \hyperref[R08]{R08} \\
+        \hline
+        \hyperref[T06]{T06} & Investigar la arquitectura transformer & \textbf{30h} & - & \hyperref[R06]{R06}, \hyperref[R08]{R08} \\
+        \hline
+        \hyperref[T07]{T07} & Investigar \textit{fine-tuning} y \textit{transfer learning} & 10h & - & \hyperref[R06]{R06}, \hyperref[R08]{R08} \\
+        \hline
+        \hyperref[T08]{T08} & Aprender sobre el tratamiento de datos en NLP & \textbf{20h} & - & \hyperref[R06]{R06}, \hyperref[R08]{R08} \\
+        \hline
+        \hyperref[T09]{T09} & Estudiar y seleccionar las métricas para la valoración de
+        modelos & \textbf{10h} & \hyperref[T06]{T06} & \hyperref[R06]{R06}, \hyperref[R08]{R08} \\
+        \hline
+        \hyperref[T10]{T10} & Investigar arquitecturas más eficientes de transformer & 10h & \hyperref[T06]{T06}, \hyperref[T09]{T09} & \hyperref[R06]{R06}, \hyperref[R08]{R08} \\
+        \hline
+        \hyperref[T11]{T11} & Investigar la técnica \textit{model distillation} & 5h & - & \hyperref[R06]{R06}, \hyperref[R08]{R08} \\
+        \hline
+        \hyperref[T12]{T12} & Implementar el pipeline de \textit{fine-tunning} & 10h & \hyperref[T06]{T06}, \hyperref[T07]{T07} & \hyperref[R03]{R03}, \hyperref[R04]{R04}, \hyperref[R05]{R05}, \hyperref[R06]{R06}, \hyperref[R08]{R08} \\
+        \hline
+        \hyperref[T13]{T13} & \textit{Fine-tunning} de un modelo & \textbf{115h} & \hyperref[T06]{T06}, \hyperref[T07]{T07}, \hyperref[T12]{T12} & \hyperref[R03]{R03}, \hyperref[R04]{R04}, \hyperref[R05]{R05}, \hyperref[R06]{R06}, \hyperref[R07]{R07}, \hyperref[R08]{R08} \\
+        \hline
+        \hyperref[T14]{T14} & Implementar el pipeline de \textit{transfer learning} & 10h & \hyperref[T06]{T06}, \hyperref[T07]{T07} & \hyperref[R03]{R03}, \hyperref[R04]{R04}, \hyperref[R05]{R05}, \hyperref[R06]{R06}, \hyperref[R08]{R08} \\
+        \hline
+        \hyperref[T15]{T15} & \textit{Transfer learning} a un modelo & \textbf{115h} & \hyperref[T06]{T06}, \hyperref[T07]{T07}, \hyperref[T14]{T14} & \hyperref[R03]{R03}, \hyperref[R04]{R04}, \hyperref[R05]{R05}, \hyperref[R06]{R06}, \hyperref[R07]{R07}, \hyperref[R08]{R08} \\
+        \hline
+        \hyperref[T16]{T16} & Entrenar un modelo más eficiente de transformer & \textbf{0h} & \textbf{-} & \textbf{-} \\
+        \hline
+        \hyperref[T17]{T17} & Implementar una web con placeholders & 5h & - & \hyperref[R03]{R03}, \hyperref[R04]{R04}, \hyperref[R05]{R05}, \hyperref[R06]{R06}, \hyperref[R08]{R08} \\
+        \hline
+        \hyperref[T18]{T18} & Implementar la traducción de fragmentos de texto & 10h & \hyperref[T17]{T17} & \hyperref[R03]{R03}, \hyperref[R04]{R04}, \hyperref[R05]{R05}, \hyperref[R06]{R06}, \hyperref[R08]{R08} \\
+        \hline
+        \hyperref[T19]{T19} & Implementar un mecanismo de corrección & 15h & \hyperref[T17]{T17}, \hyperref[T18]{T18} & \hyperref[R03]{R03}, \hyperref[R04]{R04}, \hyperref[R05]{R05}, \hyperref[R06]{R06}, \hyperref[R08]{R08} \\
+        \hline
+        \hyperref[T20]{T20} & Implementar traducción de archivos de texto plano & 10h & \hyperref[T17]{T17} & \hyperref[R03]{R03}, \hyperref[R04]{R04}, \hyperref[R05]{R05}, \hyperref[R06]{R06}, \hyperref[R08]{R08} \\
+        \hline
+        \hyperref[T21]{T21} & Implementar traducción de archivos de texto enriquecido & 15h & \hyperref[T17]{T17} & \hyperref[R03]{R03}, \hyperref[R04]{R04}, \hyperref[R05]{R05}, \hyperref[R06]{R06}, \hyperref[R08]{R08} \\
+        \hline
+        \hyperref[T22]{T22} & Implementar soporte parcial de traducción de archivos pdf & \textbf{21h} & \hyperref[T17]{T17} & \hyperref[R03]{R03}, \hyperref[R04]{R04}, \hyperref[R05]{R05}, \hyperref[R06]{R06}, \hyperref[R08]{R08} \\
+        \hline
+        \hyperref[T23]{T23} & Pulir el proyecto para su uso empresarial \textit{in-house} & 5h & \hyperref[T18]{T18}, \hyperref[T19]{T19}, \hyperref[T20]{T21}, \hyperref[T22]{T22} & \hyperref[R01]{R01}, \hyperref[R03]{R03}, \hyperref[R04]{R04}, \hyperref[R05]{R05}, \hyperref[R06]{R06}, \hyperref[R08]{R08} \\
+        \hline
+        \hyperref[T24]{T24} & Redactar la memoria del trabajo & \textbf{75h} & - & \hyperref[R01]{R01}, \hyperref[R06]{R06}, \hyperref[R08]{R08} \\
+        \hline
+        \hyperref[T25]{T25} & Preparar la defensa del trabajo & 10h & - & \hyperref[R01]{R01}, \hyperref[R06]{R06}, \hyperref[R08]{R08} \\
+        \hline
+    \end{tabular}
+    \caption{Estimación final del tiempo, dependencias y recursos por tarea. [Elaboración propia]}
+    \end{table}
+\end{landscape}
+\restoregeometry\clearpage
+
+
+
+\newgeometry{a4paper,left=1in,right=1in,top=1in,bottom=1in,nohead}
+\begin{landscape}
+  \begin{figure}
+  \section{Diagrama Gantt de la planificación final}\label{ganttfinal}
+  \definecolor{barblue}{RGB}{153,204,254}
+  \definecolor{groupblue}{RGB}{51,102,254}
+  \definecolor{linkred}{RGB}{165,0,33}
+  \renewcommand\sfdefault{phv}
+  \renewcommand\mddefault{mc}
+  \renewcommand\bfdefault{bc}
+  \setganttlinklabel{s-s}{START-TO-START}
+  \setganttlinklabel{f-s}{FINISH-TO-START}
+  \setganttlinklabel{f-f}{FINISH-TO-FINISH}
+  \sffamily
+  \begin{ganttchart}[
+      y unit chart=0.45cm,
+      canvas/.append style={fill=none, draw=black!5, line width=.75pt},
+      hgrid style/.style={draw=black!5, line width=.75pt},
+      vgrid={*1{draw=black!5, line width=.75pt}},
+      today label font=\small\bfseries,
+      title/.style={draw=none, fill=none},
+      title label font=\bfseries\footnotesize,
+      title label node/.append style={below=7pt},
+      include title in canvas=false,
+      bar label font=\mdseries\small\color{black!70},
+      bar label node/.append style={left=2cm},
+      bar/.append style={draw=none, fill=black!63},
+      bar incomplete/.append style={fill=barblue},
+      bar progress label font=\mdseries\footnotesize\color{black!70},
+      bar height=.5,
+      group incomplete/.append style={fill=groupblue},
+      group left shift=0,
+      group right shift=0,
+      group height=.4,
+      group peaks tip position=0,
+      group label node/.append style={left=.6cm},
+      group progress label font=\bfseries\small,
+      link/.style={-latex, line width=1.5pt, linkred},
+      link label font=\scriptsize\bfseries,
+      link label node/.append style={below left=-2pt and 0pt}
+      y unit chart
+    ]{1}{38}
+    \gantttitle[
+      title label node/.append style={below left=7pt and 15pt}
+    ]{Semana:}{0}
+    \gantttitle{13/09}{2}
+    \gantttitle{20/09}{2}
+    \gantttitle{27/09}{2}
+    \gantttitle{04/10}{2}
+    \gantttitle{11/10}{2}
+    \gantttitle{18/10}{2}
+    \gantttitle{25/10}{2}
+    \gantttitle{01/11}{2}
+    \gantttitle{08/11}{2}
+    \gantttitle{15/11}{2}
+    \gantttitle{22/11}{2}
+    \gantttitle{29/11}{2}
+    \gantttitle{06/12}{2}
+    \gantttitle{13/12}{2}
+    \gantttitle{20/12}{2}
+    \gantttitle{27/12}{2}
+    \gantttitle{03/01}{2}
+    \gantttitle{10/01}{2}
+    \gantttitle{17/01}{2} \\
+    \ganttgroup{Planificación y seguimiento}{1}{36} \\
+    \ganttbar{\hyperref[T01]{T01}}{1}{4} \\
+    \ganttbar{\hyperref[T02]{T02}}{5}{6} \\
+    \ganttbar{\hyperref[T03]{T03}}{7}{8} \\
+    \ganttbar{\hyperref[T04]{T04}}{1}{36} \\
+    \ganttgroup{Investigación}{1}{26} \\
+    \ganttbar{\hyperref[T06]{T06}}{5}{10} \\
+    \ganttbar{\hyperref[T07]{T07}}{5}{10} \\
+    \ganttbar{\hyperref[T08]{T08}}{5}{7} \\
+    \ganttbar{\hyperref[T09]{T09}}{8}{10} \\
+    \ganttbar{\hyperref[T11]{T11}}{11}{13} \\
+    \ganttbar{\hyperref[T10]{T10}}{14}{26} \\
+    \ganttgroup{Desarollo de modelos}{11}{26} \\
+    \ganttbar{\hyperref[T12]{T12}}{11}{12} \\
+    \ganttbar{\hyperref[T13]{T13}}{11}{18} \\
+    \ganttbar{\hyperref[T14]{T14}}{19}{20} \\
+    \ganttbar{\hyperref[T15]{T15}}{19}{26} \\
+    %\ganttbar{\hyperref[T16]{T16}}{27}{34} \\
+    \ganttgroup{Interfaz web}{11}{22} \\
+    \ganttbar{\hyperref[T17]{T17}}{11}{14} \\
+    \ganttbar{\hyperref[T18]{T18}}{11}{14} \\
+    \ganttbar{\hyperref[T19]{T19}}{13}{16} \\
+    \ganttbar{\hyperref[T20]{T20}}{15}{18} \\
+    \ganttbar{\hyperref[T21]{T21}}{17}{20} \\
+    \ganttbar{\hyperref[T22]{T22}}{17}{22} \\
+    \ganttgroup{Documentación y defensa}{1}{38} \\
+    \ganttbar{\hyperref[T23]{T23}}{23}{26} \\
+    \ganttbar{\hyperref[T24]{T24}}{1}{34} \\
+    \ganttbar{\hyperref[T05]{T05}}{35}{36} \\
+    \ganttbar{\hyperref[T25]{T25}}{35}{38} \\
+  \end{ganttchart}
+  \caption{Diagrama de Gantt de la planificación final. [Elaboración propia]}
+  \end{figure}
+\end{landscape}
+\restoregeometry

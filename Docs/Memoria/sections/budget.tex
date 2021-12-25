@@ -121,10 +121,10 @@ total en horas de cada rol por su coste hora.
 
 \subsection{Costes genéricos}\label{costesgenericos}
 \subsubsection{Internet} El coste de internet es de 90\euro\ mensuales y se utilizará durante los 5 meses de
-duración del trabajo con un desempeño diario medio de 4,57 horas diarias.
+duración del trabajo con un desempeño de 580 horas en 127 dias.
 \begin{figure}[ht]
     \begin{align*}
-        Coste_{Internet} = 5 \cdot 90 \cdot \frac{4.57}{24} = 85.69\text{\euro}
+        Coste_{Internet} = 5 \cdot 90 \cdot \frac{580}{127 \cdot 24} = 85.69\text{\euro}
     \end{align*}
     \caption{Estimación del coste de internet.  [Elaboración propia]}
 \end{figure}
@@ -285,14 +285,83 @@ del coste y el coste real para cada uno de los costes.
 \end{figure}
 
 
-\section{Desviaciones del presupuesto inicial}
-\subsection{Desglose de desviaciones}
-\subsubsection{Desviación del coste de personal}
-En la sección \ref{desviaplan} se argumenta la decisión de descartar la tarea \hyperref[T16]{T16} y la necesidad de ajustar el tiempo dedicado a la tarea \hyperref[T22]{T22}.
-Ambas tareas incurren en costes de personal, concretamente la primera supone un decremento de 3.057,00\euro\ debido a su eliminación. Para la segunda se estima un incremento en el desempeño del programador del 50\%, correspondientes a 6h valoradas en 126,30\euro.
-Se calcula una desviación de 2.930,70\euro.
+
+\newgeometry{a4paper,left=1in,right=1in,top=1in,bottom=1in,nohead}
+\begin{landscape}
+    \begin{table}
+        \section{Desviaciones del presupuesto inicial}
+        \subsection{Desglose de desviaciones}
+        \subsubsection{Desviación del coste de personal}
+    \centering
+    \begin{tabular}{  l  l  r  r  r  r  r  r  }
+        Id. & Tarea & J. de proyecto & C. de datos & Programador & Tester & \textbf{Total} & \textbf{Coste} \\
+        \hline
+        \hyperref[T01]{T01} & Contextualizar y definir el alcance & 15h & 0h & 0h & 0h & 15h & 492,90\euro\\
+        \hline
+        \hyperref[T02]{T02} & Planificar el trabajo & 5h & 0h & 0h & 0h & 5h & 164,30\euro\\
+        \hline
+        \hyperref[T03]{T03} & Estimar el presupuesto y analizar la sostenibilidad & 10h & 0h & 0h & 0h & 10h & 328,60\euro\\
+        \hline
+        \hyperref[T04]{T04} & Reuniones con el director & 5h & 0h & 0h & 0h & 5h & 164,30\euro\\
+        \hline
+        \hyperref[T05]{T05} & Revisión y edición del documento final & 2h & 1h & 1h & 1h & 5h & 126,95\euro\\
+        \hline
+        \hyperref[T06]{T06} & Investigar la arquitectura transformer & 0h & \textbf{30h} & 0h & 0h & \textbf{30h} & \textbf{764,40\euro}\\
+        \hline
+        \hyperref[T07]{T07} & Investigar \textit{fine-tuning} y \textit{transfer learning} & 0h & 10h & 0h & 0h & 10h & 254,80\euro\\
+        \hline
+        \hyperref[T08]{T08} & Aprender sobre el tratamiento de datos en NLP & 0h & \textbf{20h} & 0h & 0h & \textbf{20h} & \textbf{509,60\euro}\\
+        \hline
+        \hyperref[T09]{T09} & Estudiar y seleccionar las métricas de valoración & 0h & \textbf{10h} & 0h & 0h & \textbf{10h} & \textbf{254,80\euro}\\
+        \hline
+        \hyperref[T10]{T10} & Investigar arquitecturas más eficientes de transformer & 0h & 10h & 0h & 0h & 10h & 254,80\euro\\
+        \hline
+        \hyperref[T11]{T11} & Investigar la técnica \textit{model distillation} & 0h & 5h & 0h & 0h & 5h & 127,40\euro\\
+        \hline
+        \hyperref[T12]{T12} & Implementar el pipeline de \textit{fine-tunning} & 0h & 10h & 0h & 0h & 10h & 254,80\euro\\
+        \hline
+        \hyperref[T13]{T13} & \textit{Fine-tunning} de un modelo & 0h & \textbf{115h} & 0h & 0h & \textbf{115h} & \textbf{2.930,20\euro}\\
+        \hline
+        \hyperref[T14]{T14} & Implementar el pipeline de \textit{transfer learning} & 0h & 10h & 0h & 0h & 10h & 254,80\euro\\
+        \hline
+        \hyperref[T15]{T15} & \textit{Transfer learning} a un modelo & 0h & \textbf{115h} & 0h & 0h & \textbf{115h} & \textbf{2.930,20\euro}\\
+        \hline
+        \hyperref[T16]{T16} & Entrenar un modelo más eficiente de transformer & 0h & \textbf{0h} & 0h & 0h & \textbf{0h} & \textbf{0,00\euro}\\
+        \hline
+        \hyperref[T17]{T17} & Implementar una web con placeholders & 0h & 0h & 4h & 1h & 5h & 98,90\euro\\
+        \hline
+        \hyperref[T18]{T18} & Implementar la traducción de fragmentos de texto & 0h & 0h & 8h & 2h & 10h & 197,80\euro\\
+        \hline
+        \hyperref[T19]{T19} & Implementar un mecanismo de corrección & 0h & 5h & 8h & 2h & 15h & 325,20\euro\\
+        \hline
+        \hyperref[T20]{T20} & Implementar traducción de archivos de texto plano & 0h & 0h & 8h & 2h & 10h & 197,80\euro\\
+        \hline
+        \hyperref[T21]{T21} & Implementar traducción de archivos de texto enriquecido & 0h & 0h & 12h & 3h & 15h & 296,70\euro\\
+        \hline
+        \hyperref[T22]{T22} & Implementar soporte parcial de traducción de archivos pdf & 0h & 0h & \textbf{18h} & 3h & \textbf{21h} & \textbf{423,00\euro}\\
+        \hline
+        \hyperref[T23]{T23} & Pulir el proyecto para su uso empresarial \textit{in-house} & 0h & 0h & 4h & 1h & 5h & 98,90\euro\\
+        \hline
+        \hyperref[T24]{T24} & Redactar la memoria del trabajo & 5h & \textbf{50h} & \textbf{20h} & 0h & \textbf{75h} & \textbf{1.859,30\euro}\\
+        \hline
+        \hyperref[T25]{T25} & Preparar la defensa del trabajo & 10h & 0h & 0h & 0h & 10h & 328,60\euro\\
+        \hline
+    \end{tabular}
+    \caption{Desempeño final de los distintos roles y coste por tarea. [Elaboración propia]}\label{taskroledecomposfinal}
+    \end{table}
+\end{landscape}
+\restoregeometry
+
+En la sección \ref{desviaplan} se argumenta la decisión de descartar la tarea \hyperref[T16]{T16} y la necesidad de ajustar el tiempo dedicado de algunas tareas. En la figura \ref{taskroledecomposfinal} se plasman las desviaciones.
+
+Estas desviaciones generan costes de personal, concretamente la eliminación de la tarea \hyperref[T16]{T16} supone un decremento de 3.057,00\euro. El resto de modificaciones suponen un aumento en el desempeño que implica un incremento en el coste.
+Se calcula una desviación total de personal de 1042,45\euro.
 \subsubsection{Desviación de los costes genéricos}
-La estimación de los costes genéricos ha resultado certera, sin embargo el coste del transporte, valorado en 40,32\euro, debe descartarse ya que todas las reuniones con el director se han realizado telemáticamente.
+Los costes de internet y electricidad se calculan según la consumición estimada durante la realización del trabajo, es por ello que
+deben ajustarse al recuento final de horas según la planificación final. Se estima que con una duración de 541 horas, la desviación del coste
+de internet es de 5,82\euro\ y el de electricidad es de 10,77\euro\ usando las fórmulas definidas en el apartado \ref{costesgenericos}.
+El coste del transporte, valorado en 40,32\euro, debe descartarse ya que todas las reuniones con el director se han realizado telemáticamente.
+Se calcula una desviación total de costes genéricos de 56,91\euro.
 \subsubsection{Desviación del coste de contingencia}
 El 10\% sobre el total del coste de personal (CPA) y genéricos (CG), ha resultado ser innecesario ya que los costes reales són inferiores a la estimación a la alza. La desviación del coste de contingencia es de 1.538,46\euro.
 \subsubsection{Desviación del coste asociado al riesgo}
@@ -305,14 +374,14 @@ La desviación presupuestaria se calcula como la diferencia entre la estimación
         \begin{tabular}{ l r r r}
          Concepto & Estimación & Real & Desviación \\
          \hline
-         Costes de personal (CPA) & 14.681,50\euro & 11.750,80\euro & 2.930,70\euro \\
-         Costes genéricos (CG) & 703,03\euro & 662,71\euro & 40,32\euro \\
-         \textbf{CPA+CG} & 15.384,53\euro & 12.413,51\euro & 2.971,02\euro \\
+         Costes de personal (CPA) & 14.681,50\euro & 13.639,05\euro & 1042,45\euro \\
+         Costes genéricos (CG) & 703,03\euro & 646,12\euro & 56,91\euro \\
+         \textbf{CPA+CG} & 15.384,53\euro & 14.285,17\euro & 1.099,36\euro \\
          Contingencia del 10\% & 1.538,46\euro & 0,00\euro & 1.538,46\euro \\
-         \textbf{CPA+CG+Contingencia} & 16.922,99\euro & 12.413,51\euro & 4.509,48\euro \\
+         \textbf{CPA+CG+Contingencia} & 16.922,99\euro & 14.285,17\euro & 2.637,82\euro \\
          Costes asociados al riesgo & 960,00\euro & 0,00\euro & 960,00\euro \\ 
          \hline \hline
-         \textbf{Total} & 17.882,99\euro & 12.413,51\euro & 5.469,48\euro
+         \textbf{Total} & 17.882,99\euro & 14.285,17\euro & 3.597,82\euro
         \end{tabular}
         \caption{Desviación total del presupuesto. [Elaboración propia]}\label{totaldesvictable}
     \end{center}
