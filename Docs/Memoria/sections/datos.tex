@@ -1,8 +1,31 @@
 \chapter{Adquisición y tratamiento de datos}
 \section{Consideraciones sobre la adquisición de datos}
+La adquisición de datos es uno de los pasos más importantes en el desarrollo de un proyecto de \textit{machine learning}, ya que la calidad del \textit{dataset} tiene una influencia directa sobre el rendimiento de los modelos. En el caso de la traducción automática es común usar corpus biling{\"u}es para entrenar modelos a traducir de una de las lenguas a la otra.
+
+Los corpus biling{\"u}es son escasos, la situación empeora con lenguajes de pocos hablantes, más todavía si el par de lenguajes no están relacionados. Por ejemplo, los corpus en catalán son escasos, muy escasos si además el par de lenguajes es catalán-vietnamita ya que existen pocos documentos relacionando ambos lenguajes. Sin embargo, los corpus catalán-inglés o catalán-español son mucho más frecuentes que los anteriores, pero infrecuentes en un contexto general.
+Debido a la escasez de corpus, técnicas como el \textit{transfer learning} permiten reducir el volumen de datos necesarios.
+
+Además de la cantidad de datos, la calidad de estos es también importante. En el contexto de los corpus biling{\"u}es es común encontrar corpus traducidos artificialmente a partir de otros corpus, esto reduce la calidad del \textit{dataset} ya que condiciona el vocabulario y otras características de las oraciones al modelo usado para la traducción. Generalmente es difícil evitar corpus previamente traducidos ya que muchas veces la traducción la aplica la propia fuente de información, un ejemplo són los corpus obtenidos de Wikipedia. Los corpus obtenidos de otros modelos generativos o tratados a priori sufren el mismo problema.
+
+El dominio al que pertenecen los corpus también condicionará la calidad de los modelos. En el trabajo se ha experimentado con varios \textit{datasets} y se han descartado algunos de ellos, por ejemplo los \textit{datasets} obtenidos a partir de la información de localización de los proyectos KDE y Gnome. Ambos proyectos desarrollan interfaces gráficas de código abierto y son populares en sistemas GNU Linux. Además disponen de una gran cantidad de texto localizado en distintos idiomas que puede extraerse para obtener corpus multiling{\"u}es. El problema con estos \textit{datasets} es que el dominio del texto usado en interfaces gráficas es muy específico, el léxico es pobre, la semántica es muy simple y los textos suelen ser oraciones simples de unas pocas palabras como: ``Aceptar'', ``Continuar'', ``Ver más'', etc.
+
+Por último, el origen y el método de obtención de \textit{datasets} plantea problemas éticos y legales, es por ello que para la elaboración del trabajo se ha optado por usar el repositorio abierto OPUS \cite{CORPUS}, que contiene una colección de corpus biling{\"u}es obtenidos éticamente.
+
 \section{Normalización}
+La normalización en el contexto del lenguaje natural consiste en aplicar una serie de operaciones sobre el texto para reducir su variabilidad y así mismo facilitar el entrenamiento de modelos u otras tareas. Algunas operaciones son: la eliminación de espacios en blanco, la conversión a minúsculas, la normalización de caracteres y ligaduras unicode o la eliminación de acentos diacríticos o todos los acentos.
+
+También existen técnicas más avanzadas como el \textit{stemming}, la lematización o la expansión de contracciones. Estas tienen como objetivo sustituir palabras de significado parecido, por una representación canónica. Por ejemplo las palabras \textit{walking} y \textit{walked} podrían sustituirse por \textit{walk} o la contracción \textit{we'll} se podría expandir a \textit{we will}.
+
+El uso de técnicas de normalización depende de la aplicación. En el contexto de la traducción automática neuronal se aplican transformaciones poco agresivas, por ejemplo: la normalización de caracteres unicode y la eliminación de acentos diacríticos.
+Este procedimiento es el que usaron los ganadores de la competición de traducción automática WMT de 2016 en la categoría Inglés-Rumano \cite{Sennrich2016Jun} y fue el estandar durante los siguientes años. La tendencia actual parece dirigirse a limitar el preprocesamiento excepto con modelos de pocos recursos. Un ejemplo es \cite{Liu2020Jan}, que utiliza \textit{Sentencepiece} sobre texto sin ningún tipo de procesamiento previo y obtiene un nuevo estado del arte para la traducción Rumano-Inglés.
+
+Los modelos que se han entrenado en este trabajo no han usado ningún tipo normalización y los resultados obtenidos han sido satisfactorios y soportan acentos diacríticos y otros detalles que hubieran sido eliminados se usara normalización.
+
 \section{Pretokenización}
-\section{Tokenización}
+El pretokenizado es una operación previa y necesaria para muchos de los algoritmos de tokenizado explicados en la sección \ref{tokenization}. Consiste en la segmentación del texto usando un criterio de delimitación de los segmentos, un ejemplo es la separación por espacio en blanco y signos de puntuación.
+El resultado suele ser un conjunto de segmentos compuestos de uno o más simbolos, asociados a la frecuencia de aparición de cada segmento en el texto. 
+
+\section{Tokenización}\label{tokenization}
 \subsection{Tipos de tokenización}
 \subsubsection{Segmentación por palabras}
 \subsubsection{Segmentación por caracteres}
