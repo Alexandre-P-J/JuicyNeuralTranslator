@@ -23,15 +23,93 @@ Los modelos que se han entrenado en este trabajo no han usado ningún tipo norma
 
 \section{Pretokenización}
 El pretokenizado es una operación previa y necesaria para muchos de los algoritmos de tokenizado explicados en la sección \ref{tokenization}. Consiste en la segmentación del texto usando un criterio de delimitación de los segmentos, un ejemplo es la separación por espacio en blanco y signos de puntuación.
-El resultado suele ser un conjunto de segmentos compuestos de uno o más simbolos, asociados a la frecuencia de aparición de cada segmento en el texto. 
+El resultado suele ser un conjunto de segmentos compuestos de uno o más símbolos, asociados a la frecuencia de aparición de cada segmento en el texto. 
 
 \section{Tokenización}\label{tokenization}
+La tokenización consiste en la segmentación de texto en secuencias de símbolos como palabras o subpalabras. Los segmentos son llamados tokens y se les suele asignar un índice numérico mediante una correspondencia definida en un vocabulario. Esto permite la transformación de cadenas de texto a secuencias de índices que pueden usarse en diversas aplicaciones. La operación inversa permite transformar secuencias de indices normalmente obtenidas como resultado de un modelo, a cadenas de texto.
+
+Este trabajo utiliza \textit{Sentencepiece} explicado en el apartado \ref{sentencepiece} pero se ha realizado un resumen de los métodos de tokenización más relevantes.
+
 \subsection{Tipos de tokenización}
 \subsubsection{Segmentación por palabras}
+La tokenización de palabras es posiblemente la más intuitiva y usada en la literatura. Consiste en dividir un texto en palabras individuales basándose en un delimitador, por ejemplo: los distintos símbolos para codificar espaciado en unicode, signos de puntuación y otros caracteres.
+
+Uno de los mayores problemas de este método es que las palabras parecidas, como las conjugaciones de verbos en español, corresponden a tokens distintos. Por ello, los modelos que usan este tokenizado requieren un vocabulario muy grande, generalmente compuesto por las palabras más frecuentes, y suelen definir un token especial para las palabras fuera del vocabulario. Sin embargo, un mayor vocabulario generalmente dificulta el entrenamiento de modelos y el uso de un token especial para las palabras fuera del vocabulario, pierde cualquier información sobre la palabra original.
+
+Existen muchos modelos que utilizan tokenización por palabras, algunos conocidos son Word2Vec y GloVe, dos modelos que transforman tokens a \textit{embeddings} para su uso en otros modelos o para el cálculo de métricas de similitud semántica.
+
 \subsubsection{Segmentación por caracteres}
+La tokenización de caracteres divide el texto en un conjunto de caracteres y soluciona ambos problemas mencionados sobre la tokenización por palabras. Dado que es posible definir un vocabulario con todas combinaciones de un byte en un tamaño razonable, toda secuencia de caracteres se puede componer concatenando varios tokens.
+
+El mayor problema de este método es que al representar textos como secuencias de sus símbolos, se obtienen secuencias muy largas que dificultan y limitan el entrenamiento de modelos. Además, los símbolos, a diferencia de las palabras o subpalabras, no suelen tener un significado por si mismos y el aprendizaje de las relaciones entre símbolos para componer estructuras como palabras y oraciones es complejo.
+
 \subsubsection{Segmentación por subpalabras}
-\subsection{\textit{Byte pair encoding} (BPE)}
+La tokenización en subpalabras divide el texto en subpalabras o n-gramas. Es especialmente interesante porque permite tokenizar palabras como conjugaciones verbales, prefijos y sufijos de forma natural.
+
+Por ejemplo, con los tokens \textit{``watch''}, \textit{``play''}, \textit{``ed''}, \textit{``ing''} sería posible codificar \textit{``watch''}, \textit{``watch''+``ing''}, \textit{``watch''+``ed''}, \textit{``play''+``ed''}, \textit{``play''+``ing''}. Esta representación además de funcionar bien con modelos de aprendizaje automático, reduce el tamaño del vocabulario necesario en comparación con la tokenización por palabras. Algunas implementaciones garantizan la tokenización de cualquier palabra, evitando así la pérdida de información.
+
+\subsection{\textit{Byte pair encoding} (BPE)}\label{BPE}
+\textit{Byte pair encoding} o BPE \cite{Sennrich2015Aug} es un tokenizado de subpalabras que se entrena sobre un corpus para conseguir que las secuencias de símbolos más frecuentes se tokenicen al menor número de tokens. Primero se aplica un pretokenizado por palabras al corpus de entrenamiento y se obtiene la frecuencia de cada token. Posteriormente se crea un vocabulario que contiene todos los símbolos de los tokens obtenidos en el pretokenizado. A continuación, se busca el par de símbolos contiguos más frecuentes teniendo en cuenta la frecuencia de los tokens en los que aparecen, luego se concatenan y añaden al vocabulario. Se repite la búsqueda del par de símbolos más frecuentes hasta que el vocabulario tiene un tamaño determinado a priori por un hiperparámetro.
+
+Lo que se consigue al minimizar el número de tokens necesarios para las secuencias de símbolos más frecuentes, es reducir la longitud de tokenización fijando el tamaño máximo del vocabulario. Hay que destacar que no todos los textos serán tokenizables con BPE y es habitual definir un token especial para las secuencias de símbolos desconocidos.
+
+\subsubsection{\textit{Byte level BPE}}
+El \textit{Byte pair encoding} a nivel de byte es una mejora sobre el algoritmo original que consiste en inicializar el vocabulario base a partir de las $2^{8}$ combinaciones que permite un byte en lugar de los símbolos del corpus de entrenamiento.
+Debido a la gran cantidad de símbolos en unicode, la posibilidad de que no todos aparezcan en el corpus de entrenamiento es muy alta y al mismo tiempo no es viable inicializar el vocabulario con todos los símbolos. Usar las $2^{8}$ combinaciones que permite un byte permite codificar cualquier símbolo con uno o más tokens y por extensión permite tokenizar cualquier texto a diferencia de la implementación tradicional de BPE.
+
 \subsection{\textit{WordPiece}}
+\textit{Wordpiece} \cite{Schuster2012Mar} es otro algoritmo de tokenizado por subpalabras muy similar al tokenizador BPE explicado en la sección \ref{BPE}. Para entrenar el tokenizador, primero se inicializa el vocabulario con todo símbolo presente en el corpus de entrenamiento y progresivamente se concatenan e incorporan al vocabulario según un criterio distinto al de BPE.
+
+En contraste con BPE, \textit{WordPiece} no elige el par de símbolos más frecuentes, en su lugar maximiza la verosimilitud del corpus de entrenamiento tras añadir al vocabulario cada nueva concatenación de dos símbolos. Maximizar la verosimilitud equivale a encontrar el par de símbolos cuya probabilidad dividida por las probabilidades de su primer símbolo seguido de su segundo símbolo sea la mayor entre todos los pares de símbolos tal como se describe en la figura \ref{wordpieceformula}. La probabilidad de un token es su frecuencia en el corpus de entrenamiento dividida por la suma de todas las frecuencias de los tokens del vocabulario.
+\begin{figure}[H]
+\[
+    S(s_{0}, s_{1})=\frac{p(s_{0}s_{1})}{p(s_{0}) \cdot p(s_{1})}
+\]
+\caption{Fórmula de puntuación del tokenizador \textit{WordPiece} [Elaboración propia]}\label{wordpieceformula}
+\end{figure}
+\textit{WordPiece} es diferente a BPE en el sentido de que evalúa lo que pierde al fusionar dos símbolos y añadirlos al vocabulario para asegurarse de que merece la pena.
+
 \subsection{\textit{Unigram}}
-\subsection{\textit{SentencePiece}}
+\textit{Unigram} \cite{Kudo2018Apr} es un tokenizador por subpalabras que contrasta sustancialmente respecto a BPE y \textit{WordPiece}. Primero inicializa el vocabulario con un gran número de símbolos. Por ejemplo, podría contener todos los tokens obtenidos del pretokenizador, secuencias de símbolos frecuentes y caracteres base para poder tokenizar cualquier texto.
+
+Posteriormente, se usa una función como la log-verosimilitud sobre el corpus de entrenamiento para calcular por cada token del vocabulario, cuanto incrementaría la pérdida si se eliminara del vocabulario. En cada iteración se eliminan el 10-20\% de los tokens que menos aumentan la pérdida y se repite el proceso hasta que el vocabulario tiene el tamaño deseado. Para expresar el cálculo de la pérdida de un vocabulario sobre un corpus se detallan a continuación varias definiciones necesarias.
+
+\textit{Unigram} es un modelo de lenguaje que considera que cada token de una secuencia es independiente de los tokens que le preceden. Es un modelo de lenguaje muy sencillo ya que la probabilidad de un token en una secuencia de texto es simplemente la probabilidad del token.
+
+La probabilidad de un token $x$, $p(x)$, se calcula dividiendo su frecuencia en el corpus de entrenamiento por la suma de todas las frecuencias del vocabulario. La función $p(t)$ define la probabilidad de la tokenización $t$.
+
+\begin{figure}[H]
+\begin{gather*}
+    p(t) = \prod_{x\in{t}}{p(x)}
+\end{gather*}
+\caption{Probabilidad de una tokenización en \textit{Unigram} [Elaboración propia]}
+\end{figure}
+Sin embargo para una misma palabra puede existir más de una tokenización. Sea $S(w)$ el conjunto de todas las tokenizaciones para la palabra $w$, $P(w)$ es la probabilidad de la tokenización más probable.
+\begin{figure}[H]
+    \begin{gather*}
+        t_{0},t_{1}\in S(w)\ |\ \forall{t_{1}}\ p(t_{0}) \geq p(t_{1})\\
+        P(w) = p(t_{0})
+    \end{gather*}
+    \caption{Probabilidad de una palabra en un modelo \textit{Unigram} [Elaboración propia]}
+\end{figure}
+
+Sea $f(w)$ la frecuencia de una palabra $w$ y $C$ el conjunto de palabras del corpus de entrenamiento, $L$ es la pérdida del vocabulario sobre el corpus.
+\begin{figure}[H]
+    \begin{gather*}
+        L = \sum_{w\in{C}}{-log(P(w))\cdot{f(w)}}
+    \end{gather*}
+    \caption{Pérdida de un vocabulario sobre un corpus en un modelo \textit{Unigram} [Elaboración propia]}
+\end{figure}
+El algoritmo nunca elimina los caracteres base del vocabulario, así siempre puede tokenizar cualquier texto. El porcentaje de tokens eliminados, el tamaño final del vocabulario y la función de pérdida son hiperparámetros.
+
+\subsection{\textit{SentencePiece}}\label{sentencepiece}
+Los algoritmos de tokenizado mencionados anteriormente sufren de un problema común: se asume que el texto usa espacios para separar las palabras. Sin embargo no todos los lenguajes usan espacios. \textit{Sentencepiece} \cite{Kudo2018Aug} es un algoritmo de tokenizado por subpalabras que soluciona este problema procesando el texto en crudo. Los espacios y otros caracteres se tratan como cualquier otro símbolo. Posteriormente se usa BPE o \textit{Unigram} para construir el vocabulario de \textit{Sentencepiece}.
+
+Una ventaja de \textit{SentencePiece} es que funciona bien independientemente del lenguaje, incluso con texto artificial como lenguajes de programación. Además, decodificar un tokenizado es mucho más simple que con otros tokenizadores, ya que se puede concatenar los símbolos correspondientes a la secuencia de tokens directamente, sin necesidad de añadir espacios u otros signos de puntuación arbitrarios.
+
+Este trabajo utiliza \textit{Sentencepiece} junto con \textit{Unigram} debido a que los modelos con los que se realiza \textit{finetuning} y \textit{transfer learning} fueron sido implementados con este método.
+
 \section{Postprocesado}
+El postprocesado es el último paso del \textit{pipeline} de datos. En algunos casos, las secuencias de texto tokenizadas requieren un último procesamiento antes de ser usadas, una operación habitual es el truncamiento de las secuencias a una longitud máxima o el \textit{padding} con tokens especiales para aumentar el número de elementos a un tamaño fijo. En otros casos se añaden tokens especiales con un significado específico: delimitadores de inicio y final de secuencia, delimitadores para estructuras de texto pregunta-respuesta o tokens que proveen de información adicional al modelo como el idioma al que se desea traducir el texto en el caso de los modelos de traducción multiling{\"u}e.
+
+El proyecto utiliza truncamiento para ajustar las secuencias a un tamaño máximo de 512 tokens y también se utilizan modelos multiling{\"u}e que requieren introducir un token al inicio de la secuencia indicando el lenguaje al que se desea traducir.
