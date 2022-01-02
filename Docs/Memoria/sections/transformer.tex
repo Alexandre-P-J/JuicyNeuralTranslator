@@ -1,10 +1,95 @@
 \chapter{Arquitectura transformer}
-\section{\textit{Encoder}}
-\section{\textit{Decoder}}
-\section{Mecanismo de atención}
-\section{\textit{Feed-Forward} posicional}
-\section{\textit{Embeddings}}
-\section{\textit{Encoding} posicional}
+El transformer \cite{Vaswani2017Jun} es actualmente una de las arquitecturas más populares y supone el estado del arte en muchas areas del \textit{machine learning}, especialmente en el procesamiento del lenguaje natural. Esta arquitectura toma muchas ideas clásicas como por ejemplo el uso de mecanismos de atención y el uso de \textit{encoder-decoder}, pero plantea una arquitectura que descarta el uso de recurrencias y convoluciones para facilitar la paralelización, el procesamiento de secuencias largas y el modelado de dependencias sin importar la distancia a la que se encuentran en las secuencias de entrada o de salida.
+
+La arquitectura transformer es precursora de un gran número de variantes cuyo diseño se basa en la arquitecta original. En este trabajo se han usado modelos preentrenados de MarianMT \cite{Junczys-Dowmunt2018Apr}, cuya arquitectura es idéntica al transformer original.
+
+\section{Visión general}
+
+La arquitectura transformer puede visualizarse en varios niveles de abstracción. En esta sección se intentará describir el funcionamiento a alto nivel y posteriormente en las secciones siguientes se detallaran cada uno de los componentes de la arquitectura.
+
+\begin{figure}[H]
+    \centering
+        \includegraphics[width=250pt]{./img/transformer01.png}
+        \caption{Arquitectura transformer [Obtenido de \cite{Vaswani2017Jun}]}\label{transformerdiagram}
+\end{figure}
+
+La figura \ref{transformerdiagram} muestra un diagrama completo de la arquitectura. Se aprecian al menos tres tipos de elementos: cajas coloreadas o figuras que representan operaciones, flechas que representan el flujo de datos y dos areas coloreadas en gris.
+
+El area gris de la izquierda señala las operaciones que componen el \textit{encoder} y el area de la derecha las del \textit{decoder}. Sin embargo, ambas areas se acompañan con el símbolo $N_{x}$ que hace referencia al hiperparámetro que ajusta el número de \textit{encoders} o \textit{decoders} apilados. El modelo original usa $N=6$ correspondiente a 6 encoders apilados y 6 decoders apilados.
+
+En ese caso, solo el primer encoder obtiene sus datos de entrada del resultado de la operación \textit{Positional encoding} de la izquierda. Los siguientes cinco \textit{encoders} reciben su entrada de la salida del encoder anterior y únicamente el sexto encoder conecta su resultado a los decoders tal como se observa en la figura \ref{transformerdiagram}.
+Los decoders se apilan de forma similar, sin embargo, cada decoder recibe el resultado del sexto y último encoder. Además, también reciben la salida del decoder anterior a excepción del primer decoder, que recibe la salida de la operación \textit{Positional encoding} de la derecha.
+
+Una forma de visualizar la arquitectura completa es como una caja negra que acepta dos secuencias y devuelve un único vector. Profundizando un poco más, en un modelo de procesamiento del lenguaje natural, ambas secuencias de entrada podrían corresponder a textos tokenizados y el resultado del modelo representaría una distribución de probabilidad sobre la que se interpretaría un token. El modelo de traducción implementado en el trabajo, toma por primera secuencia un texto en el lenguaje a traducir y la segunda secuencia es una traducción incompleta de ese texto, ya sea una secuencia vacía o compuesta por los primeros tokens de la traducción. El resultado del modelo se interpreta como el token siguiente en la secuencia incompleta. Para obtener la traducción completa, se repite el procesamiento concatenando los resultados a la secuencia de texto traducido tal como se observa en el ejemplo \ref{transforminexample}.
+
+\begin{table}[H]
+    \begin{center}
+        \begin{tabular}{ l l l }
+        \hline
+        \textbf{Inputs:} & [How, \_are, \_you, ?, \#] & [\#, \#, \#, \#, \#] \\ 
+        \textbf{Output:} & ¿ \\  
+        \hline
+        \textbf{Inputs:} & [How, \_are, \_you, ?, \#] & [¿, \#, \#, \#, \#] \\ 
+        \textbf{Output:} & Cómo \\  
+        \hline
+        \textbf{Inputs:} & [How, \_are, \_you, ?, \#] & [¿, Cómo, \#, \#, \#] \\ 
+        \textbf{Output:} & \_estás \\  
+        \hline
+        \textbf{Inputs:} & [How, \_are, \_you, ?, \#] & [¿, Cómo, \_estás, \#, \#] \\ 
+        \textbf{Output:} & ? \\  
+        \hline
+        \textbf{Inputs:} & [How, \_are, \_you, ?, \#] & [¿, Cómo, \_estás, ?, \#] \\ 
+        \textbf{Output:} & END \\  
+        \hline
+        \end{tabular}
+        \caption{Inferencia en un modelo transformer de traducción [Elaboración propia]}\label{transforminexample}
+    \end{center}
+\end{table}
+
+El ejemplo \ref{transforminexample} utiliza secuencias de tamaño 5 y rellena los espacios con el token especial de \textit{padding} ``\#''. También se observa el uso del token ``END'' que marca el final de la traducción.
+
+\section{Componentes de la arquitectura}
+Siguiendo el diagrama de la figura \ref{transformerdiagram}, se describirá la arquitectura más al detalle en los siguientes subapartados. También se contextualizará el funcionamiento en relación al procesamiento del lenguaje natural, específicamente a la traducción automática a pesar de que la arquitectura transformer 
+
+\subsection{\textit{Embeddings} y \textit{Softmax}}
+La primera operación que se aplica a las dos secuencias de entrada del modelo es el \textit{embedding}. Cada token de las secuencias originalmente se representa con un índice numérico y una vez aplicado el \textit{embedding}, se reemplaza cada índice por un vector de tamaño $d_{model}$ correspondiente a cada índice.
+
+La capa de \textit{embedding} se observa en el recuadro rojo de la figura \ref{transformerdiagram}. La capa aplicada a un índice de token consiste en la conversión del entero a un vector \textit{one-hot} seguido de una capa lineal equivalente a la multiplicación por una matriz de pesos. Un detalle interesante es la decisión de compartir la misma matriz de pesos en ambas capas de \textit{embedding} y en la capa lineal previa a la operación \textit{Softmax}. Los autores lo justifican citando \cite{Press2016Aug} por usar un diseño similar. Otro detalle mencionado pero no argumentado por los autores de la arquitectura, es que en ambas capas de \textit{embedding} se multiplica la matriz de pesos por $\sqrt{d_{model}}$ para augmentar la magnitud de los \textit{embeddings} en preparación para el \textit{Encoding} posicional. Si no se realiza esta multiplicación, el \textit{Encoding} posicional podría tener demasiado efecto sobre el \textit{embedding}.
+
+La capa \textit{Softmax} representada por un recuadro verde en la figura \ref{transformerdiagram} es la última capa del modelo y sirve para normalizar el resultado hacia una distribución de probabilidad en la que puede extraerse el índice del token más probable a partir del índice de mayor valor de la distribución, el mismo procedimiento que en otros clasificadores.
+
+\subsection{\textit{Encoding} posicional}
+Debido a que la arquitectura transformer no usa recurrencias o convoluciones que determinen directa o indirectamente el orden de los elementos de las secuencias de entrada, si se usan directamente los \textit{embeddings}, las secuencias carecerían de orden y equivaldrían a conjuntos de tokens.
+Para codificar el orden en las secuencias, los autores del modelo plantean sumar un vector a los \textit{embeddings} para inyectar esta información.
+
+\begin{figure}[H]
+    \begin{align*}
+        PE(pos,2i)=\sin\left(\frac{pos}{10000^{2i / d_{model}}}\right)\\
+        PE(pos,2i+1)=\cos\left(\frac{pos}{10000^{2i / d_{model}}}\right)
+    \end{align*}
+    \caption{Función de encoding posicional [Obtenido de \cite{Vaswani2017Jun}]}\label{transformerposfunc}
+\end{figure}
+
+La figura \ref{transformerposfunc} define la función usada para obtener los vectores de \textit{encoding} posicional. La variable $pos$ es la posición del token en la secuencia e $i$ es la dimensión del vector.
+Dado un \textit{embedding} correspondiente al token en la posición $pos$, se le deberá sumar el vector compuesto por los valores de la función en $i=1..d_{model}$ para obtener el \textit{embedding} con información posicional.
+
+\begin{figure}[H]
+    \centering
+        \includegraphics[width=410pt]{./img/positional_encoding.png}
+        \caption{Ejemplo de encoding posicional con secuencias de 10 tokens y \textit{embeddings} de 64 dimensiones ($d_{model}=64$) [Obtenido de \cite{Alammar2021Dec}]}\label{transformerposicional}
+\end{figure}
+
+La figura \ref{transformerposicional} muestra los valores que toma la función de \textit{encoding} posicional cuando el tamaño de los \textit{embeddings}, determinado por $d_{model}$, es 64 y las secuencias tienen un tamaño de 10 tokens. En ese ejemplo las filas de la matriz representan cada vector de \textit{encoding} posicional. La primera fila sería el vector que se sumaría al primer \textit{embedding}, la segunda al siguiente y así hasta la última fila, que se sumaría al último \textit{embedding}.
+
+Los autores de la arquitectura remarcan que pueden usarse otras funciones para el \textit{encoding} posicional, incluso variantes con pesos que permitirían al modelo ajustar la función. Sin embargo argumentan que durante su experimentación, la función dio resultados muy parecidos a su variante con pesos y eligieron la función sinusoidal por su capacidad de extrapolar a secuencias más largas que las encontradas durante el entrenamiento.
+
+\subsection{\textit{Encoder}}
+\subsection{\textit{Decoder}}
+\subsection{Mecanismo de atención}
+\subsection{\textit{Feed-Forward} posicional}
+\section{Detalles de implementación}
+\subsection{Entrenamiento}
+\subsection{Inferencia}
 \section{Variantes de la arquitectura transformer} \label{transfvariants}
 \cite{Tay2020Sep, Lin2021Jun}
 % ...destacan con tareas que requieren un mayor número de tokens, como por ejemplo, el resumen de textos, tal como se explica en el apartado \ref{transfvariants}...
