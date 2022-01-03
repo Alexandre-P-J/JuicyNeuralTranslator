@@ -3,7 +3,7 @@ El transformer \cite{Vaswani2017Jun} es actualmente una de las arquitecturas má
 
 La arquitectura transformer es precursora de un gran número de variantes cuyo diseño se basa en la arquitecta original. En este trabajo se han usado modelos preentrenados de MarianMT \cite{Junczys-Dowmunt2018Apr}, cuya arquitectura es idéntica al transformer original.
 
-\section{Visión general}
+\section{Visión general}\label{transformergeneral}
 
 La arquitectura transformer puede visualizarse en varios niveles de abstracción. En esta sección se intentará describir el funcionamiento a alto nivel y posteriormente en las secciones siguientes se detallaran cada uno de los componentes de la arquitectura.
 
@@ -15,10 +15,10 @@ La arquitectura transformer puede visualizarse en varios niveles de abstracción
 
 La figura \ref{transformerdiagram} muestra un diagrama completo de la arquitectura. Se aprecian al menos tres tipos de elementos: cajas coloreadas o figuras que representan operaciones, flechas que representan el flujo de datos y dos areas coloreadas en gris.
 
-El area gris de la izquierda señala las operaciones que componen el \textit{encoder} y el area de la derecha las del \textit{decoder}. Sin embargo, ambas areas se acompañan con el símbolo $N_{x}$ que hace referencia al hiperparámetro que ajusta el número de \textit{encoders} o \textit{decoders} apilados. El modelo original usa $N=6$ correspondiente a 6 encoders apilados y 6 decoders apilados.
+El area gris de la izquierda señala las operaciones que componen un módulo \textit{encoder} y el area de la derecha las de un módulo \textit{decoder}. Sin embargo, ambas areas se acompañan con el símbolo $N_{x}$ que hace referencia al hiperparámetro que ajusta el número de módulos apilados que componen el \textit{encoder} y el \textit{decoder}. El modelo original usa $N=6$ correspondiente a 6 módulos \textit{encoder} apilados para formar el encoder y 6 módulos \textit{decoder} apilados para el decoder.
 
-En ese caso, solo el primer encoder obtiene sus datos de entrada del resultado de la operación \textit{Positional encoding} de la izquierda. Los siguientes cinco \textit{encoders} reciben su entrada de la salida del encoder anterior y únicamente el sexto encoder conecta su resultado a los decoders tal como se observa en la figura \ref{transformerdiagram}.
-Los decoders se apilan de forma similar, sin embargo, cada decoder recibe el resultado del sexto y último encoder. Además, también reciben la salida del decoder anterior a excepción del primer decoder, que recibe la salida de la operación \textit{Positional encoding} de la derecha.
+En ese caso, solo el primer módulo \textit{encoder} obtiene sus datos de entrada del resultado de la operación \textit{Positional encoding} de la izquierda. Los siguientes cinco módulos \textit{encoder} reciben su entrada de la salida del módulo anterior y únicamente el sexto módulo \textit{encoder} conecta su resultado a los módulos \textit{decoder} de la derecha tal como se observa en la figura \ref{transformerdiagram}.
+Los módulos \textit{decoder} se apilan de forma similar, sin embargo, cada módulo recibe el resultado del sexto y último módulo \textit{encoder}. Además, también reciben la salida del módulo \textit{decoder} anterior a excepción del primer módulo, que recibe la salida de la operación \textit{Positional encoding} de la derecha.
 
 Una forma de visualizar la arquitectura completa es como una caja negra que acepta dos secuencias y devuelve un único vector. Profundizando un poco más, en un modelo de procesamiento del lenguaje natural, ambas secuencias de entrada podrían corresponder a textos tokenizados y el resultado del modelo representaría una distribución de probabilidad sobre la que se interpretaría un token. El modelo de traducción implementado en el trabajo, toma por primera secuencia un texto en el lenguaje a traducir y la segunda secuencia es una traducción incompleta de ese texto, ya sea una secuencia vacía o compuesta por los primeros tokens de la traducción. El resultado del modelo se interpreta como el token siguiente en la secuencia incompleta. Para obtener la traducción completa, se repite el procesamiento concatenando los resultados a la secuencia de texto traducido tal como se observa en el ejemplo \ref{transforminexample}.
 
@@ -83,13 +83,105 @@ La figura \ref{transformerposicional} muestra los valores que toma la función d
 
 Los autores de la arquitectura remarcan que pueden usarse otras funciones para el \textit{encoding} posicional, incluso variantes con pesos que permitirían al modelo ajustar la función. Sin embargo argumentan que durante su experimentación, la función dio resultados muy parecidos a su variante con pesos y eligieron la función sinusoidal por su capacidad de extrapolar a secuencias más largas que las encontradas durante el entrenamiento.
 
-\subsection{\textit{Encoder}}
-\subsection{\textit{Decoder}}
-\subsection{Mecanismo de atención}
-\subsection{\textit{Feed-Forward} posicional}
+\subsection{Módulos \textit{Encoder}}
+Tal como se detalla en el apartado \ref{transformergeneral}, el número de módulos \textit{encoder} apilados para formar el \textit{encoder} es un hiperparámetro de la arquitectura y en el modelo original igual que en los modelos usados en el proyecto se usan 6.
+
+En la figura \ref{transformerdiagram} se observa que cada módulo \textit{encoder} esta compuesto por tres capas distintas: \textit{Multi-Head Attention}, \textit{Feed Forward} y \textit{Add} \& \textit{Norm}.
+
+Las dos primeras se detallan en los apartados \ref{transfattention}, \ref{transfffpos} debido a que el mecanismo de atención es distinto a otras arquitecturas anteriores y la capa \textit{Feed Forward} no es una densa clásica como su nombre parecería indicar. 
+
+La capa de \textit{Add} \& \textit{Norm} es interesante por el uso de una conexión residual \cite{He2015Dec} proviniente de la entrada de la capa anterior. Sea $L(x)$ la capa anterior a la operación \textit{Add} \& \textit{Norm}, la figura \ref{transformeraddnorm} expresa el cálculo de la operación.
+
+\begin{figure}[H]
+    \begin{align*}
+        LayerNorm(x + L(x))
+    \end{align*}
+    \caption{Expresión de la capa \textit{Add} \& \textit{Norm} [Obtenido de \cite{Vaswani2017Jun}]}\label{transformeraddnorm}
+\end{figure}
+
+La función $LayerNorm$ \cite{Ba2016Jul} aplica normalización a la dimensión de las características en vez de la del \textit{batch} como es más habitual.
+
+\subsection{Módulos \textit{Decoder}}
+El número de módulos \textit{decoder} apilados para formar el \textit{decoder} es un hiperparámetro de la arquitectura tal como se describe en el apartado \ref{transformergeneral}. En el modelo original y en los modelos usados en el proyecto se usan 6 módulos \textit{decoder} para el \textit{decoder}.
+
+Las capas del módulo \textit{decoder} son muy parecidas a las del \textit{encoder}, las únicas dos diferencias entre ambos módulos son el uso de \textit{Masked Multi-Head Attention} y \textit{Multi-Head Attention} con el resultado del último encoder en cada módulo \textit{decoder} tal como se observa en la figura \ref{transformerdiagram}.
+
+\textit{Masked Multi-Head Attention} es el mismo mecanismo de atención explicado en el apartado \ref{transfattention} con el añadido de una máscara que enmascara los valores de la secuencia de embeddings según la configuración de la máscara. En el caso del modelo de traducción del proyecto así como la arquitectura original, se usa una máscara para las posiciones subsiguientes al último token que se quiere procesar en la secuencia introducida al \textit{decoder}. De esta forma se garantiza que el modelo solo atiende a las posiciones ya traducidas en ejecuciones anteriores tal como se observa en el ejemplo del cuadro \ref{transforminexample}.
+
+La otra diferencia respecto el \textit{módulo} encoder es el uso de una tercera capa \textit{Multi-Head Attention} que atiende sobre la salida del \textit{encoder}. Específicamente, los vectores \textit{value} y \textit{key} se obtienen del \textit{encoder} mientras que los vectores \textit{queue} provienen del resultado de la capa anterior.
+
+\subsection{Mecanismo de atención}\label{transfattention}
+Un mecanismo de atención puede describirse como la función que toma un vector \textit{queue} y un conjunto de pares de vectores \textit{key-value} y obtiene un vector resultado.
+El vector resultado se calcula como la suma ponderada de los elementos del vector \textit{value}, donde el peso asignado a cada elemento se obtiene mediante una función de compatibilidad entre el vector \textit{queue} y el vector \textit{key} correspondiente.
+
+\subsubsection{\textit{Scaled dot-product attention}}
+Este mecanismo de atención es el que implementa la arquitectura transformer pero existen muchas variantes. La entrada consiste en vectores \textit{query} y \textit{value} de tamaño $d_{k}$ además de vectores \textit{value} de tamaño $d_{v}$. Se calcula el producto escalar del vector \textit{query} con todos los vectores \textit{key}, se divide por $\sqrt{d_{k}}$ y finalmente se aplica la función \textit{Softmax} para obtener los pesos con los que realizar la suma ponderada del vector \textit{value}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=90pt]{./img/transformer02.png}
+    \begin{align*}
+        Atention(Q,K,V) = Softmax\left(\frac{QK^{T}}{\sqrt{d_{k}}}\right)V
+    \end{align*}
+    \caption{Definición matricial del \textit{Scaled dot-product attention} [Obtenido de \cite{Vaswani2017Jun}]}\label{transformerscaleddotprodform}
+\end{figure}
+
+La figura \ref{transformerscaleddotprodform} muestra una definición matricial del mecanismo de atención que permite usar aceleración hardware. La capa \textit{Mask} del diagrama es una capa opcional usada para impedir que se preste atención a posiciones específicas de las secuencias.
+
+\subsubsection{\textit{Multi-head attention}}
+Los autores de la arquitectura transformer encontraron beneficioso realizar múltiples cálculos de la atención con distintas proyecciones lineales aprendidas por el modelo. Los vectores \textit{query}, \textit{key}, \textit{value} se multiplican con matrices distintas $h$ veces. Posteriormente se aplica la operación \textit{Scaled dot-product attention}, se concatenan las $h$ matrices resultantes y se multiplica el resultado por una matriz para proyectar una última vez.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=160pt]{./img/transformer03.png}
+    \begin{align*}
+        MultiHead(Q,K,V) = Concat(head_{1},...,head_{h})W^{O}\\
+        \text{donde }head_{i} = Attention(QW^{Q}_{i}, KW^{K}_{i}, VW^{V}_{i})
+    \end{align*}
+    \caption{Definición matricial del \textit{Multi-head attention} [Obtenido de \cite{Vaswani2017Jun}]}\label{transformerheads}
+\end{figure}
+
+Las matrices de pesos $W$ son de la forma $W_{i}^{Q}\in\mathbb{R}^{d_{\text{model}}\times d_{k}}$, $W_{i}^{K}\in\mathbb{R}^{d_{\text{model}}\times d_{k}}$, $W_{i}^{V}\in\mathbb{R}^{d_{\text{model}}\times d_{v}}$ y $W^{O}\in\mathbb{R}^{hd_{v}\times d_{\text{model}}}$. En el proyecto y en la arquitectura original $h=8$ y $d_{k}=d_{v}=d_{model}/h=64$. Debido a la baja dimensionalidad de las matrices, el coste computacional de las 8 cabezas es similar a una sola cabeza con dimensionalidad total.
+
+\subsection{\textit{Feed-Forward} posicional}\label{transfffpos}
+Cada módulo \textit{encoder} y \textit{decoder} incorpora una capa \textit{Feed forward} representada como un bloque azul en la figura \ref{transformerdiagram}. Se implementan como dos capas densas con una activación ReLU entre ellas y se aplican a cada posición de las secuencias separada e idénticamente.
+
+\begin{figure}[H]
+    \begin{align*}
+        FF(x) = max(0, xW_{1}+b_{1})W_{2}+b_{2}
+    \end{align*}
+    \caption{Definición de la capa \textit{Feed-Forward} de la arquitectura transformer [Obtenido de \cite{Vaswani2017Jun}]}\label{transformerffposform}
+\end{figure}
+
+En la figura \ref{transformerffposform} se muestra la definición matricial de las capas densas con término \textit{bias} y la $ReLU(x)=max(0,x)$ que las une.
+La dimensionalidad de la primera capa densa es de $d_{model}=512$ valores de entrada y $d_{ff}=2048$ valores de salida. La segunda capa es de $d_{ff}$ valores de entrada y $d_{model}$ valores de salida para proporcionar la arquitectura en forma de embudo típica de un \textit{autoencoder}.
+
 \section{Detalles de implementación}
+Una de las fortalezas de la arquitectura transformer es su afinidad a la paralelización. Además del \textit{batching} aplicado en la mayoría de modelos, la arquitectura transformer implementa muchas de sus operaciones en paralelo. Cada cabezal del \textit{Multi-head attention} se ejecuta en paralelo y otras capas como el \textit{Feed Forward} posicional operan las distintas posiciones con la misma operación en paralelo. Estas mejoras proporcionan un muy buen rendimiento especialmente en GPUs.
 \subsection{Entrenamiento}
+Otro uso del paralelismo es durante el entrenamiento. En el caso de la traducción automática se suele entrenar el modelo transformer de forma supervisada. Se pretende que dada una secuencia completa en un idioma y una secuencia incompleta en otro idioma el modelo prediga el próximo token de la secuencia incompleta.
+Una implementación eficiente paraleliza la ejecución de cada una de las posibles combinaciones de secuencia completa y secuencia incompleta para predecir el token siguiente de todas las posiciones al mismo tiempo para todos los pares de secuencias del \textit{batch}.
+
+Esta técnica contrasta con otras técnicas como por ejemplo las redes recurrentes ya que estas requieren una ejecución secuencial muy ineficiente y a menudo inestable.
+
+El resultado del modelo es un vector por cada par de secuencias de entrada. El vector puede interpretarse como una distribución de probabilidad y debido a que la última capa es un \textit{Softmax}, la función de pérdida \textit{Cross entropy} resulta apropiada.
+
+El optimizador usado en el trabajo es \textit{Adam} \cite{Kingma2014Dec} con hiperparámetros ajustados según el experimento. Se usan distintos métodos de regularización, específicamente se aplican capas de \textit{Dropout} \cite{Srivastava2014} con probabilidad del 10\% al resultado proviniente de la capa anterior de la operación \textit{Add} \& \textit{Norm} pero no al término proviniente de la entrada de la capa anterior. También se aplica \textit{Dropout} a suma realizada por ambos \textit{encodings} posicionales.
+
+Otra medida de regularización es la técnica de \textit{label smoothing} \cite{Szegedy2015Dec}. Resulta una medida apropiada para combatir el overfitting en clasificadores. Sin el uso de esta técnica el modelo calcularía la función de pérdida \textit{cross entropy} entre la distribución resultante del modelo y la distribución objetivo normalmente representada por un vector \textit{one-hot}. Esto inclinaría al modelo a aprender distribuciones orientadas hacia tokenes concretos. Usando \textit{label smoothing} se suma a cada vector \textit{one-hot} una distribución normal centrada a la posición correspondiente y esto motiva al modelo a predecir distribuciones más suaves e inciertas.
+
 \subsection{Inferencia}
+Durante la inferencia no es posible paralelizar la obtención del token siguiente como se hace durante el entrenamiento ya que no se dispone de ambas secuencias completas. La secuencia introducida al \textit{decoder} debe concatenar los tokens obtenidos en ejecuciones anteriores y esto requiere un procesamiento secuencial.
+
 \section{Variantes de la arquitectura transformer} \label{transfvariants}
-\cite{Tay2020Sep, Lin2021Jun}
+La arquitectura transformer ha cultivado mucho interés durante los últimos años debido a su gran éxito en campos como el procesamiento del lenguaje natural y otros dominios del \textit{machine learning}. Actualmente existen decenas de variantes de la arquitectura original y frecuentemente aparecen nuevas alternativas, por ello, resulta imposible abarcar las distintas bondades de las arquitecturas en este trabajo. Alternativamente se citan los papers \cite{Tay2020Sep, Lin2021Jun} que describen muchas de las arquitecturas más relevantes, las analizan y agrupan en taxonomías. Las principales mejoras que plantean las distintas variantes se definen a continuación.
+
+\subsection{Eficiencia}
+Uno de los principales problemas del transformer original es su incremento cuadrático en complejidad en relación a la longitud de las secuencias. Esto se debe al mecanismo de atención, ya que para todo elemento de una secuencia se computa la atención con el resto de elementos, generando así la comúnmente llamada matriz de atención.
+Algunos modelos proponen alternativas a este mecanismo con el fin de mejorar la eficiencia de la arquitectura usando secuencias largas.
+\subsection{Generalización}
+El modelo transformer es flexible y hace pocas asunciones sobre la estructura de los datos, esto dificulta el entrenamiento con datasets pequeños. Este problema se ha abordado introduciendo sesgos hacia la estructura de los datos y el pre-entrenamiento no supervisado con datasets de gran tamaño.
+\subsection{Adaptabilidad}
+Esta linea de trabajo busca la adaptación de la arquitectura transformer para ser aplicada en aplicaciones específicas.
+
 % ...destacan con tareas que requieren un mayor número de tokens, como por ejemplo, el resumen de textos, tal como se explica en el apartado \ref{transfvariants}...
