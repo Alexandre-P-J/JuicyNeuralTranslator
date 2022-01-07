@@ -6,6 +6,8 @@ SciELO Test
 {'eval_loss': 1.3268274068832397, 'eval_BLEU': 40.1954, 'eval_chr-F': 67.1326, 'eval_gen_len': 40.2621, 'eval_runtime': 7380.1097, 'eval_samples_per_second': 11.282, 'eval_steps_per_second': 0.705}
 Tatoeba challenge
 {'eval_loss': 0.6677169799804688, 'eval_BLEU': 56.9578, 'eval_chr-F': 73.6682, 'eval_gen_len': 9.8371, 'eval_runtime': 403.7111, 'eval_samples_per_second': 41.076, 'eval_steps_per_second': 2.569}
+JRC-Acquis Last Eval
+{'eval_loss': 0.7985895872116089, 'eval_BLEU': 55.2525, 'eval_chr-F': 73.6, 'eval_gen_len': 36.9017, 'eval_runtime': 11036.3434, 'eval_samples_per_second': 9.151, 'eval_steps_per_second': 0.572}
 
 # FINE-TUNED (SciELO) EN-ES
 Last SciELO epoch Eval

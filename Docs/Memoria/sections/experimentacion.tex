@@ -6,9 +6,6 @@
 \subsection{\textit{Character N-gram F-score}}
 \cite{popovic-2015-chrf}
 
-% \section{Experimentación preliminar}
-% El primer contacto con la arquitectura transformer fue un experimento con el objetivo de entrenar un modelo idéntico al transformer original para la traducción de inglés-español. Este experimento se realizó antes de la inscripción
-
 \section{\textit{Pipeline} de datos}\label{datapipeline}
 En los experimentos de \textit{finetuning} y \textit{transfer learning} el \textit{pipeline} de datos es idéntico. Los datasets son uno o más corpus biling{\"u}es compuestos de pares de secuencias con el mismo contenido en dos idiomas. Los corpus se mezclan aleatoriamente y se particionan en conjuntos de entrenamiento, validación y test en las proporciones de 60/20/20\% en ese mismo orden.
 
@@ -16,32 +13,33 @@ Posteriormente, se arreglan en cada conjunto los caracteres unicode inválidos, 
 
 Para la medición y evaluación se usan las métricas BLEU y chrF sobre el conjunto de validación o test para comparar todas las secuencias traducidas con sus respectivas secuencias de referencia. Antes de computar las métricas, se revierte la tokenización y se postprocesan las secuencias eliminando espacios al inicio y final de las frases.
 
-\section{Finetuning}
+\section{Finetuning}\label{finetune}
 El primer experimento que se llevó a cabo fue el \textit{finetuning} de un modelo de traducción inglés-español para ajustar su registro a un tono más formal.
 El modelo de partida usado es \textbf{Helsinki-NLP/opus-mt-en-es} del repositorio de Huggingface.
 Los modelos del grupo de investigación del procesamiento del lenguaje natural de la universidad de Helsinki publicados en Huggingface usan el \textit{framework} MarianMT \cite{Junczys-Dowmunt2018Apr}, con una arquitectura idéntica al transformer original descrito en el capítulo \ref{transformerchapter} en profundidad.
 
 Para el \textit{finetuning} del modelo, se optó por conservar el máximo número de hiperparámetros intactos y simular un \textit{pipeline} lo más parecido posible al original.
-La normalización usada en el corpus del modelo original consistía en la eliminación de acentos diacríticos y la limpieza o sustitución de caracteres unicode, sin embargo, para el \textit{finetuning} del modelo se ha preferido no eliminar acentos ni otras riquezas ling{\"u}ísticas con el objetivo de mejorar la calidad del modelo. Esta es la única diferencia respecto al \textit{pipeline} de datos descrito en el apartado \ref{datapipeline}.
-El tokenizador del modelo original usa \textit{SentencePiece} con un vocabulario de $65.000$ tokens y se conservó para el nuevo modelo debido a que producía tokenizaciones razonables y de un tamaño similar independiente de la modificación en la normalización.
+La normalización usada en el corpus del modelo original consistía en la eliminación de acentos diacríticos y la limpieza o sustitución de caracteres unicode, sin embargo, para el \textit{finetuning} del modelo se ha preferido no eliminar acentos ni otras riquezas ling{\"u}ísticas con el objetivo de mejorar la calidad del modelo. El resto del \textit{pipeline} de datos coincide lo descrito en el apartado \ref{datapipeline}.
+El tokenizador del modelo original usa \textit{SentencePiece} con un vocabulario de 65.000 tokens y se conservó para el nuevo modelo debido a que producía tokenizaciones razonables y de un tamaño similar independiente de la modificación en la normalización.
 
-En la rutina de optimización Adam \cite{Kingma2014Dec} únicamente se redujo el ratio de aprendizaje debido a que manteniendo el valor original, el modelo era muy inestable y empeoraba de forma visible. Se optó por un ajuste manual del hiperparámetro, de $2\cdot 10^{-3}$ a $2\cdot 10^{-4}$, un orden de magnitud inferior.
+En la rutina de optimización Adam \cite{Kingma2014Dec} únicamente se redujo el ratio de aprendizaje debido a que manteniendo el valor original, el modelo era muy inestable y empeoraba de forma visible. Se optó por un ajuste manual del hiperparámetro, de $2\cdot 10^{-3}$ a $2\cdot 10^{-5}$, dos órdenes de magnitud inferior.
 
 \subsection{Entrenamiento}
 \subsubsection{JRC-Acquis}
-El entrenamiento se ha realizado con dos datasets, el primer modelo se entrenó con el dataset JRC-Acquis del repositorio OPUS \cite{CORPUS} y es una colección de textos legislativos de la unión europea desde el año 1950 hasta la actualidad. Se ha elegido el par de lenguajes inglés-español alineados por parágrafos con un total de 416.322 pares de secuencias.
-Se finalizó el entrenamiento una vez terminado el tercer \textit{epoch} a las 5 horas de ejecución debido a que el error de validación empezaba a estabilizarse. No se esperó hasta la convergencia total debido a que el coste temporal y computacional se hubiera disparado y las ganancias probablemente serían mínimas.
+El entrenamiento se ha realizado con dos datasets, el primer modelo se entrenó con el dataset JRC-Acquis del repositorio OPUS \cite{CORPUS} y es una colección de textos legislativos de la unión europea desde el año 1950 hasta la actualidad. Se ha elegido el par de lenguajes inglés-español alineados por parágrafos con un total de 504.981 pares de secuencias.
+
+Se finalizó el entrenamiento una vez terminado el tercer \textit{epoch} a las 5 horas y media de ejecución debido a que el error de validación empezaba a estabilizarse. No se esperó hasta la convergencia total debido a que el coste temporal y computacional se hubiera disparado y las ganancias probablemente serían mínimas.
 
 \begin{table}[H]
     \begin{center}
         \begin{tabular}{ l r r }
         \multicolumn{3}{l}{\textbf{Helsinki-NLP/opus-mt-en-es}}\\
         \textbf{Muestra} & \textbf{BLEU} & \textbf{chrF} \\
-        Validación & 40.1775 & 67.0548 \\
-        Test & 40.1954 & 67.1326 \\
-        Tatoeba Challenge & 56.9578 & 73.6682
+        Validación & 55.2525 & 73.6000 \\
+        Test & 0 & 0 \\
+        Tatoeba Challenge & 0 & 0
         \end{tabular}
-        \caption{Inferencia en un modelo transformer de traducción [Elaboración propia]}\label{originalacquis}
+        \caption{Métricas del modelo original sobre el corpus JRC-Acquis [Elaboración propia]}\label{originalacquis}
     \end{center}
 \end{table}
 
@@ -50,28 +48,121 @@ Se finalizó el entrenamiento una vez terminado el tercer \textit{epoch} a las 5
         \begin{tabular}{ l r r }
         \multicolumn{3}{l}{\textbf{JRC-Acquis \textit{finetuned}}}\\
         \textbf{Muestra} & \textbf{BLEU} & \textbf{chrF} \\
-        Validación & 43.0387 & 68.9894 \\
-        Test & 43.0197 & 68.9007 \\
-        Tatoeba Challenge & 49.8269 & 68.9390
+        Validación & 0 & 0 \\ % ?
+        Test & 0 & 0 \\
+        Tatoeba Challenge & 0 & 0
         \end{tabular}
-        \caption{Inferencia en un modelo transformer de traducción [Elaboración propia]}\label{finetuneacquis}
+        \caption{Métricas del modelo \textit{finetuned} sobre el corpus JRC-Acquis [Elaboración propia]}\label{finetuneacquis}
     \end{center}
 \end{table}
 
 
-\begin{spverbatim}
-After a black hole has formed, it can continue to grow by absorbing mass from its surroundings. There is consensus that supermassive black holes exist in the centers of most galaxies.
-\end{spverbatim}
-\begin{spverbatim}
-Después de que se ha formado un agujero negro, puede seguir creciendo absorbiendo masa de su entorno. Hay consenso en que los agujeros negros supermasivos existen en los centros de la mayoría de las galaxias.
-\end{spverbatim}
-\begin{spverbatim}
-Después de la formación de un agujero negro, puede seguir creciendo absorbiendo masa de su entorno. Hay consenso de que existen agujeros negros supermasivos en los centros de la mayoría de las galaxias.
-\end{spverbatim}
+\subsubsection{SciELO}
+También se hizo \textit{finetuning} con el dataset SciELO del repositorio OPUS \cite{CORPUS}. Este dataset a diferencia de JRC-Acquis, procede de una librería digital de publicación científica de la cual se esperan textos formales y con vocabulario rico y específico de distintos campos. En este caso los textos también se han alineado por parágrafos y hay un total de 416.322 pares de secuencias inglés-español.
+
+De la misma manera que con el dataset anterior, se finalizó el entrenamiento una vez terminado el tercer \textit{epoch} a las 5 horas de ejecución debido a que el error de validación empezaba a estabilizarse. Tampoco se esperó hasta la convergencia total debido al coste temporal y computacional, que se hubiera disparado y las ganancias probablemente serían mínimas.
+
+\begin{table}[H]
+    \begin{center}
+        \begin{tabular}{ l r r }
+        \multicolumn{3}{l}{\textbf{Helsinki-NLP/opus-mt-en-es}}\\
+        \textbf{Muestra} & \textbf{BLEU} & \textbf{chrF} \\
+        Validación & 40.1775 & 67.0548 \\ % ?
+        Test & 40.1954 & 67.1326 \\
+        Tatoeba Challenge & 56.9578 & 73.6682
+        \end{tabular}
+        \caption{Métricas del modelo original sobre el corpus SciELO [Elaboración propia]}\label{originalscielo}
+    \end{center}
+\end{table}
+
+\begin{table}[H]
+    \begin{center}
+        \begin{tabular}{ l r r }
+        \multicolumn{3}{l}{\textbf{SciELO \textit{finetuned}}}\\
+        \textbf{Muestra} & \textbf{BLEU} & \textbf{chrF} \\
+        Validación & 43.0387 & 68.9894 \\
+        Test & 43.0197 & 68.9007 \\
+        Tatoeba Challenge & 49.8269 & 68.9390
+        \end{tabular}
+        \caption{Métricas de modelo \textit{finetuned} sobre el corpus SciELO [Elaboración propia]}\label{finetunescielo}
+    \end{center}
+\end{table}
 
 
-
-% 2 datasets
 \section{Transfer learning}
-% tokenizado, freeze embed, filtrado de datasets
+Debido a la escasez de corpus en catalán combinado a la baja calidad de estos, se considera paliar esta limitación mediante el uso de \textit{transfer learning}.
+Este experimento consiste en la implementación de un modelo de traducción catalán-inglés a partir de un modelo español-inglés.
+Como modelo de partida para el \textit{transfer learning} se ha usado \textbf{Helsinki-NLP/opus-mt-es-en} del repositorio de Huggingface. También se ha usado el modelo \textbf{Helsinki-NLP/opus-mt-ca-en} como \textit{baseline} ya que se espera poder superar su calidad.
+
+Se ha optado por conservar el máximo número de hiperparámetros intactos así como el \textit{pipeline} de datos. La normalización se ha implementado como en el experimento de \textit{finetuning} descrito en el apartado \ref{finetune} y el resto del \textit{pipeline} es tal como se describe en el apartado \ref{datapipeline}.
+
+Se consideró reentrenar el tokenizador \textit{SentencePiece} con el corpus de entrenamiento catalán-inglés para obtener mejores tokenizaciones, sin embargo se ha decidido conservar el tokenizador original del modelo español-inglés, con un vocabulario de 65.000 tokens, por los motivos siguientes:
+\begin{itemize}
+    \item El tokenizador \textit{SentencePiece} original mezcla el vocabulario español e inglés en un mismo corpus y de entrenar un nuevo tokenizador, no sería posible conservar los \textit{embeddings} en inglés.
+    \item Conservando el tokenizador, el modelo quizás pueda seguir traduciendo del español al inglés después del \textit{transfer learning}.
+    \item Empíricamente las tokenizaciones de secuencias en catalán con el tokenizador español-inglés respecto el tokenizador catalán-inglés únicamente contienen entre un 15-20\% más tokens.
+\end{itemize}
+
+En el optimizador Adam \cite{Kingma2014Dec} se ha reducido manualmente el hiperparámetro de ratio de aprendizaje, de $2\cdot 10^{-3}$ a $2\cdot 10^{-4}$, un orden de magnitud inferior.
+
+
+\subsection{Entrenamiento}
+
+Durante entrenamiento del modelo se congeló la matriz de \textit{embeddings} del \textit{decoder} correspondiente a la matriz del idioma inglés ya que es común tanto en el modelo original español-inglés como en el modelo catalán-inglés que se quiere implementar.
+
+Los datos de entrenamiento se eligieron a partir de los corpus usados por el modelo catalán-inglés entrenado por Helsinki-NLP. Ellos seleccionaron los datasets Books, EUbookshop, GlobalVoices, GNOME, KDE4, OpenSubtitles, QED y Ubuntu del repositorio OPUS \cite{CORPUS}. Sin embargo, tras una examinación de los corpus, se percibió que el dataset EUbookshop contenía mucho ruido, por ejemplo: links, siglas, símbolos inválidos y muchas secuencias sin valor semántico. Por otra parte, los corpus GNOME, KDE y Ubuntu extraídos de los software con su mismo nombre, contenían secuencias con vocabulario y semántica muy pobre además de cortas debido al origen y contexto de los datos, las interfaces gráficas de programas.
+
+Para el \textit{transfer learning} solo se usaron los corpus Books, GlobalVoices, OpenSubtitles y QED compuestos por textos alineados en parágrafos de la literatura, noticias internacionales, subtítulos de películas y de medios educativos en ese orden.
+El dataset resultante después de mezclar los corpus aleatoriamente como se describe en \ref{datapipeline} contiene un total de 509.194 secuencias catalán-inglés.
+
+Se dio por terminado el entrenamiento una vez concluido el \textit{epoch} 5 después de 12 horas de entrenamiento debido a que el error de validación empezaba a estabilizarse pero no se esperó hasta la convergencia total debido al coste computacional y temporal asociado.
+
+\begin{table}[H]
+    \begin{center}
+        \begin{tabular}{ l r r }
+        \multicolumn{3}{l}{\textbf{Helsinki-NLP/opus-mt-es-en}}\\
+        \textbf{Muestra} & \textbf{BLEU} & \textbf{chrF} \\
+        Tatoeba Challenge Ca-En & 0 & 0 \\
+        Tatoeba Challenge Es-En & 0 & 0
+        \end{tabular}
+        \caption{Métricas del modelo \textit{finetuned} sobre el corpus JRC-Acquis [Elaboración propia]}\label{transferorigesen}
+    \end{center}
+\end{table}
+
+\begin{table}[H]
+    \begin{center}
+        \begin{tabular}{ l r r }
+        \multicolumn{3}{l}{\textbf{Helsinki-NLP/opus-mt-ca-en}}\\
+        \textbf{Muestra} & \textbf{BLEU} & \textbf{chrF} \\
+        Tatoeba Challenge Ca-En & 0 & 0 \\
+        Tatoeba Challenge Es-En & 0 & 0
+        \end{tabular}
+        \caption{Métricas del modelo \textit{finetuned} sobre el corpus JRC-Acquis [Elaboración propia]}\label{transferorigcaen}
+    \end{center}
+\end{table}
+
+\begin{table}[H]
+    \begin{center}
+        \begin{tabular}{ l r r }
+        \multicolumn{3}{l}{\textbf{Catalán-Inglés \textit{transfer learning}}}\\
+        \textbf{Muestra} & \textbf{BLEU} & \textbf{chrF} \\
+        Validación & 0 & 0 \\
+        Test & 0 & 0 \\
+        Tatoeba Challenge Ca-En & 0 & 0 \\
+        Tatoeba Challenge Es-En & 0 & 0
+        \end{tabular}
+        \caption{Métricas del modelo \textit{finetuned} sobre el corpus JRC-Acquis [Elaboración propia]}\label{transfercaen}
+    \end{center}
+\end{table}
+
+
 \section{Resultados}
+% \begin{spverbatim}
+% After a black hole has formed, it can continue to grow by absorbing mass from its surroundings. There is consensus that supermassive black holes exist in the centers of most galaxies.
+% \end{spverbatim}
+% \begin{spverbatim}
+% Después de que se ha formado un agujero negro, puede seguir creciendo absorbiendo masa de su entorno. Hay consenso en que los agujeros negros supermasivos existen en los centros de la mayoría de las galaxias.
+% \end{spverbatim}
+% \begin{spverbatim}
+% Después de la formación de un agujero negro, puede seguir creciendo absorbiendo masa de su entorno. Hay consenso de que existen agujeros negros supermasivos en los centros de la mayoría de las galaxias.
+% \end{spverbatim}
