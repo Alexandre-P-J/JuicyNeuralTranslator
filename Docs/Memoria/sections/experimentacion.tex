@@ -1,6 +1,77 @@
-\chapter{Experimentación con modelos de traducción}
-\section{Métricas de evaluación}
+\chapter{Implementación de los modelos de traducción}
+
+\section{Métricas de valoración}
 \subsection{\textit{SacreBleu}}
+\cite{Post2018Oct}
 \subsection{\textit{Character N-gram F-score}}
+\cite{popovic-2015-chrf}
+
+% \section{Experimentación preliminar}
+% El primer contacto con la arquitectura transformer fue un experimento con el objetivo de entrenar un modelo idéntico al transformer original para la traducción de inglés-español. Este experimento se realizó antes de la inscripción
+
+\section{\textit{Pipeline} de datos}\label{datapipeline}
+En los experimentos de \textit{finetuning} y \textit{transfer learning} el \textit{pipeline} de datos es idéntico. Los datasets son uno o más corpus biling{\"u}es compuestos de pares de secuencias con el mismo contenido en dos idiomas. Los corpus se mezclan aleatoriamente y se particionan en conjuntos de entrenamiento, validación y test en las proporciones de 60/20/20\% en ese mismo orden.
+
+Posteriormente, se arreglan en cada conjunto los caracteres unicode inválidos, se elimina la indentación y otros espacios en blanco innecesarios y se descartan las secuencias vacías. Sin embargo, no se eliminan acentos diacríticos u otros elementos que enriquecen el idioma. Luego se tokeniza usando \textit{SentencePiece} tal como se detalla en profundidad en el apartado \ref{datamangle} y se truncan las tokenizaciones a un tamaño máximo de 512 tokens, el límite del modelo. Posteriormente se agrupan los datos en \textit{batches} de 16 ejemplos listos para ser procesados por el modelo descrito en el capítulo \ref{transformerchapter}, que es idéntico a la arquitecta transformer original.
+
+Para la medición y evaluación se usan las métricas BLEU y chrF sobre el conjunto de validación o test para comparar todas las secuencias traducidas con sus respectivas secuencias de referencia. Antes de computar las métricas, se revierte la tokenización y se postprocesan las secuencias eliminando espacios al inicio y final de las frases.
+
 \section{Finetuning}
+El primer experimento que se llevó a cabo fue el \textit{finetuning} de un modelo de traducción inglés-español para ajustar su registro a un tono más formal.
+El modelo de partida usado es \textbf{Helsinki-NLP/opus-mt-en-es} del repositorio de Huggingface.
+Los modelos del grupo de investigación del procesamiento del lenguaje natural de la universidad de Helsinki publicados en Huggingface usan el \textit{framework} MarianMT \cite{Junczys-Dowmunt2018Apr}, con una arquitectura idéntica al transformer original descrito en el capítulo \ref{transformerchapter} en profundidad.
+
+Para el \textit{finetuning} del modelo, se optó por conservar el máximo número de hiperparámetros intactos y simular un \textit{pipeline} lo más parecido posible al original.
+La normalización usada en el corpus del modelo original consistía en la eliminación de acentos diacríticos y la limpieza o sustitución de caracteres unicode, sin embargo, para el \textit{finetuning} del modelo se ha preferido no eliminar acentos ni otras riquezas ling{\"u}ísticas con el objetivo de mejorar la calidad del modelo. Esta es la única diferencia respecto al \textit{pipeline} de datos descrito en el apartado \ref{datapipeline}.
+El tokenizador del modelo original usa \textit{SentencePiece} con un vocabulario de $65.000$ tokens y se conservó para el nuevo modelo debido a que producía tokenizaciones razonables y de un tamaño similar independiente de la modificación en la normalización.
+
+En la rutina de optimización Adam \cite{Kingma2014Dec} únicamente se redujo el ratio de aprendizaje debido a que manteniendo el valor original, el modelo era muy inestable y empeoraba de forma visible. Se optó por un ajuste manual del hiperparámetro, de $2\cdot 10^{-3}$ a $2\cdot 10^{-4}$, un orden de magnitud inferior.
+
+\subsection{Entrenamiento}
+\subsubsection{JRC-Acquis}
+El entrenamiento se ha realizado con dos datasets, el primer modelo se entrenó con el dataset JRC-Acquis del repositorio OPUS \cite{CORPUS} y es una colección de textos legislativos de la unión europea desde el año 1950 hasta la actualidad. Se ha elegido el par de lenguajes inglés-español alineados por parágrafos con un total de 416.322 pares de secuencias.
+Se finalizó el entrenamiento una vez terminado el tercer \textit{epoch} a las 5 horas de ejecución debido a que el error de validación empezaba a estabilizarse. No se esperó hasta la convergencia total debido a que el coste temporal y computacional se hubiera disparado y las ganancias probablemente serían mínimas.
+
+\begin{table}[H]
+    \begin{center}
+        \begin{tabular}{ l r r }
+        \multicolumn{3}{l}{\textbf{Helsinki-NLP/opus-mt-en-es}}\\
+        \textbf{Muestra} & \textbf{BLEU} & \textbf{chrF} \\
+        Validación & 40.1775 & 67.0548 \\
+        Test & 40.1954 & 67.1326 \\
+        Tatoeba Challenge & 56.9578 & 73.6682
+        \end{tabular}
+        \caption{Inferencia en un modelo transformer de traducción [Elaboración propia]}\label{originalacquis}
+    \end{center}
+\end{table}
+
+\begin{table}[H]
+    \begin{center}
+        \begin{tabular}{ l r r }
+        \multicolumn{3}{l}{\textbf{JRC-Acquis \textit{finetuned}}}\\
+        \textbf{Muestra} & \textbf{BLEU} & \textbf{chrF} \\
+        Validación & 43.0387 & 68.9894 \\
+        Test & 43.0197 & 68.9007 \\
+        Tatoeba Challenge & 49.8269 & 68.9390
+        \end{tabular}
+        \caption{Inferencia en un modelo transformer de traducción [Elaboración propia]}\label{finetuneacquis}
+    \end{center}
+\end{table}
+
+
+\begin{spverbatim}
+After a black hole has formed, it can continue to grow by absorbing mass from its surroundings. There is consensus that supermassive black holes exist in the centers of most galaxies.
+\end{spverbatim}
+\begin{spverbatim}
+Después de que se ha formado un agujero negro, puede seguir creciendo absorbiendo masa de su entorno. Hay consenso en que los agujeros negros supermasivos existen en los centros de la mayoría de las galaxias.
+\end{spverbatim}
+\begin{spverbatim}
+Después de la formación de un agujero negro, puede seguir creciendo absorbiendo masa de su entorno. Hay consenso de que existen agujeros negros supermasivos en los centros de la mayoría de las galaxias.
+\end{spverbatim}
+
+
+
+% 2 datasets
 \section{Transfer learning}
+% tokenizado, freeze embed, filtrado de datasets
+\section{Resultados}

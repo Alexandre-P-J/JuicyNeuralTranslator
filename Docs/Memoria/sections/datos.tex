@@ -1,4 +1,4 @@
-\chapter{Adquisición y tratamiento de datos}
+\chapter{Adquisición y tratamiento de datos}\label{datamangle}
 \section{Consideraciones sobre la adquisición de datos}
 La adquisición de datos es uno de los pasos más importantes en el desarrollo de un proyecto de \textit{machine learning}, ya que la calidad del \textit{dataset} tiene una influencia directa sobre el rendimiento de los modelos. En el caso de la traducción automática es común usar corpus biling{\"u}es para entrenar modelos a traducir de una de las lenguas a la otra.
 
@@ -11,7 +11,7 @@ El dominio al que pertenecen los corpus también condicionará la calidad de los
 
 Por último, el origen y el método de obtención de \textit{datasets} plantea problemas éticos y legales, es por ello que para la elaboración del trabajo se ha optado por usar el repositorio abierto OPUS \cite{CORPUS}, que contiene una colección de corpus biling{\"u}es obtenidos éticamente.
 
-\section{Normalización}
+\section{Normalización}\label{datanorm}
 La normalización en el contexto del lenguaje natural consiste en aplicar una serie de operaciones sobre el texto para reducir su variabilidad y así mismo facilitar el entrenamiento de modelos u otras tareas. Algunas operaciones son: la eliminación de espacios en blanco, la conversión a minúsculas, la normalización de caracteres y ligaduras unicode o la eliminación de acentos diacríticos o todos los acentos.
 
 También existen técnicas más avanzadas como el \textit{stemming}, la lematización o la expansión de contracciones. Estas tienen como objetivo sustituir palabras de significado parecido, por una representación canónica. Por ejemplo las palabras \textit{walking} y \textit{walked} podrían sustituirse por \textit{walk} o la contracción \textit{we'll} se podría expandir a \textit{we will}.
