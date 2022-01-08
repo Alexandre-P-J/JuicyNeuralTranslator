@@ -158,9 +158,13 @@ trainer = Seq2SeqTrainer(
 # trainer.train(base_model_name) # start from interrupted train
 # trainer.train()
 
-# # TEST
-# _, _, metrics = trainer.predict(test_dataset=test_tokenized)
-# print(f"TEST:\n{metrics}")
+# LAST EPOCH EVAL
+metrics = trainer.evaluate(eval_dataset=val_tokenized)
+print(f"LAST EPOCH EVAL:\n{metrics}")
+
+# TEST
+_, _, metrics = trainer.predict(test_dataset=test_tokenized)
+print(f"TEST:\n{metrics}")
 
 # # EXTRA TEST: METRICS WITH TATOEBA
 test_ca_en_tatoeba = load_ca_en_tatoeba_challenge()
