@@ -2,12 +2,18 @@
 /////////////// FINETUNING ///////////////
 //////////////////////////////////////////
 # ORIGINAL EN-ES
-SciELO Test
-{'eval_loss': 1.3268274068832397, 'eval_BLEU': 40.1954, 'eval_chr-F': 67.1326, 'eval_gen_len': 40.2621, 'eval_runtime': 7380.1097, 'eval_samples_per_second': 11.282, 'eval_steps_per_second': 0.705}
 Tatoeba challenge
 {'eval_loss': 0.6677169799804688, 'eval_BLEU': 56.9578, 'eval_chr-F': 73.6682, 'eval_gen_len': 9.8371, 'eval_runtime': 403.7111, 'eval_samples_per_second': 41.076, 'eval_steps_per_second': 2.569}
-JRC-Acquis Last Eval
+JRC-Acquis Eval
 {'eval_loss': 0.7985895872116089, 'eval_BLEU': 55.2525, 'eval_chr-F': 73.6, 'eval_gen_len': 36.9017, 'eval_runtime': 11036.3434, 'eval_samples_per_second': 9.151, 'eval_steps_per_second': 0.572}
+
+# FINE-TUNED (JRC-Acquis) EN-ES (run2)
+Last JRC-Acquis epoch Eval
+{'eval_loss': 0.6296912431716919, 'eval_BLEU': 58.6264, 'eval_chr-F': 75.6313, 'eval_gen_len': 36.7278, 'eval_runtime': 10062.3182, 'eval_samples_per_second': 10.037, 'eval_steps_per_second': 0.627}
+JRC-Acquis Test
+{'eval_loss': 0.6277616620063782, 'eval_BLEU': 58.621, 'eval_chr-F': 75.654, 'eval_gen_len': 36.6521, 'eval_runtime': 10449.7749, 'eval_samples_per_second': 9.665, 'eval_steps_per_second': 0.604}
+Tatoeba challenge
+{'eval_loss': 1.2016243934631348, 'eval_BLEU': 39.4177, 'eval_chr-F': 61.0986, 'eval_gen_len': 10.7557, 'eval_runtime': 582.0825, 'eval_samples_per_second': 28.489, 'eval_steps_per_second': 1.782}
 
 # FINE-TUNED (SciELO) EN-ES
 Last SciELO epoch Eval
@@ -16,6 +22,15 @@ SciELO Test
 {'eval_loss': 1.1033543348312378, 'eval_BLEU': 43.0197, 'eval_chr-F': 68.9007, 'eval_gen_len': 40.3101, 'eval_runtime': 7688.0882, 'eval_samples_per_second': 10.83, 'eval_steps_per_second': 0.677}
 Tatoeba challenge
 {'eval_loss': 0.7542015910148621, 'eval_BLEU': 49.8269, 'eval_chr-F': 68.939, 'eval_gen_len': 10.1284, 'eval_runtime': 435.6015, 'eval_samples_per_second': 38.069, 'eval_steps_per_second': 2.381}
+
+# FINE-TUNED (SciELO) EN-ES 2 (run5)
+Last SciELO epoch Eval
+{'eval_loss': 1.0951454639434814, 'eval_BLEU': 43.1173, 'eval_chr-F': 69.0259, 'eval_gen_len': 40.3166, 'eval_runtime': 8075.7822, 'eval_samples_per_second': 10.31, 'eval_steps_per_second': 0.644}
+SciELO Test
+{'eval_loss': 1.098435401916504, 'eval_BLEU': 43.0942, 'eval_chr-F': 68.9413, 'eval_gen_len': 40.2951, 'eval_runtime': 8173.5053, 'eval_samples_per_second': 10.187, 'eval_steps_per_second': 0.637}
+Tatoeba challenge
+{'eval_loss': 0.7429891228675842, 'eval_BLEU': 50.071, 'eval_chr-F': 69.1425, 'eval_gen_len': 10.1193, 'eval_runtime': 501.7406, 'eval_samples_per_second': 33.051, 'eval_steps_per_second': 2.067}
+
 
 //////////////////////////////////////////
 //////////////// TRANSFER ////////////////
@@ -37,3 +52,17 @@ TATOEBA CA-EN:
 {'eval_loss': 0.7405405044555664, 'eval_BLEU': 51.0978, 'eval_chr-F': 67.7934, 'eval_gen_len': 9.5665, 'eval_runtime': 38.9187, 'eval_samples_per_second': 41.908, 'eval_steps_per_second': 2.621}
 TATOEBA ES-EN:
 {'eval_loss': 0.8239797949790955, 'eval_BLEU': 48.0979, 'eval_chr-F': 65.5349, 'eval_gen_len': 10.3163, 'eval_runtime': 445.4392, 'eval_samples_per_second': 37.228, 'eval_steps_per_second': 2.328}
+Last Eval:
+{'eval_loss': 1.5252395868301392, 'eval_BLEU': 35.2946, 'eval_chr-F': 54.9076, 'eval_gen_len': 12.0266, 'eval_runtime': 4301.6466, 'eval_samples_per_second': 23.674, 'eval_steps_per_second': 1.48}
+Test:
+{'eval_loss': 1.5261942148208618, 'eval_BLEU': 35.2684, 'eval_chr-F': 54.8989, 'eval_gen_len': 12.0967, 'eval_runtime': 4236.5674, 'eval_samples_per_second': 24.038, 'eval_steps_per_second': 1.502}
+
+CA-EN transfer 2 from ES-EN model:
+TATOEBA CA-EN:
+{'eval_loss': 0.6625560522079468, 'eval_BLEU': 53.54, 'eval_chr-F': 69.2849, 'eval_gen_len': 9.5794, 'eval_runtime': 46.5786, 'eval_samples_per_second': 35.016, 'eval_steps_per_second': 2.19}
+TATOEBA ES-EN:
+{'eval_loss': 0.5703380107879639, 'eval_BLEU': 57.049, 'eval_chr-F': 72.4531, 'eval_gen_len': 10.2108, 'eval_runtime': 536.192, 'eval_samples_per_second': 30.927, 'eval_steps_per_second': 1.934}
+Last Eval:
+{'eval_loss': 1.414432168006897, 'eval_BLEU': 35.7988, 'eval_chr-F': 55.3232, 'eval_gen_len': 11.975, 'eval_runtime': 4484.5557, 'eval_samples_per_second': 22.709, 'eval_steps_per_second': 1.419}
+Test:
+{'eval_loss': 1.4144368171691895, 'eval_BLEU': 35.8034, 'eval_chr-F': 55.2997, 'eval_gen_len': 12.0346, 'eval_runtime': 4483.6768, 'eval_samples_per_second': 22.713, 'eval_steps_per_second': 1.42}
