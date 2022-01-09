@@ -130,25 +130,25 @@ De la misma manera que con el dataset anterior, se finalizó el entrenamiento un
 \subsection{Resultados}
 \begin{table}[H]
     \begin{center}
-        \begin{tabular}{ l r r }
+        \begin{tabular}{ l S[table-format=2.4] S[table-format=2.4] }
         \multicolumn{3}{l}{\textbf{Helsinki-NLP/opus-mt-en-es}}\\
         \textbf{Muestra} & \textbf{BLEU} & \textbf{chrF} \\
-        Validación & 55.2525 & 73.6000 \\
-        Test & 0 & 0 \\
-        Tatoeba Challenge & 0 & 0
+        Validación JRC-Acquis & 55,2525 & 73,6 \\
+        Validación SciELO & wip & wip \\
+        Tatoeba Challenge & 56,9578 & 73,6682
         \end{tabular}
-        \caption{Métricas del modelo original sobre el corpus JRC-Acquis [Elaboración propia]}\label{originalacquis}
+        \caption{Métricas del modelo original antes del \textit{finetuning} [Elaboración propia]}\label{originalfinetune}
     \end{center}
 \end{table}
 
 \begin{table}[H]
     \begin{center}
-        \begin{tabular}{ l r r }
+        \begin{tabular}{ l S[table-format=2.4] S[table-format=2.4] }
         \multicolumn{3}{l}{\textbf{JRC-Acquis \textit{finetuned}}}\\
         \textbf{Muestra} & \textbf{BLEU} & \textbf{chrF} \\
-        Validación & 0 & 0 \\ % ?
-        Test & 0 & 0 \\
-        Tatoeba Challenge & 0 & 0
+        Validación JRC-Acquis & 58,6264 & 75,6313 \\
+        Test JRC-Acquis & 58,621 & 75,654 \\
+        Tatoeba Challenge & 39,4177 & 61,0986
         \end{tabular}
         \caption{Métricas del modelo \textit{finetuned} sobre el corpus JRC-Acquis [Elaboración propia]}\label{finetuneacquis}
     \end{center}
@@ -156,25 +156,12 @@ De la misma manera que con el dataset anterior, se finalizó el entrenamiento un
 
 \begin{table}[H]
     \begin{center}
-        \begin{tabular}{ l r r }
-        \multicolumn{3}{l}{\textbf{Helsinki-NLP/opus-mt-en-es}}\\
-        \textbf{Muestra} & \textbf{BLEU} & \textbf{chrF} \\
-        Validación & 40.1775 & 67.0548 \\ % ?
-        Test & 40.1954 & 67.1326 \\
-        Tatoeba Challenge & 56.9578 & 73.6682
-        \end{tabular}
-        \caption{Métricas del modelo original sobre el corpus SciELO [Elaboración propia]}\label{originalscielo}
-    \end{center}
-\end{table}
-
-\begin{table}[H]
-    \begin{center}
-        \begin{tabular}{ l r r }
+        \begin{tabular}{ l S[table-format=2.4] S[table-format=2.4] }
         \multicolumn{3}{l}{\textbf{SciELO \textit{finetuned}}}\\
         \textbf{Muestra} & \textbf{BLEU} & \textbf{chrF} \\
-        Validación & 43.0387 & 68.9894 \\
-        Test & 43.0197 & 68.9007 \\
-        Tatoeba Challenge & 49.8269 & 68.9390
+        Validación SciELO & 43,1173 & 69,0259 \\
+        Test SciELO & 43,0942 & 68,9413 \\
+        Tatoeba Challenge & 50,071 & 69,1425
         \end{tabular}
         \caption{Métricas de modelo \textit{finetuned} sobre el corpus SciELO [Elaboración propia]}\label{finetunescielo}
     \end{center}
@@ -195,7 +182,7 @@ Se consideró reentrenar el tokenizador \textit{SentencePiece} con el corpus de 
     \item Empíricamente las tokenizaciones de secuencias en catalán con el tokenizador español-inglés respecto el tokenizador catalán-inglés únicamente contienen entre un 15-20\% más tokens.
 \end{itemize}
 
-En el optimizador Adam \cite{Kingma2014Dec} se ha reducido manualmente el hiperparámetro de ratio de aprendizaje, de $2\cdot 10^{-3}$ a $2\cdot 10^{-4}$, un orden de magnitud inferior.
+En el optimizador Adam \cite{Kingma2014Dec} se ha reducido manualmente el hiperparámetro de ratio de aprendizaje, de $2\cdot 10^{-3}$ a $10^{-5}$, dos ordenes de magnitud inferior.
 
 
 \subsection{Entrenamiento}
@@ -206,16 +193,16 @@ Los datos de entrenamiento se eligieron a partir de los corpus usados por el mod
 Para el \textit{transfer learning} solo se usaron los corpus Books, GlobalVoices, OpenSubtitles y QED compuestos por textos alineados en parágrafos de la literatura, noticias internacionales, subtítulos de películas y de medios educativos en ese orden.
 El dataset resultante después de mezclar los corpus aleatoriamente como se describe en \ref{datapipeline} contiene un total de 509.194 secuencias catalán-inglés.
 
-Se dio por terminado el entrenamiento una vez concluido el \textit{epoch} 5 después de 12 horas de entrenamiento debido a que el error de validación empezaba a estabilizarse pero no se esperó hasta la convergencia total debido al coste computacional y temporal asociado.
+Se dio por terminado el entrenamiento una vez concluido el \textit{epoch} 5 después de 9 horas de entrenamiento debido a que el error de validación empezaba a estabilizarse pero no se esperó hasta la convergencia total debido al coste computacional y temporal asociado.
 
 \subsection{Resultados}
 \begin{table}[H]
     \begin{center}
-        \begin{tabular}{ l r r }
+        \begin{tabular}{ l S[table-format=2.4] S[table-format=2.4] }
         \multicolumn{3}{l}{\textbf{Helsinki-NLP/opus-mt-es-en}}\\
         \textbf{Muestra} & \textbf{BLEU} & \textbf{chrF} \\
-        Tatoeba Challenge Ca-En & 0 & 0 \\
-        Tatoeba Challenge Es-En & 0 & 0
+        Tatoeba Challenge Ca-En & 9,6952 & 28,3868 \\
+        Tatoeba Challenge Es-En & 60,6793 & 74,9145
         \end{tabular}
         \caption{Métricas del modelo original español-inglés [Elaboración propia]}\label{transferorigesen}
     \end{center}
@@ -223,11 +210,11 @@ Se dio por terminado el entrenamiento una vez concluido el \textit{epoch} 5 desp
 
 \begin{table}[H]
     \begin{center}
-        \begin{tabular}{ l r r }
+        \begin{tabular}{ l S[table-format=2.4] S[table-format=2.4] }
         \multicolumn{3}{l}{\textbf{Helsinki-NLP/opus-mt-ca-en}}\\
         \textbf{Muestra} & \textbf{BLEU} & \textbf{chrF} \\
-        Tatoeba Challenge Ca-En & 0 & 0 \\
-        Tatoeba Challenge Es-En & 0 & 0
+        Tatoeba Challenge Ca-En & 48,7704 & 65,7556 \\
+        Tatoeba Challenge Es-En & 17,6634 & 36,9217
         \end{tabular}
         \caption{Métricas del modelo \textit{baseline} catalán-ingles [Elaboración propia]}\label{transferorigcaen}
     \end{center}
@@ -235,15 +222,15 @@ Se dio por terminado el entrenamiento una vez concluido el \textit{epoch} 5 desp
 
 \begin{table}[H]
     \begin{center}
-        \begin{tabular}{ l r r }
+        \begin{tabular}{ l S[table-format=2.4] S[table-format=2.4] }
         \multicolumn{3}{l}{\textbf{Catalán-Inglés \textit{transfer learning}}}\\
         \textbf{Muestra} & \textbf{BLEU} & \textbf{chrF} \\
-        Validación & 0 & 0 \\
-        Test & 0 & 0 \\
-        Tatoeba Challenge Ca-En & 0 & 0 \\
-        Tatoeba Challenge Es-En & 0 & 0
+        Validación & 35,7988 & 55,3232 \\
+        Test & 35,8034 & 55,2997 \\
+        Tatoeba Challenge Ca-En & 53,54 & 69,2849 \\
+        Tatoeba Challenge Es-En & 57,049 & 72,4531
         \end{tabular}
-        \caption{Métricas del modelo entrenado con \textit{transfer learning} catalán-inglés [Elaboración propia]}\label{transfercaen}
+        \caption{Métricas del modelo entrenado con \textit{transfer learning} de español-inglés a catalán-inglés [Elaboración propia]}\label{transfercaen}
     \end{center}
 \end{table}
 
