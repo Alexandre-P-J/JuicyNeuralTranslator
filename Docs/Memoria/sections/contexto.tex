@@ -58,7 +58,7 @@ Los mecanismos de atención son una forma de codificar la importancia y relacion
 datos de la entrada. Un ejemplo seria el de las palabras en una oración: cada palabra tiene una
 importancia y unas relaciones con el resto de palabras de la oración.
 En el caso concreto del transformer original \cite{Vaswani2017Jun} el mecanismo de atención
-calcula numericamente la relación entre cada par de palabras, pero existen diversos métodos.
+calcula numéricamente la relación entre cada par de palabras, pero existen diversos métodos.
 
 \subsubsection{\textit{Fine-tuning y Transfer learning}}
 \textit{Fine-tuning} consiste en re-entrenar (posiblemente con datos distintos) un modelo que ya ha
@@ -78,6 +78,10 @@ Es una técnica interesante porque el nuevo modelo puede ser más pequeño, simp
 además reduce el tiempo de entrenamiento considerablemente.
 Si el tiempo lo permite, se hará \textit{model distillation} de un modelo pre-entrenado de traducción
 hacia una arquitectura más eficiente.
+
+\subsubsection{\textit{N-gram}}
+Un \textit{n-gram} es un conjunto de $n$ elementos contiguos en una secuencia, donde los elementos habitualmente son palabras o caracteres.
+Suponiendo que se usan palabras, en la frase ``Miguel tiene dos perros'' los \textit{1-gram} son: ``Miguel'', ``tiene'', ``dos'' y ``perros''. Sus \textit{2-gram} serían: ``Miguel tiene'', ``tiene dos'', ``dos perros'' y sus \textit{3-grams}: ``Miguel tiene dos'' y ``tiene dos perros''.
 
 
 

@@ -1,15 +1,106 @@
-\chapter{Implementación de los modelos de traducción}
+\chapter{Implementación de modelos de traducción}
 
 \section{Métricas de valoración}
+En el trabajo se usan las métricas BLEU y chrF para la comparación de textos obtenidos con modelos de traducción respecto a sus textos de referencia. Ambas métricas pretenden dar una estimación de la calidad de las traducciones sobre un corpus.
+
+Las métricas elegidas son simples, fáciles de computar y bien conocidas, además son independientes del tokenizador usado.
+BLEU es una de las métricas más famosas, sin embargo, a lo largo de los años ha sido objeto de crítica debido a su baja correlación con la valoración humana y otros problemas. ChrF es una métrica más moderna que usa n-gram de caracteres en vez de palabras. Esto permite la puntuación parcial de palabras con erratas y es especialmente relevante en lenguas con morfología rica como el catalán o el español. Se ha demostrado empíricamente que chrF tiene una mejor correlación con la valoración humana que BLEU \cite{Ma2019Aug} y es una métrica generalmente recomendada \cite{Kocmi2021Jul} y simple de calcular debido a que no requiere preentrenamiento.
+
 \subsection{\textit{SacreBleu}}
-\cite{Post2018Oct}
+\textit{SacreBleu} \cite{Post2018Oct} es una implementación de la puntuación BLEU con el objetivo de estandarizar el cálculo de la métrica y facilitar la comparación.
+BLEU compara una secuencia de texto con una o más secuencias de referencia mediante una puntuación entre el 0 y el 100. Sin embargo en este trabajo cada secuencia únicamente corresponde a una secuencia de referencia.
+
+\begin{figure}[H]
+    \begin{align*}
+        BLEU(N,S_{p},S_{r}) = \text{Precisión}_{media}(N, S_{p}, S_{r})\cdot \text{Penalización}_{brevedad}(S_{p}, S_{r})
+    \end{align*}
+    \caption{Fórmula de la métrica BLEU [Elaboración propia]}\label{Bleuform}
+\end{figure}
+La figura \ref{Bleuform} muestra una formula para calcular BLEU a partir de $N \geq 1$, un natural que normalmente es $4$ y $S_{p}$, $S_{r}$ la frase predicha por un modelo y su secuencia de referencia en ese orden.
+
+\begin{figure}[H]
+    \begin{align*}
+        \text{Sea }C_{p}\text{ el conjunto de }n\text{-grams de }S_{p}\text{,}\\
+        T(S_{x}, g)\text{ el número de ocurrencias de }g\text{ en }S_{x}\text{ y}\\
+        |S_{p}|\text{ el número de }n\text{-grams de la secuencia }S_{p}\text{,}\\ \\
+        \text{Precisión}(n, S_{p}, S_{r}) = \sum_{g\in{C_{p}}}\frac{min(T(S_{p}, g), T(S_{r}, g))}{ |S_{p}| }
+    \end{align*}
+    \caption{Precisión de los $n$-gram de una secuencia predicha sobre una secuencia de referencia [Elaboración propia]}\label{Bleuprecision}
+\end{figure}
+
+La fórmula \ref{Bleuprecision} calcula la precisión de $S_{p}$ sobre $S_{r}$ dividiendo el número de n-gram correctamente predichos entre el total de n-gram predichos. Sin embargo, para evitar que los n-gram repetidos más veces de las que aparecen aumenten la precisión, se limita el conteo al mínimo número de apariciones en ambas secuencias.
+
+\begin{figure}[H]
+    \begin{align*}
+        \text{Precisión}_{media}(N, S_{p}, S_{r}) = \prod^{N}_{n=1}{\text{Precisión}(n, S_{p}, S_{r})^{\frac{1}{\text{N}}}}
+    \end{align*}
+    \caption{Media geométrica de las $N$ precisiones calculadas [Elaboración propia]}\label{Bleumean}
+\end{figure}
+
+En la figura \ref{Bleumean} se observa la expresión del primer término de la primera fórmula \ref{Bleuform}. Se calcula la media geométrica de las precisiones obtenidas usando 1-gram..N-gram en la fórmula \ref{Bleuprecision}.
+
+Por último, en la figura \ref{Bleupenal} se describe el segundo término de la fórmula para calcular la métrica BLEU. Se trata de un factor que penaliza las secuencias predichas más cortas que su correspondiente secuencia de referencia. Esta medida se toma para evitar secuencias de pocos n-gram con alta precisión. Por ejemplo: una secuencia de una sola palabra tendría máxima precisión si la palabra aparece al menos una vez en la secuencia de referencia.
+
+\begin{figure}[H]
+    \begin{align*}
+        \text{Sea }|S_{x}|\text{ el número de palabras de }S_{x}\text{,}\\ \\
+        \text{Penalización}_{brevedad}(S_{p}, S_{r}) =
+        \begin{cases}
+            1, &\text{si }|S_{p}| > |S_{r}|\\
+            e^{(1 - |S_{r}|)/|S_{p}| }, &\text{si }|S_{p}|\leq{ |S_{r}| }
+          \end{cases}
+    \end{align*}
+    \caption{Penalización de la brevedad en la métrica BLEU [Elaboración propia]}\label{Bleupenal}
+\end{figure}
+
+
 \subsection{\textit{Character N-gram F-score}}
-\cite{popovic-2015-chrf}
+ChrF \cite{popovic-2015-chrf} es una métrica más reciente que BLEU para la comparativa automática de traducciones. Con el fin de estandarizar el procedimiento, la implementación usada en el trabajo también la proporciona \textit{SacreBleu} \cite{Post2018Oct}.
 
-\section{\textit{Pipeline} de datos}\label{datapipeline}
-En los experimentos de \textit{finetuning} y \textit{transfer learning} el \textit{pipeline} de datos es idéntico. Los datasets son uno o más corpus biling{\"u}es compuestos de pares de secuencias con el mismo contenido en dos idiomas. Los corpus se mezclan aleatoriamente y se particionan en conjuntos de entrenamiento, validación y test en las proporciones de 60/20/20\% en ese mismo orden.
+\begin{figure}[H]
+    \begin{align*}
+        \text{Donde }S_p\text{ y }S_r\text{ son la secuencia predicha y de referencia,}\\
+        \beta\text{ asigna }\beta\text{ veces más importancia al \textit{recall} que a la precision,}\\
+        \text{En el proyecto y en \textit{SacreBleu}, }N=6\text{ y }\beta=2\text{,}\\ \\
+        \text{chrF}(\beta, N,S_{p},S_{r})=(1-\beta^{2})\frac{\text{chrP}(N,S_{p},S_{r})\cdot\text{chrR}(N,S_{p},S_{r})}{\beta^{2}\cdot\text{chrP}(N,S_{p},S_{r})+\text{chrR}(N,S_{p},S_{r})}
+    \end{align*}
+    \caption{Fórmula general de la métrica $\text{chrF}_{\beta}$ [Elaboración propia]}\label{chrfformula}
+\end{figure}
 
-Posteriormente, se arreglan en cada conjunto los caracteres unicode inválidos, se elimina la indentación y otros espacios en blanco innecesarios y se descartan las secuencias vacías. Sin embargo, no se eliminan acentos diacríticos u otros elementos que enriquecen el idioma. Luego se tokeniza usando \textit{SentencePiece} tal como se detalla en profundidad en el apartado \ref{datamangle} y se truncan las tokenizaciones a un tamaño máximo de 512 tokens, el límite del modelo. Posteriormente se agrupan los datos en \textit{batches} de 16 ejemplos listos para ser procesados por el modelo descrito en el capítulo \ref{transformerchapter}, que es idéntico a la arquitecta transformer original.
+La fórmula de la figura \ref{chrfformula} es la misma que se presenta en \cite{popovic-2015-chrf} con todos sus parámetros expuestos para facilitar su entendimiento. Los términos chrP y chrF se definen a continuación.
+
+\begin{figure}[H]
+    \begin{align*}
+        \text{Sea }C_{r}\text{ el conjunto de }n\text{-grams de }S_{r}\text{,}\\
+        T(S_{p}, g)\text{ el número de ocurrencias de }g\text{ en }S_{p}\text{ y}\\
+        |S_{p}|\text{ el número de }n\text{-grams de la secuencia }S_{p}\text{,}\\ \\
+        \text{Precisión}(n,S_{p},S_{r})=\sum_{g\in{C_{r}}}{\frac{ T(S_{p},g) }{ |S_{p}| }}\\
+        \text{chrP}(N,S_{p},S_{r})=\sum_{n=1}^{N}\frac{\text{Precisión}(n,S_{p},S_{r})}{N}
+    \end{align*}
+    \caption{Media aritmética de la precisión de 1-gram hasta N-gram [Elaboración propia]}\label{chrfprecisionformula}
+\end{figure}
+
+La figura \ref{chrfprecisionformula} muestra la fórmula de la precisión en términos de n-grams en secuencias y posteriormente define chrP como la media aritmética de las precisiones obtenidas con n-gram de 1 hasta $N$ elementos.
+
+\begin{figure}[H]
+    \begin{align*}
+        \text{Sea }C_{r}\text{ el conjunto de }n\text{-grams de }S_{r}\text{,}\\
+        T(S_{p}, g)\text{ el número de ocurrencias de }g\text{ en }S_{p}\text{ y}\\
+        |S_{r}|\text{ el número de }n\text{-grams de la secuencia }S_{r}\text{,}\\ \\
+        \textit{Recall}(n,S_{p},S_{r})=\sum_{g\in{C_{r}}}{\frac{ T(S_{p},g) }{ |S_{r}| }}\\
+        \text{chrR}(N,S_{p},S_{r})=\sum_{n=1}^{N}\frac{\textit{Recall}(n,S_{p},S_{r})}{N}
+    \end{align*}
+    \caption{Media aritmética del \textit{recall} de 1-gram hasta N-gram [Elaboración propia]}\label{chrfrecallformula}
+\end{figure}
+
+La figura \ref{chrfrecallformula} expresa la fórmula del \textit{recall} en términos de n-grams en secuencias y define chrR como el promedio de los \textit{recall} obtenidos con n-gram de 1 hasta $N$ elementos.
+
+\section{Metodología}\label{datapipeline}
+En los experimentos de \textit{finetuning} y \textit{transfer learning} el \textit{pipeline} de datos es idéntico. Los datasets son uno o más corpus biling{\"u}es compuestos de pares de secuencias con el mismo contenido en dos idiomas. Los corpus se mezclan aleatoriamente y se parten en conjuntos de entrenamiento, validación y test en las proporciones de 60/20/20\% en ese mismo orden.
+
+Posteriormente, se arreglan en cada conjunto los caracteres unicode inválidos, se elimina la indentación y otros espacios en blanco innecesarios y se descartan las secuencias vacías. Sin embargo, no se eliminan acentos diacríticos u otros elementos que enriquecen el idioma. Luego se tokeniza usando \textit{SentencePiece} tal como se detalla en profundidad en el apartado \ref{datamangle} y se truncan las tokenizaciones a un tamaño máximo de 512 tokens, el límite de los modelos. Posteriormente se agrupan los datos en \textit{batches} de 16 ejemplos listos para ser procesados por el modelo descrito en el capítulo \ref{transformerchapter}, que es idéntico a la arquitecta transformer original.
+
+Se usa el conjunto de entrenamiento para entrenar los modelos, el conjunto de validación permite monitorizar el progreso del aprendizaje manteniendo una buena generalización. Finalmente para estimar la bondad de los modelos se usa el conjunto de test nunca antes visto por el modelo.
 
 Para la medición y evaluación se usan las métricas BLEU y chrF sobre el conjunto de validación o test para comparar todas las secuencias traducidas con sus respectivas secuencias de referencia. Antes de computar las métricas, se revierte la tokenización y se postprocesan las secuencias eliminando espacios al inicio y final de las frases.
 
@@ -30,6 +121,13 @@ El entrenamiento se ha realizado con dos datasets, el primer modelo se entrenó 
 
 Se finalizó el entrenamiento una vez terminado el tercer \textit{epoch} a las 5 horas y media de ejecución debido a que el error de validación empezaba a estabilizarse. No se esperó hasta la convergencia total debido a que el coste temporal y computacional se hubiera disparado y las ganancias probablemente serían mínimas.
 
+\subsubsection{SciELO}
+También se hizo \textit{finetuning} con el dataset SciELO del repositorio OPUS \cite{CORPUS}. Este dataset a diferencia de JRC-Acquis, procede de una librería digital de publicación científica de la cual se esperan textos formales y con vocabulario rico y específico de distintos campos. En este caso los textos también se han alineado por parágrafos y hay un total de 416.322 pares de secuencias inglés-español.
+
+De la misma manera que con el dataset anterior, se finalizó el entrenamiento una vez terminado el tercer \textit{epoch} a las 5 horas de ejecución debido a que el error de validación empezaba a estabilizarse. Tampoco se esperó hasta la convergencia total debido al coste temporal y computacional, que se hubiera disparado y las ganancias probablemente serían mínimas.
+
+
+\subsection{Resultados}
 \begin{table}[H]
     \begin{center}
         \begin{tabular}{ l r r }
@@ -55,12 +153,6 @@ Se finalizó el entrenamiento una vez terminado el tercer \textit{epoch} a las 5
         \caption{Métricas del modelo \textit{finetuned} sobre el corpus JRC-Acquis [Elaboración propia]}\label{finetuneacquis}
     \end{center}
 \end{table}
-
-
-\subsubsection{SciELO}
-También se hizo \textit{finetuning} con el dataset SciELO del repositorio OPUS \cite{CORPUS}. Este dataset a diferencia de JRC-Acquis, procede de una librería digital de publicación científica de la cual se esperan textos formales y con vocabulario rico y específico de distintos campos. En este caso los textos también se han alineado por parágrafos y hay un total de 416.322 pares de secuencias inglés-español.
-
-De la misma manera que con el dataset anterior, se finalizó el entrenamiento una vez terminado el tercer \textit{epoch} a las 5 horas de ejecución debido a que el error de validación empezaba a estabilizarse. Tampoco se esperó hasta la convergencia total debido al coste temporal y computacional, que se hubiera disparado y las ganancias probablemente serían mínimas.
 
 \begin{table}[H]
     \begin{center}
@@ -107,7 +199,6 @@ En el optimizador Adam \cite{Kingma2014Dec} se ha reducido manualmente el hiperp
 
 
 \subsection{Entrenamiento}
-
 Durante entrenamiento del modelo se congeló la matriz de \textit{embeddings} del \textit{decoder} correspondiente a la matriz del idioma inglés ya que es común tanto en el modelo original español-inglés como en el modelo catalán-inglés que se quiere implementar.
 
 Los datos de entrenamiento se eligieron a partir de los corpus usados por el modelo catalán-inglés entrenado por Helsinki-NLP. Ellos seleccionaron los datasets Books, EUbookshop, GlobalVoices, GNOME, KDE4, OpenSubtitles, QED y Ubuntu del repositorio OPUS \cite{CORPUS}. Sin embargo, tras una examinación de los corpus, se percibió que el dataset EUbookshop contenía mucho ruido, por ejemplo: links, siglas, símbolos inválidos y muchas secuencias sin valor semántico. Por otra parte, los corpus GNOME, KDE y Ubuntu extraídos de los software con su mismo nombre, contenían secuencias con vocabulario y semántica muy pobre además de cortas debido al origen y contexto de los datos, las interfaces gráficas de programas.
@@ -117,6 +208,7 @@ El dataset resultante después de mezclar los corpus aleatoriamente como se desc
 
 Se dio por terminado el entrenamiento una vez concluido el \textit{epoch} 5 después de 12 horas de entrenamiento debido a que el error de validación empezaba a estabilizarse pero no se esperó hasta la convergencia total debido al coste computacional y temporal asociado.
 
+\subsection{Resultados}
 \begin{table}[H]
     \begin{center}
         \begin{tabular}{ l r r }
@@ -125,7 +217,7 @@ Se dio por terminado el entrenamiento una vez concluido el \textit{epoch} 5 desp
         Tatoeba Challenge Ca-En & 0 & 0 \\
         Tatoeba Challenge Es-En & 0 & 0
         \end{tabular}
-        \caption{Métricas del modelo \textit{finetuned} sobre el corpus JRC-Acquis [Elaboración propia]}\label{transferorigesen}
+        \caption{Métricas del modelo original español-inglés [Elaboración propia]}\label{transferorigesen}
     \end{center}
 \end{table}
 
@@ -137,7 +229,7 @@ Se dio por terminado el entrenamiento una vez concluido el \textit{epoch} 5 desp
         Tatoeba Challenge Ca-En & 0 & 0 \\
         Tatoeba Challenge Es-En & 0 & 0
         \end{tabular}
-        \caption{Métricas del modelo \textit{finetuned} sobre el corpus JRC-Acquis [Elaboración propia]}\label{transferorigcaen}
+        \caption{Métricas del modelo \textit{baseline} catalán-ingles [Elaboración propia]}\label{transferorigcaen}
     \end{center}
 \end{table}
 
@@ -151,12 +243,10 @@ Se dio por terminado el entrenamiento una vez concluido el \textit{epoch} 5 desp
         Tatoeba Challenge Ca-En & 0 & 0 \\
         Tatoeba Challenge Es-En & 0 & 0
         \end{tabular}
-        \caption{Métricas del modelo \textit{finetuned} sobre el corpus JRC-Acquis [Elaboración propia]}\label{transfercaen}
+        \caption{Métricas del modelo entrenado con \textit{transfer learning} catalán-inglés [Elaboración propia]}\label{transfercaen}
     \end{center}
 \end{table}
 
-
-\section{Resultados}
 % \begin{spverbatim}
 % After a black hole has formed, it can continue to grow by absorbing mass from its surroundings. There is consensus that supermassive black holes exist in the centers of most galaxies.
 % \end{spverbatim}
