@@ -12,7 +12,7 @@ import itertools
 
 random.seed(1234)
 
-base_model_name = "Helsinki-NLP/opus-mt-ca-en"
+base_model_name = "/home/pyro/Projects/TFG/Experimental/opus-mt-transfer-ca-to-en/checkpoint-95500"#"Helsinki-NLP/opus-mt-es-en"
 bleu_metric = load_metric("sacrebleu")
 chrf_metric = load_metric("chrf")
 tokenizer = MarianTokenizer.from_pretrained(base_model_name)
@@ -22,7 +22,7 @@ max_target_length = 128
 source_lang = "ca"
 target_lang = "en"
 batch_size = 16
-num_epoch = 5
+num_epoch = 10
 
 
 def freeze_output_embeddings(model):
@@ -135,7 +135,7 @@ test_tokenized = test.map(preprocess_function, batched=True)
 args = Seq2SeqTrainingArguments(
     f"opus-mt-transfer-{source_lang}-to-{target_lang}",
     evaluation_strategy="epoch",
-    learning_rate=2e-4,
+    learning_rate=1e-5,
     per_device_train_batch_size=batch_size,
     per_device_eval_batch_size=batch_size,
     weight_decay=0.01,
@@ -154,8 +154,9 @@ trainer = Seq2SeqTrainer(
     tokenizer=tokenizer,
     compute_metrics=compute_metrics
 )
+
 # # TRAINING
-# trainer.train(base_model_name) # start from interrupted train
+# #trainer.train(base_model_name) # start from interrupted train
 # trainer.train()
 
 # LAST EPOCH EVAL

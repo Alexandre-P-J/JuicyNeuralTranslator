@@ -6,6 +6,8 @@ Tatoeba challenge
 {'eval_loss': 0.6677169799804688, 'eval_BLEU': 56.9578, 'eval_chr-F': 73.6682, 'eval_gen_len': 9.8371, 'eval_runtime': 403.7111, 'eval_samples_per_second': 41.076, 'eval_steps_per_second': 2.569}
 JRC-Acquis Eval
 {'eval_loss': 0.7985895872116089, 'eval_BLEU': 55.2525, 'eval_chr-F': 73.6, 'eval_gen_len': 36.9017, 'eval_runtime': 11036.3434, 'eval_samples_per_second': 9.151, 'eval_steps_per_second': 0.572}
+SciELO Eval
+{'eval_loss': 1.322216272354126, 'eval_BLEU': 40.2099, 'eval_chr-F': 67.248, 'eval_gen_len': 40.3124, 'eval_runtime': 8441.0776, 'eval_samples_per_second': 9.864, 'eval_steps_per_second': 0.617}
 
 # FINE-TUNED (JRC-Acquis) EN-ES (run2)
 Last JRC-Acquis epoch Eval

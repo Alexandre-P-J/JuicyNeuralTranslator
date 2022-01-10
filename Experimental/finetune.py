@@ -4,6 +4,7 @@ from datasets import Dataset, load_metric
 import random
 from Data.TatoebaChallenge_EsEn import TatoebaChallenge_EsEn_Dataset
 from Data.SciELO_EnEs import SciELO_EnEs_Dataset
+from Data.JRC_Acquis_EnEs import JRC_Acquis_EnEs_Dataset
 
 random.seed(1234)
 
@@ -105,7 +106,7 @@ test_tokenized = test.map(preprocess_function, batched=True)
 args = Seq2SeqTrainingArguments(
     f"opus-mt-finetuned-{source_lang}-to-{target_lang}",
     evaluation_strategy="epoch",
-    learning_rate=2e-5,
+    learning_rate=1e-5,
     per_device_train_batch_size=batch_size,
     per_device_eval_batch_size=batch_size,
     weight_decay=0.01,
@@ -125,10 +126,10 @@ trainer = Seq2SeqTrainer(
 )
 
 # # TRAINING
-#trainer.train(model_name) # start from interrupted train
-#trainer.train()
+# #trainer.train(model_name) # start from interrupted train
+# trainer.train()
 
-# # LAST EPOCH EVAL
+# LAST EPOCH EVAL
 metrics = trainer.evaluate(eval_dataset=val_tokenized)
 print(f"LAST EPOCH EVAL:\n{metrics}")
 
