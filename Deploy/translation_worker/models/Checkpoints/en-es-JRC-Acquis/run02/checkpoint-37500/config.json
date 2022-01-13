@@ -1,5 +1,5 @@
 {
-  "_name_or_path": "Helsinki-NLP/opus-mt-es-en",
+  "_name_or_path": "Helsinki-NLP/opus-mt-en-es",
   "activation_dropout": 0.0,
   "activation_function": "swish",
   "add_bias_logits": false,
@@ -31,6 +31,7 @@
   "extra_pos_embeddings": 65001,
   "force_bos_token_to_be_generated": false,
   "forced_eos_token_id": 0,
+  "gradient_checkpointing": false,
   "id2label": {
     "0": "LABEL_0",
     "1": "LABEL_1",

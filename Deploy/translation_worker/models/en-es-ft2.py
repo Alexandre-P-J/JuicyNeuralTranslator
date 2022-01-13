@@ -4,21 +4,21 @@ from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 import pathlib
 
 
-class CaEnTL(Model):
+class EnEsFT(Model):
     __folder = pathlib.Path(__file__).parent.resolve()
     __model_path = str(pathlib.Path.joinpath(
-        __folder, "Checkpoints/ca-en/checkpoint-95000"))
+        __folder, "Checkpoints/en-es-SciELO/run05/checkpoint-78000"))
     __model = AutoModelForSeq2SeqLM.from_pretrained(__model_path)
     __tokenizer = AutoTokenizer.from_pretrained(__model_path)
     __sentencizer = Model.get_spacy_sentencecizer()
 
     @classmethod
     def get_source_langs(cls) -> Set[str]:
-        return {"Catalan (Standard)"}
+        return {"English (Standard)"}
 
     @classmethod
     def get_target_langs(cls) -> Set[str]:
-        return {"English (Standard) [Transfer from es-en to ca-en]"}
+        return {"Spanish (Standard) [Finetuned SciELO en-es]"}
 
     @classmethod
     def batch_translate(cls, texts: List[str], source: str, target: str) -> List[str]:

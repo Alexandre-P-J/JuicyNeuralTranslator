@@ -1,0 +1,1 @@
+{"source_lang": "eng", "target_lang": "spa", "unk_token": "<unk>", "eos_token": "</s>", "pad_token": "<pad>", "model_max_length": 512, "sp_model_kwargs": {}, "special_tokens_map_file": null, "tokenizer_file": null, "name_or_path": "Helsinki-NLP/opus-mt-en-es", "tokenizer_class": "MarianTokenizer"}
