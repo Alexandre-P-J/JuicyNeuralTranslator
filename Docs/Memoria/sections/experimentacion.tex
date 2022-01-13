@@ -96,13 +96,16 @@ La figura \ref{chrfprecisionformula} muestra la fórmula de la precisión en té
 La figura \ref{chrfrecallformula} expresa la fórmula del \textit{recall} en términos de n-grams en secuencias y define chrR como el promedio de los \textit{recall} obtenidos con n-gram de 1 hasta $N$ elementos.
 
 \section{Metodología}\label{datapipeline}
-En los experimentos de \textit{finetuning} y \textit{transfer learning} el \textit{pipeline} de datos es idéntico. Los datasets son uno o más corpus biling{\"u}es compuestos de pares de secuencias con el mismo contenido en dos idiomas. Los corpus se mezclan aleatoriamente y se parten en conjuntos de entrenamiento, validación y test en las proporciones de 60/20/20\% en ese mismo orden.
+En los experimentos de \textit{finetuning} y \textit{transfer learning} el \textit{pipeline} de datos es idéntico. Los datasets son corpus biling{\"u}es obtenidos del repositorio OPUS \cite{CORPUS} y están compuestos de pares de secuencias con el mismo contenido en dos idiomas. Los corpus se mezclan aleatoriamente y se parten en conjuntos de entrenamiento, validación y test en las proporciones de 60/20/20\% en ese mismo orden.
 
 Posteriormente, se arreglan en cada conjunto los caracteres unicode inválidos, se elimina la indentación y otros espacios en blanco innecesarios y se descartan las secuencias vacías. Sin embargo, no se eliminan acentos diacríticos u otros elementos que enriquecen el idioma. Luego se tokeniza usando \textit{SentencePiece} tal como se detalla en profundidad en el apartado \ref{datamangle} y se truncan las tokenizaciones a un tamaño máximo de 512 tokens, el límite de los modelos. Posteriormente se agrupan los datos en \textit{batches} de 16 ejemplos listos para ser procesados por el modelo descrito en el capítulo \ref{transformerchapter}, que es idéntico a la arquitecta transformer original.
 
-Se usa el conjunto de entrenamiento para entrenar los modelos, el conjunto de validación permite monitorizar el progreso del aprendizaje manteniendo una buena generalización. Finalmente para estimar la bondad de los modelos se usa el conjunto de test nunca antes visto por el modelo.
+Se usa el conjunto de entrenamiento para entrenar los modelos y el conjunto de validación permite monitorizar el progreso del aprendizaje manteniendo una buena generalización. Finalmente, para estimar la bondad de los modelos se usa el conjunto de test, nunca antes visto por el modelo, para evaluar su rendimiento.
 
-Para la medición y evaluación se usan las métricas BLEU y chrF sobre el conjunto de validación o test para comparar todas las secuencias traducidas con sus respectivas secuencias de referencia. Antes de computar las métricas, se revierte la tokenización y se postprocesan las secuencias eliminando espacios al inicio y final de las frases.
+Para la medición y evaluación se usan las métricas BLEU y chrF sobre el conjunto de validación o test para comparar todas las secuencias traducidas con sus respectivas secuencias de referencia.
+Además, aprovechando que los modelos usados forman parte de la iniciativa \textit{Tatoeba Challenge} \cite{tiedemann-2020-tatoeba} entrenados con datasets de OPUS \cite{CORPUS}, también se evaluarán los resultados con los conjuntos de test de Tatoeba.
+Antes de computar las métricas chrF y BLEU, se revierte la tokenización y se postprocesan las secuencias eliminando espacios al inicio y final de las frases.
+
 
 \section{Finetuning}\label{finetune}
 El primer experimento que se llevó a cabo fue el \textit{finetuning} de un modelo de traducción inglés-español para ajustar su registro a un tono más formal.
@@ -128,6 +131,7 @@ De la misma manera que con el dataset anterior, se finalizó el entrenamiento un
 
 
 \subsection{Resultados}
+El modelo inicial para efectuar \textit{finetuning} se evalúa en la tabla \ref{originalfinetune} con los conjuntos de validación de ambos datasets usados y con el dataset de tatoeba propuesto por los creadores del modelo.
 \begin{table}[H]
     \begin{center}
         \begin{tabular}{ l S[table-format=2.4] S[table-format=2.4] }
@@ -140,6 +144,9 @@ De la misma manera que con el dataset anterior, se finalizó el entrenamiento un
         \caption{Métricas del modelo original antes del \textit{finetuning} [Elaboración propia]}\label{originalfinetune}
     \end{center}
 \end{table}
+
+Se observa que el modelo inicial es razonablemente bueno en la traducción inglés-español y además tiene un buen rendimiento tanto el dataset JRC-Acquis como en SciELO elegidos para el entrenamiento.
+En la tabla \ref{finetuneacquis} se muestran las métricas del \textit{finetuning} con el dataset JRC-Acquis.
 
 \begin{table}[H]
     \begin{center}
@@ -154,6 +161,8 @@ De la misma manera que con el dataset anterior, se finalizó el entrenamiento un
     \end{center}
 \end{table}
 
+Como es de esperar, el rendimiento en el corpus JRC-Aquis mejora, sin embargo la puntuación en Tatoeba decrece sustancialmente. El mismo fenómeno ocurre también en el modelo entrenado con SciELO pero a una escala menor según se observa en la tabla \ref{finetunescielo}.
+
 \begin{table}[H]
     \begin{center}
         \begin{tabular}{ l S[table-format=2.4] S[table-format=2.4] }
@@ -166,6 +175,41 @@ De la misma manera que con el dataset anterior, se finalizó el entrenamiento un
         \caption{Métricas de modelo \textit{finetuned} sobre el corpus SciELO [Elaboración propia]}\label{finetunescielo}
     \end{center}
 \end{table}
+
+La disminución en rendimiento con el test de Tatoeba podría significar que el modelo ha perdido calidad en la traducción inglés-español debido a que los datasets elegidos no fueran representativos al problema a resolver. Sin embargo, probando los modelos con diversos textos de ámbitos y contextos distintos se observa que en la mayoría de casos los modelos entrenados ofrecen traducciones de igual o mayor calidad en algunos casos.
+
+Se cree que el test de Tatoeba pertenece a un dominio con ejemplos más simples del idioma y los datasets usados para el entrenamiento empeoran los resultados en ese test porque a menudo hacen uso de vocabulario y sintaxis más rica incluso cuando no es necesario, sin embargo las métricas usadas no son capaces de percibir la similitud semántica.
+
+Los modelos se han probado por un total de 4 individuos sin contar al implementador y el director del trabajo para realizar un test a ciegas con el objetivo de determinar subjetivamente la calidad de los modelos. Además, uno de los individuos es traductor e intérprete de profesión. Todos han probado los modelos de forma exhaustiva con fragmentos de temática diversa y de libre elección.
+El test a ciegas ha dado resultados mejor de lo esperados ya que los 4 participantes votaron el modelo entrenado con el dataset SciELO como el mejor, seguido del modelo de JRC-Acquis y por último el original.
+
+Los participantes mencionaron que el modelo SciELO interpreta mejor el contexto y su vocabulario suele ser más apropiado. El modelo original a veces comete errores en conjugaciones verbales, sin embargo los modelos entrenados conjugan correctamente. Por último, el traductor e intérprete de profesión comentó que el modelo SciELO ofreció una traducción sorprendentemente buena de algunos poemas de Edgar Alan Poe.
+
+\begin{figure}[H]
+\subsubsection{Original}
+\begin{spverbatim}
+Because of its neutrality policy, the Swiss army does not take part in armed conflicts in other countries but is part of some peacekeeping missions around the world. Since 2000 the armed force department has also maintained the Onyx intelligence gathering system to monitor satellite communications.
+\end{spverbatim}
+
+\subsubsection{Helsinki-NLP/opus-mt-en-es}
+\begin{spverbatim}
+Debido a su política de neutralidad, el ejército suizo no participa en conflictos armados en otros países, sino que forma parte de algunas misiones de mantenimiento de la paz en todo el mundo. Desde 2000, el departamento de las fuerzas armadas también ha mantenido el sistema de reunión de información de Onyx para vigilar las comunicaciones por satélite.
+\end{spverbatim}
+
+\subsubsection{JRC-Acquis}
+\begin{spverbatim}
+Debido a su política de neutralidad, el ejército suizo no participa en conflictos armados en otros países, sino que forma parte de algunas misiones de mantenimiento de la paz en todo el mundo. Desde 2000, el departamento de las fuerzas armadas también ha mantenido el sistema de recopilación de información de Onyx para supervisar las comunicaciones por satélite.
+\end{spverbatim}
+
+\subsubsection{SciELO}
+\begin{spverbatim}
+Debido a su política de neutralidad, el ejército suizo no participa en conflictos armados en otros países, sino que forma parte de algunas misiones de mantenimiento de la paz en todo el mundo. Desde el año 2000, el departamento de las fuerzas armadas también ha mantenido el sistema de recolección de inteligencia Onyx para monitorear las comunicaciones por satélite.
+\end{spverbatim}
+\caption{Ejemplo de traducción [Elaboración propia, fragmento original de \cite{ContributorstoWikimediaprojects2022Jan}]}\label{ejemplotranslate}
+\end{figure}
+
+En la figura \ref{ejemplotranslate} se muestra un ejemplo de traducción donde los tres modelos obtienen un resultado aceptable, sin embargo el modelo original confunde la palabra \textit{``gathering''} con ``reunión'', que es incorrecta en el contexto del fragmento, los modelos entrenados usan los verbos ``recopilar'' y ``recolectar'' que sí son correctos.
+El modelo entrenado con SciELO interpreta correctamente que ``2000'' hace referencia a un año y genera una traducción más inteligible.
 
 
 \section{Transfer learning}
@@ -193,7 +237,7 @@ Los datos de entrenamiento se eligieron a partir de los corpus usados por el mod
 Para el \textit{transfer learning} solo se usaron los corpus Books, GlobalVoices, OpenSubtitles y QED compuestos por textos alineados en parágrafos de la literatura, noticias internacionales, subtítulos de películas y de medios educativos en ese orden.
 El dataset resultante después de mezclar los corpus aleatoriamente como se describe en \ref{datapipeline} contiene un total de 509.194 secuencias catalán-inglés.
 
-Se dio por terminado el entrenamiento una vez concluido el \textit{epoch} 5 después de 9 horas de entrenamiento debido a que el error de validación empezaba a estabilizarse pero no se esperó hasta la convergencia total debido al coste computacional y temporal asociado.
+Se dio por terminado el entrenamiento una vez concluido el \textit{epoch} 5 después de 9 horas de entrenamiento debido a que el error de validación empezaba a estabilizarse pero no se esperó hasta la convergencia total debido al coste computacional y temporal asociado. 
 
 \subsection{Resultados}
 \begin{table}[H]
@@ -208,6 +252,9 @@ Se dio por terminado el entrenamiento una vez concluido el \textit{epoch} 5 desp
     \end{center}
 \end{table}
 
+La tabla \ref{transferorigesen} muestra el rendimiento del modelo original sobre los tests de Tatoeba para los pares catalán-inglés y Español-Inglés. Como es de esperar, el modelo obtiene una puntuación muy baja en catalán-inglés ya que no ha sido entrenado para ese par de lenguajes.
+La puntuación obtenida en el test Español-Inglés es muy elevada. Si el test es representativo a la tarea de traducción, se podría interpretar que el modelo realiza traducciones de buena calidad.
+
 \begin{table}[H]
     \begin{center}
         \begin{tabular}{ l S[table-format=2.4] S[table-format=2.4] }
@@ -219,6 +266,9 @@ Se dio por terminado el entrenamiento una vez concluido el \textit{epoch} 5 desp
         \caption{Métricas del modelo \textit{baseline} catalán-ingles [Elaboración propia]}\label{transferorigcaen}
     \end{center}
 \end{table}
+
+Se han calculado las mismas métricas para el modelo \textit{baseline} catalán-inglés. La tabla \ref{transferorigcaen} muestra un mal rendimiento para la traducción español-inglés y bueno para el par de lenguajes catalán-inglés. Los resultados confirman que el modelo catalán-inglés entrenado por el equipo NLP de Helsinki no se ha implementado mediante \textit{transfer learning} desde un modelo español-inglés como se realiza en este trabajo. De ser así, se esperaría una puntuación mayor en el segundo test, reminiscente del modelo original.
+Esta conclusión no es sorprendente ya que el equipo de Helsinki describe el procedimiento de entrenamiento en el repositorio del modelo. 
 
 \begin{table}[H]
     \begin{center}
@@ -234,12 +284,32 @@ Se dio por terminado el entrenamiento una vez concluido el \textit{epoch} 5 desp
     \end{center}
 \end{table}
 
-% \begin{spverbatim}
-% After a black hole has formed, it can continue to grow by absorbing mass from its surroundings. There is consensus that supermassive black holes exist in the centers of most galaxies.
-% \end{spverbatim}
-% \begin{spverbatim}
-% Después de que se ha formado un agujero negro, puede seguir creciendo absorbiendo masa de su entorno. Hay consenso en que los agujeros negros supermasivos existen en los centros de la mayoría de las galaxias.
-% \end{spverbatim}
-% \begin{spverbatim}
-% Después de la formación de un agujero negro, puede seguir creciendo absorbiendo masa de su entorno. Hay consenso de que existen agujeros negros supermasivos en los centros de la mayoría de las galaxias.
-% \end{spverbatim}
+La tabla \ref{transfercaen} muestra las métricas obtenidas en el modelo resultado del \textit{transfer learning} a partir del modelo español-inglés. La puntuación obtenida en los conjuntos de validación y test muestran unos valores aceptables pero es difícil interpretar la calidad del modelo entrenado. Las métricas sobre los conjuntos de Tatoeba superan al modelo \textit{baseline} para la traducción catalán-inglés. Además, conserva una puntuación muy alta en la traducción español-inglés procedente del modelo original.
+
+La diferencia entre la puntuación del modelo en su conjunto de test y el de Tatoeba parece indicar que los datos de tatoeba són más simples. Además, a diferencia de los otros tests procedentes de Tatoeba, el número de ejemplos del test catalán-inglés es un orden de magnitud más pequeño que el resto.
+
+Se ha decidido realizar un experimento a ciegas tal como se hizo con los modelos de \textit{finetuning} \ref{finetune}. La prueba se ha realizado con los mismos 4 individuos y el objetivo era comparar a ciegas el modelo obtenido mediante \textit{transfer learning} con los modelos catalán-inglés y español-inglés del equipo NLP de Helsinki. Los 4 participantes usaron fragmentos de temática diversa y de libre elección y al finalizar el experimento, coincidieron en que el modelo entrenado mediante \textit{transfer learning} ofrece traducciones generalmente mejores que el modelo catalán-inglés \textit{baseline}. También se cree que usa un vocabulario más apropiado y conserva mejor la semántica con menos erratas.
+
+Sin embargo, al comparar el modelo entrenado contra el modelo original español-inglés, destacaron que las traducciones parecen ser idénticas con ligeras diferencias de vocabulario. Dos de los participantes votaron por el modelo original, uno eligió el modelo entrenado y otro decidió no votar a favor ni en contra de ninguno.
+
+Dado que el objetivo era el entrenamiento de un modelo catalán-inglés a partir del modelo original español-inglés y el modelo se ha valorado mejor que el \textit{baseline}, se considera el experimento un éxito. Por otra parte, se ha logrado conservar la habilidad del modelo para la traducción al inglés desde el español.
+
+\begin{figure}[H]
+\subsubsection{Original}
+\begin{spverbatim}
+Sloane Street és un carrer de Londres orientat nord-sud des de Knightsbridge fins a Sloane Square; creua Pont Street més o menys a la meitat i està situada completament en el districte reial de Kensington i Chelsea. Sloane Street deu el seu nom a Sir Hans Sloane, que va adquirir els terrenys veïns el 1712.
+\end{spverbatim}
+
+\subsubsection{Helsinki-NLP/opus-mt-ca-en}
+\begin{spverbatim}
+Sloane Street is a North-sud London street from Knightsbridge to Sloane Square; cross Street more or less than half and is completely located in Kenston's royal district and Chelsea. Selane Street owes Sir Hans Selane's name, who acquired the neighbours' ground in 1712.
+\end{spverbatim}
+
+\subsubsection{Modelo obtenido mediante \textit{transfer learning}}
+\begin{spverbatim}
+Sloane Street is a north-south street in London from Knightsbridge to Sloane Square; it crosses Pont Street more or less halfway and is located entirely in the royal district of Kensington and Chelsea. Sloane Street owes his name to Sir Hans Sloane, who acquired the lands next to him in 1712.
+\end{spverbatim}
+\caption{Ejemplo de traducción [Elaboración propia, fragmento original de \cite{ContributorstoWikimediaprojects2021Aug}]}\label{transferexample}
+\end{figure}
+
+La figura \ref{transferexample} muestra un ejemplo de traducción catalán-inglés. El modelo \textit{baseline} no traduce correctamente la expresión \textit{``més o menys a la meitat''} ya que ``more or less than half'' carece de sentido. La traducción ``Kenston's royal district and Chelsea'' para el fragmento \textit{``districte reial de Kensington i Chelsea''} es incorrecto ya que se trata de un único distrito. Además, la última frase del fragmento es totalmente incorrecta. Por otra parte, la traducción ofrecida por el modelo obtenido mediante \textit{transfer learning} es correcta exceptuando la partícula \textit{``his''} que debería ser \textit{``its''}.

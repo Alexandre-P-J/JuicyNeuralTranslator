@@ -1,6 +1,58 @@
 \chapter{Implantación de modelos a producción}\label{deployprod}
 \section{Gestión de recursos}
+% Definir, avaluar i seleccionar plataformes de desenvolupament i producció hardware i software per al desenvolupament d'aplicacions i serveis informàtics de diversa complexitat
+La herramienta de traducción web que se implementa en este trabajo requiere diversos recursos hardware y software para funcionar adecuadamente. Se espera que el usuario pueda traducir fragmentos de texto o documentos en una interfaz accesible, rápida y simple de navegar, además también se deben poder enviar correcciones.
+
+Un primer diseño podría consistir en un único servidor para la aplicación web y una base de datos. Sin embargo, aunque el servicio podría funcionar con pocos usuarios, no escalaría correctamente ya que las necesidades de un servidor web son distintas a las que requiere un servidor de inferencia para la ejecución de los modelos de traducción. La base de datos y el almacenaje de ficheros también requieren hardware específico y pretender que una sola máquina abarque todos los roles no es una opción realista.
+
+En su lugar, es conveniente desacoplar cada una de las partes que componen el servicio para ajustar el hardware a las necesidades específicas y así abaratar coste al mismo tiempo que se mejora el servicio. Para la elaboración del proyecto se ha decidido separar el servidor web del almacenamiento de ficheros, la base de datos, el procesamiento de documentos y el cómputo de traducciones.
+
+Se ha desarrollado el proyecto usando Docker para la definición de cada componente y Docker Compose para orquestrar la ejecución en local. Una configuración empresarial podría usar las imágenes de Docker que se han implementado directamente en un servicio de cómputo web como AWS o las alternativas de Google o Microsoft, eligiendo el hardware y las tarifas que más se ajusten.
+
 \section{Arquitectura del servicio web}
+El diagrama \ref{webdiagram} muestra todas las partes que componen la arquitecta del servicio. Los distintos nodos se enlazan mediante flechas que simbolizan la comunicación o transmisión de datos.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=300pt]{./img/arquitecturaweb.png}
+    \caption{Arquitectura del servicio de traducción [Elaboración propia]}\label{webdiagram}
+\end{figure}
+Los apartados a continuación detallan cada uno de los componentes y su relación con el resto del servicio.
+
+\subsection{Gestor de mensajes}
+El gestor de mensajes es un servidor implementado con Redis para la comunicación y encolado de tareas entre los distintos nodos de la arquitectura. Una característica que no se aprecia en el diagrama \ref{webdiagram}, es la capacidad de escalar la arquitectura horizontalmente incrementando el número de nodos de procesamiento de documentos, computo de traducciones o instancias del portal web. Sin embargo, el diseño se planeó específicamente para habilitar este tipo de comportamiento para poder afrontar distintos niveles de carga dinámicamente.
+
+Esto no sería posible sin el sistema de comunicación que provee un gestor de mensajes como Redis, cuyo objetivo es habilitar la transmisión de tareas desde cualquier instancia del portal web hasta alguno de los nodos de procesamiento o computo. Además, el gestor tiene un funcionamiento asíncrono que permite recuperar los resultados de las tareas sin necesidad de bloquear los distintos componentes de la arquitectura, maximizando así el uso eficiente de los recursos.
+
+\subsection{Instancia de cómputo}
+Las instancias de cómputo són los nodos encargados de la ejecución de modelos de traducción como los que se han implementado en este trabajo. 
+Estas instancias obtienen tareas de traducción gracias al gestor de mensajes y su objetivo es obtener resultados de forma rápida para devolver lo antes posible la tarea resuelta al gestor.
+
+En el proyecto se usa un sistema que usa inferencia mediante CPU desde Python, ya que es una opción económica y común. Sin embargo, existen soluciones industriales que permiten el uso de GPUs y FPGAs de forma muy efectiva para abarcar un gran volumen de procesamiento con poca latencia. En este trabajo no se exploran estas alternativas, pero el diseño de la arquitectura permite el uso de cualquier forma de procesamiento siempre y cuando se use el gestor de mensajes como interfaz de comunicación.
+
+\subsection{Procesador de documentos}
+Las instancias de procesamiento de documentos se encargan de la lectura de documentos procedentes del almacén de ficheros y el procesamiento de los distintos formatos para la extracción del texto a traducir. La extracción de datos en el formato pdf es particularmente difícil debido a que el texto no se almacena como cadenas de caracteres, en su lugar, los pdf contienen información vectorial de los símbolos pero no la correspondencia a los caracteres que representan. Para extraer el texto es necesario realizar operaciones costosas como el \textit{OCR} u otros algoritmos que no garantizan una buena extracción de datos.
+
+El servicio es capaz de procesar documentos con formatos pdf, docx y txt usando distintas librerías de Python, posteriormente agrupa los textos extraídos y genera tareas de traducción que se lanzan al gestor de mensajes para su traducción. Finalmente, obtenidas las traducciones, el procesador de documentos genera un nuevo archivo con los contenidos actualizados, lo guarda en el almacén de ficheros y finaliza la tarea de procesamiento devolviendo el identificador del fichero traducido.
+
+\subsection{Almacén de ficheros}
+El almacén de ficheros es el componente encargado de la gestión de ficheros. Almacena los documentos subidos al servicio web para ser traducidos y también gestiona los ficheros ya traducidos y disponibles para la descarga.
+Este nodo es accedido por el portal web para almacenar los documentos subidos al servicio y también se usa para la descarga de los ficheros traducidos. Además, internamente se asignan identificadores a los archivos subidos que permiten al procesador de documentos la lectura y el posterior guardado del documento traducido.
+La implementación consiste en una única carpeta cuyo contenido podría estar alojado en la nube.
+
+\subsection{Base de datos}
+La base de datos se usa únicamente para el registro de correcciones proporcionadas por los usuarios. Se utiliza un servidor de PostgreSQL con dos tablas. La primera tabla almacena información sobre el lenguaje usado para la traducción, su llave primaria es \textit{id} y contiene otra columna no nula y única para el nombre del lenguaje.
+
+La segunda tabla almacena las traducciones de los clientes mediante seis columnas. La columna \textit{id} es la llave primaria, \textit{from\_lang} es una llave foránea que identifica el lenguaje original, \textit{to\_lang} también es una llave foránea pero esta identifica el lenguaje de traducción. La columna \textit{text} contiene el texto original, \textit{translation} corresponde al texto traducido por el servicio y finalmente \textit{translation\_correction} es la corrección efectuada por el usuario. Dado que cualquier nombre es válido para representar un lenguaje, los valores ``Español'' y ``Inglés finetuned 02'' son valores válidos para las columnas \textit{from\_lang} y \textit{to\_lang} e identifican el modelo usado para la traducción.
+
+En el trabajo no se implementa ningún mecanismo de \textit{online learning}, sin embargo, la base de datos permite el \textit{finetuning} de los modelos existentes con las correcciones ofrecidas por los clientes del servicio.
+
+\subsection{Portal web}
+El portal web se ha implementado en Python con Flask y se encarga del abastecimiento de contenido Html, Css y Javascript a los navegadores de los clientes del servicio. Además, establece una conexión a la base de datos, al almacén de ficheros y al gestor de tareas donde se lanzan las tareas de traducción.
+
+Se ha diseñado para funcionar sin necesidad de mantener información de estado y eso permite la ejecución de múltiples servidores al mismo tiempo en una o más máquinas para usar mejor los recursos de hardware y abastecer a más usuarios. La información de estado, como por ejemplo el identificador de la tarea de traducción pendiente de ser procesada, la gestiona el propio cliente desde el código Javascript que se ejecuta en su navegador. Cuando un cliente lanza una orden de traducción, su navegador pide periódicamente actualizaciones sobre el estado de la tarea hasta que puede mostrarse en la pantalla del usuario.
+
+\section{Funcionalidades}
 \subsection{Traducción de fragmentos de texto}
-\subsection{Tratamiento de documentos}
 \subsection{Corrección y mejora de los modelos}
+\subsection{Traducción de documentos}
+\subsection{Registro de modelos de traducción}
