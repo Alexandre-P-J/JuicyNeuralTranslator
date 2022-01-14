@@ -53,6 +53,60 @@ Se ha diseñado para funcionar sin necesidad de mantener información de estado 
 
 \section{Funcionalidades}
 \subsection{Traducción de fragmentos de texto}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=410pt]{./img/webfragtext.png}
+    \caption{Traducción de fragmentos de texto en la web [Elaboración propia]}\label{webfrag}
+\end{figure}
+
+La figura \ref{webfrag} muestra una captura donde se aprecia el portal web. Se observan dos cajas de texto configuradas mediante el desplegable superior para traducir catalán-inglés con el modelo implementado en este trabajo.
+Cuando el usuario modifica el texto en la caja de la izquierda se espera medio segundo desde la última edición y posteriormente se pide al servidor web la traducción. Internamente el traductor web crea una tarea destinada a ser ejecutada por cualquiera de las instancias de cómputo. Dada la etiqueta de origen, en este caso ``Catalan (Standard)'', y la etiqueta de destino ``English (Standard) [Transfer from es-en to ca-en]'', se selecciona el modelo y se realiza la traducción.
+Periódicamente, el navegador del cliente consulta el estado de la tarea y una vez completada muestra el resultado en la caja de la derecha. La implementación utiliza AJAX para habilitar la traducción sin requerir el uso de botones u otros mecanismos.
+
 \subsection{Corrección y mejora de los modelos}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=410pt]{./img/webcorrect.png}
+    \caption{Envío de correcciones en el servicio web [Elaboración propia]}\label{webcorrect}
+\end{figure}
+El mecanismo para enviar correcciones es muy simple, desde el portal web únicamente se debe editar el texto traducido. Hecho esto, aparecerá un botón inferior visible en la figura \ref{webcorrect} que al apretarse enviará la corrección y desaparecerá.
+Internamente, al presionar el botón de envío, el servidor web recibe los datos de la petición y posteriormente ejecuta una inserción en la base de datos PostgreSQL de forma asíncrona.
+Las correcciones luego pueden ser usadas para el \textit{finetuning} de modelos.
+
 \subsection{Traducción de documentos}
-\subsection{Registro de modelos de traducción}
+Otra de las funcionalidades principales es la traducción de ficheros pdf, docx o txt completos. Esta operación se puede realizar seleccionado la traducción de ficheros tal como se muestra en la figura \ref{webfile1}.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=410pt]{./img/webfile1.png}
+    \caption{Arquitectura del servicio de traducción [Elaboración propia]}\label{webfile1}
+\end{figure}
+
+La figura \ref{webfile1} muestra el resultado al cambiar el modo de traducción de fragmentos de texto a subida de documentos. Esta interfaz reemplaza la caja izquierda por un panel con un único botón para la subida de archivos.
+Una vez presionado el botón, se abrirá un menú del sistema donde se podrá seleccionar un documento y subirlo al servicio.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=410pt]{./img/webfile2.png}
+    \caption{Arquitectura del servicio de traducción [Elaboración propia]}\label{webfile2}
+\end{figure}
+
+En la figura \ref{webfile2} se muestra la interfaz después de haber seleccionado un documento. Se muestra un \textit{spinner} indicando que la tarea de traducción esta en curso. Internamente el servidor web recibirá el documento y lo almacenará en el almacén de archivos, luego creará una tarea de procesamiento de documento que contendrá el identificador del fichero subido. En cualquiera de las instancias de procesamiento de documentos, se procesará el documento subido y se emitirán nuevas tareas de traducción agrupando los distintos fragmentos de texto extraídos del documento.
+
+Una vez procesadas las tareas de traducción por las instancias de cómputo, el procesador de documentos compondrá el nuevo archivo traducido y lo almacenará en el almacén de archivos. Finalmente, se retornará el nuevo identificador del documento disponible en el almacén, y cuando el navegador del usuario pida una actualización de estado para la tarea, si ha finalizado, el servidor web devolverá un enlace hacia el documento para habilitar la descarga.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=410pt]{./img/webfile3.png}
+    \caption{Arquitectura del servicio de traducción [Elaboración propia]}\label{webfile3}
+\end{figure}
+
+La figura \ref{webfile3} muestra la interfaz web una vez finalizada la traducción del documento subido. El navegador ha recibido el enlace de descarga mediante una petición AJAX y ha generado un nuevo botón para la descarga.
+
+\subsection{Extensibilidad}
+Todo el proyecto se ha desarrollado con el principio de ser usable de forma empresarial, concretamente, el uso de Docker y la separación de los distintos componentes de la arquitectura permiten incorporar el servicio para un uso profesional. Además, el proyecto es fácilmente extensible y es muy simple añadir nuevos modelos.
+
+Para añadir un nuevo modelo únicamente es necesario añadir un fichero de Python en la carpeta \textit{models} del nodo de cómputo, este script se ejecutará durante el arranque de cada instancia de cómputo y puede usarse para registrar un nuevo modelo de traducción. Para ello, solo es necesario añadir una clase que herede del objeto \textit{Model} e implementar las funciones \textit{get\_source\_langs}, \textit{get\_target\_langs} y \textit{batch\_translate}.
+
+La función \textit{get\_source\_langs} debe retornar el conjunto de etiquetas origen que el modelo es capaz de traducir, un ejemplo sería el conjunto que contiene la etiqueta ``Español de España'', \textit{get\_target\_langs} debe retornar el conjunto de etiquetas destino que el modelo puede traducir, por ejemplo: ``Catalán'' y ``Catalán \textit{Finetune} 01''.
+La unión de las etiquetas origen de todos los modelos serán las opciones que aparezcan en el selector izquierdo del portal web, mientras que la unión de las etiquetas destino serán las que aparezcan en el selector derecho.
+La función \textit{batch\_translate} recibe una lista de textos, una etiqueta de origen y otra de destino, y debe ser capaz de traducir todos los textos de la lista y retornarlos como otra lista en el mismo orden. Generalmente las etiquetas que se pasan a esta última función, únicamente se usan en modelos multiling{\"u}e para insertar tokens que condicionan al modelo a traducir en los lenguajes o etiquetas especificados.

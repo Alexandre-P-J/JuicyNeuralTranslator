@@ -75,8 +75,6 @@ services:
       - STORAGE_MOUNT_DIR=${STORAGE_MOUNT_DIR:-/opt/storage}
     depends_on:
       - redis
-      - translation_worker
-      - file_worker
       - postgresql
 
 networks:
