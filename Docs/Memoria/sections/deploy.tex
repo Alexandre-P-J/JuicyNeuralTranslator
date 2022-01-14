@@ -25,9 +25,14 @@ Esto no sería posible sin el sistema de comunicación que provee un gestor de m
 
 \subsection{Instancia de cómputo}
 Las instancias de cómputo són los nodos encargados de la ejecución de modelos de traducción como los que se han implementado en este trabajo. 
-Estas instancias obtienen tareas de traducción gracias al gestor de mensajes y su objetivo es obtener resultados de forma rápida para devolver lo antes posible la tarea resuelta al gestor.
+Estas instancias obtienen tareas de traducción gracias al gestor de mensajes y su objetivo es devolver resultados lo antes posible para enviar la tarea resuelta al gestor.
 
 En el proyecto se usa un sistema que usa inferencia mediante CPU desde Python, ya que es una opción económica y común. Sin embargo, existen soluciones industriales que permiten el uso de GPUs y FPGAs de forma muy efectiva para abarcar un gran volumen de procesamiento con poca latencia. En este trabajo no se exploran estas alternativas, pero el diseño de la arquitectura permite el uso de cualquier forma de procesamiento siempre y cuando se use el gestor de mensajes como interfaz de comunicación.
+
+Internamente cada tarea de traducción dirigida a las instancias de cómputo provee una lista con uno o más textos a traducir, también las etiquetas de origen y destino que especifican los idiomas o cualquier otro indicador para seleccionar el modelo apropiado y realizar la traducción.
+La tokenización y cualquier otro comportamiento depende totalmente del modelo que debe ejecutarse, es por ello que cada modelo hereda de la clase \textit{Model} tal como se detalla en el apartado \ref{funcextensibility} y es libre de usar cualquier técnica de segmentación.
+
+En los modelos registrados por el servicio web, se usa la librería Spacy para la segmentación de textos largos en parágrafos mediante reglas independientes al lenguaje usado. De esta forma, es posible traducir textos muy largos en uno o más \textit{batches}. También se reduce el tamaño de las secuencias limitando potencialmente las dependencias a las que un modelo puede atender, sin embargo, empíricamente suele dar mejores resultados por que se conserva mejor la sintaxis original. Tampoco se han observado efectos negativos posiblemente debido a que la traducción necesita dependencias para contextualizar pero rara vez requiere dependencias de otros parágrafos. Si no se usa la segmentación por parágrafos los modelos tienden a convertir oraciones separadas por punto a oraciones yuxtapuestas posiblemente debido al dominio de los datos de entrenamiento.
 
 \subsection{Procesador de documentos}
 Las instancias de procesamiento de documentos se encargan de la lectura de documentos procedentes del almacén de ficheros y el procesamiento de los distintos formatos para la extracción del texto a traducir. La extracción de datos en el formato pdf es particularmente difícil debido a que el texto no se almacena como cadenas de caracteres, en su lugar, los pdf contienen información vectorial de los símbolos pero no la correspondencia a los caracteres que representan. Para extraer el texto es necesario realizar operaciones costosas como el \textit{OCR} u otros algoritmos que no garantizan una buena extracción de datos.
@@ -102,7 +107,7 @@ Una vez procesadas las tareas de traducción por las instancias de cómputo, el 
 
 La figura \ref{webfile3} muestra la interfaz web una vez finalizada la traducción del documento subido. El navegador ha recibido el enlace de descarga mediante una petición AJAX y ha generado un nuevo botón para la descarga.
 
-\subsection{Extensibilidad}
+\subsection{Extensibilidad}\label{funcextensibility}
 Todo el proyecto se ha desarrollado con el principio de ser usable de forma empresarial, concretamente, el uso de Docker y la separación de los distintos componentes de la arquitectura permiten incorporar el servicio para un uso profesional. Además, el proyecto es fácilmente extensible y es muy simple añadir nuevos modelos.
 
 Para añadir un nuevo modelo únicamente es necesario añadir un fichero de Python en la carpeta \textit{models} del nodo de cómputo, este script se ejecutará durante el arranque de cada instancia de cómputo y puede usarse para registrar un nuevo modelo de traducción. Para ello, solo es necesario añadir una clase que herede del objeto \textit{Model} e implementar las funciones \textit{get\_source\_langs}, \textit{get\_target\_langs} y \textit{batch\_translate}.
