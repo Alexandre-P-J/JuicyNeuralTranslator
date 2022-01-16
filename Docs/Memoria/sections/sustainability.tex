@@ -19,6 +19,13 @@ En la sección \ref{budget} se estima el coste de los distintos recursos humanos
 tarea y se calculan los costes genéricos, que principalmente són materiales.
 Además se define un margen de contingencia y otros costes asociados al riesgo y los obstáculos.
 
+\subsubsection{¿Has cuantificado el coste (recursos humanos y materiales) de la realización del proyecto? ¿Qué decisiones has tomado para reducir el coste? ¿Has cuantificado este ahorro?}
+
+Los costes del trabajo se han cuantificado en la tabla \ref{totaldesvictable} una vez elaborado el proyecto y también se han calculado las desviaciones respecto al coste estimado inicialmente. Para reducir los costes se ha descartado el uso de \textit{hardware} en la nube para entrenar los modelos de traducción y se han limitado las sesiones con el director a reuniones en Google \textit{meet}. Ambos ahorros se han cuantificado, el primero supone una desviación de 960\euro\ y el segundo de 40,32\euro. Otras decisiones como por ejemplo el ajuste de las horas de dedicación del personal, también han tenido consecuencias en el coste final y se desglosan en el apartado \ref{desvpresini}.
+
+\subsubsection{¿Se ha ajustado el coste previsto al coste final? ¿Has justificado las diferencias (lecciones aprendidas)?}
+La estimación inicial fue de 17.882,99\euro\ para la elaboración total del trabajo y el coste final se ha cuantificado en 14.285,17\euro. Una desviación de 3.597,82\euro\ se considera aceptable teniendo en cuenta que se hizo una estimación a la alza y no ha sido necesario usar fondos de contingencia o asociados al riesgo. Cada una de las desviaciones se ha justificado y explicado en el apartado \ref{desvpresini} dedicado al desglose exhaustivo de las desviaciones.
+
 \subsubsection{¿Cómo se resuelve actualmente el problema que quieres abordar (estado del arte)?
 ¿En qué mejorará económicamente tu solución a las existentes?}
 
@@ -26,11 +33,23 @@ El método de resolución que se plantea en este trabajo es el estado del arte a
 Las soluciones existentes se ofrecen como servicios de pago con tarifas poco atractivas
 \cite{GoogleTranslatePricing,AWSTranslatePricing,MicrosoftTranslatePricing}. El proyecto pretende
 hacer accesible una solución \textit{in-house} para empresas con necesidad de traducir grandes
-volumenes de contenido.
+volúmenes de contenido.
+
+\subsubsection{¿Qué coste estimas que tendrá el proyecto durante su vida útil? ¿Se podría reducir este coste para hacerlo más viable?}
+El proyecto se ha diseñado teniendo en mente la escalabilidad y el uso dinámico de recursos, esto hace que en cualquier momento sea posible aumentar o disminuir el número de nodos de la arquitectura para atender a las necesidades del momento. También de han desacoplado las distintas funcionalidades para ajustar lo máximo posible el \textit{hardware} necesario y abaratar costes. Ambas decisiones se detallan en el apartado \ref{gestionrecursosimplant}.
+
+Debido a que el proyecto es de carácter abierto, los costes de mantenimiento corresponderán a los costes de \textit{hardware} para alojar el servicio. Estos pueden oscilar desde unos pocos céntimos o euros mensuales hasta miles de euros dependiendo de la escala que se quiera usar. Siempre será posible reducir o aumentar el coste en tiempo real según el criterio de la entidad que decida usar el proyecto. Se estima que usando un servicio como AWS el coste de mantenimiento para un promedio de 10 usuarios concurrentes en todo momento oscila unos 20\euro\ mensuales.
+
+\subsubsection{¿Se ha tenido en cuenta el coste de los ajustes/actualizaciones/reparaciones durante la vida útil del proyecto?}
+La arquitectura del servicio desacopla la mayoría de los componentes y esto facilitará cualquier interacción futura con el código. Cada parte puede ajustarse, actualizarse y repararse con facilidad ya cada componente se ha diseñado de forma simple e independiente en torno a tecnologías conocidas en la industria. Añadir nuevos modelos de traducción sea cual sea su implementación, puede realizarse en minutos tal como se describe en el apartado \ref{funcextensibility}. El conjunto de decisiones tomadas durante la elaboración del proyecto garantizan un coste razonablemente bajo durante la vida útil del servicio.
+
+\subsubsection{¿Podrían producirse escenarios que perjudicasen la viabilidad del proyecto?}
+El coste del servicio depende del número de clientes y a su vez del \textit{hardware} usado. Un escenario que haría el proyecto inviable, sería un alto coste del hardware en relación al beneficio que pudiera aportar el servicio a la empresa.
+En general, los costes en servicios como AWS son estables y se considera un riesgo improbable que incrementen haciendo el proyecto inviable.
 
 \subsection{Dimensión ambiental}
 \subsubsection{¿Has estimado el impacto ambiental que tendrá la realización del proyecto? ¿Te has
-planteado minimizar el impacto, por ejemplo, reutilizando recursos?}
+planteado minimizar el impacto, por ejemplo, reutilizando recursos?}\label{susambmedth}
 
 El trabajo ejerce un impacto sobre el medio ambiente de diversas formas, algunos de estos
 agentes són el consumo eléctrico, agua, transporte, internet, espacio de trabajo y maquinaria \ref{costesgenericos}.
@@ -51,6 +70,15 @@ entrenar los modelos de traducción.
 Por último, el uso de transporte público y la consumición de recursos y servicios sostenibles
 reducen mi impacto como individuo y principal fuerza de trabajo del proyecto. 
 
+\subsubsection{¿Has cuantificado el impacto ambiental de la realización del proyecto? ¿Qué medidas has tomado para reducir el impacto? ¿Has cuantificado esta reducción?}
+
+El análisis del consumo eléctrico, agua, transporte, internet, espacio de trabajo y maquinaria se lleva a cabo en el apartado \ref{costesgenericos} y algunas de las medidas llevadas a cabo se describen en \ref{susambmedth}, además las reuniones se han efectuado a través de Google \textit{meet} y no ha sido necesario ningún transporte, eliminando así una parte de mi impacto ambiental.
+Se cree que eliminando la necesidad de transporte se han reducido unos 12 viajes en bus.
+
+\subsubsection{Si hicieras de nuevo el proyecto, ¿podrías realizarlo con menos recursos?}
+
+Si pudiera rehacer el proyecto con los conocimientos que he adquirido, podría ahorrar los recursos usados durante la investigación y reduciría notablemente el tiempo necesario para elaborar el trabajo. Sin embargo, no considero que los recursos se hayan usado de forma ineficiente.
+
 \subsubsection{¿Cómo se resuelve actualmente el problema que quieres abordar (estado del arte)?
 ¿En qué mejorará ambientalmente tu solución a las existentes?}
 
@@ -63,6 +91,24 @@ explorarán opciones de mayor rendimiento.
 Esto se convertirá en una reducción en el consumo eléctrico y al mismo tiempo dará mejor uso al
 \textit{hardware}.
 
+\subsubsection{¿Qué recursos estimas que se usarán durante la vida útil del proyecto? ¿Cuál será el impacto ambiental de estos recursos?}
+
+El proyecto puede usarse sin necesidad de modificación, sin embargo para mejorar o extender el proyecto sería necesaria una persona o un colectivo pequeño. Si se implanta como una solución \textit{in-house} también requeriría el mantenimiento ocasional de un informático además de los recursos computacionales para hospedar el servicio.
+
+Para una empresa mediana sería recomendable un servidor de gama media y quizás una instancia de cómputo. Sin embargo, dependería de las necesidades específicas: el tráfico concurrente, el tamaño de los archivos, la necesidad de entrenar modelos propios y la política de eliminación de ficheros entre otros. Se considera que en la mayoría de casos el impacto no sería muy elevado pero suponiendo un caso de uso exigente, se necesitaría la contratación de al menos una persona y los costes asociados a una o dos máquinas, cuyo impacto ambiental vendría determinado por el impacto del trabajador, la política ambiental \textit{hardware} de la empresa y el consumo eléctrico, que podría oscilar los 300-600W \cite{Davy2022Jan}. Si se usa tecnología industrial el coste eléctrico se reduciría en momentos de poco tráfico.
+
+\subsubsection{¿El proyecto permitirá reducir el uso de otros recursos? ¿Globalmente, el uso del proyecto mejorará o empeorará la huella ecológica?}
+
+Otras alternativas en el mercado requieren la contratación de servicios de pago alojados en servidores altamente optimizados para la inferencia de modelos, mientras que las tecnologías disponibles al público general o empresas medianas carecen de tales optimizaciones. En contraposición, se cree que los intereses de las empresas que ofrecen servicios de traducción automática se centran en la calidad de servicio y la monetización pero no tanto en el impacto ambiental.
+
+Las corporaciones como Amazon, Microsoft o Google requieren un gran volumen de \textit{hardware} destinado a la redundancia para hacer frente a picos de tráfico sin ralentizar o pausar sus actividades. Usando soluciones \textit{in-house} gestionadas directamente por la empresa interesada es posible reducir la huella ambiental gracias al conocimiento sobre los requisitos específicos del servicio.
+Además, con el proyecto que se ha desarrollado sería posible usar máquinas menos modernas puesto que el software no depende de licencias o limitaciones ligadas a soluciones de \textit{hardware} industrial. Por todos estos motivos, se cree que el proyecto tiene un efecto positivo sobre el medio a nivel global y permitiría reducir la huella ecológica siempre que la empresa que implante el proyecto haga una buena gestión de los recursos.
+
+\subsubsection{¿Podrían producirse escenarios que hiciesen aumentar la huella ecológica del proyecto?}
+
+Un mal uso del \textit{software} sería claramente perjudicial para el medio ambiente. Para aprovechar al máximo los recursos de \textit{hardware} y reducir el consumo eléctrico, es necesario conocer el tráfico que tendrá el servicio además de cierto conocimiento sobre el uso de Docker u otras herramientas de orquestración para maximizar la saturación de los recursos.
+
+
 
 \subsection{Dimensión social}
 \subsubsection{Qué crees que te va a aportar a nivel personal la realización de este proyecto?}
@@ -71,6 +117,12 @@ El trabajo de fin de grado es hasta la fecha el proyecto de \textit{machine lear
 complejo y extenso que he realizado, además tiene un fuerte componente de investigación
 así como de desarrollo práctico. Considero que ganaré cierto grado de madurez
 en el campo y me permitirá afrontar proyectos de mayor envergadura en el futuro.
+
+\subsubsection{¿La realización de este proyecto ha implicado refrexiones significativas a nivel personal, profesional o ético de las personas que han intervenido?}
+
+Diversas personas han intervenido en la realización del trabajo, entre ellos, el director de la tesis y 4 amigos que me han ayudado a probar los modelos de traducción mediante un test a ciegas. No considero que ninguno de estos individuos haya desarrollado reflexiones significativas a raíz del trabajo debido a sus niveles de implicación personal en el proyecto. Sin embargo, como autor del trabajo si que he reflexionado personal y profesionalmente como consecuencia de haberme afrontado al proyecto más complejo que he realizado en el campo del \textit{machine learning} hasta la fecha.
+
+Durante la elaboración del trabajo se ha consultado una gran cantidad de informes de investigación \textit{papers} y he adquirido confianza para afrontar proyectos que requieran una labor similar en el futuro. También he aprendido una multitud de tecnologías que considero importantes en mi futuro profesional como ingeniero informático.
 
 \subsubsection{¿Cómo se resuelve actualmente el problema que quieres abordar (estado del arte)?
 ¿En qué mejorará socialmente (calidad de vida) tu solución a las existentes?}
@@ -93,6 +145,25 @@ La traducción es una tarea esencial en el ámbito personal y empresarial. Las p
 suponen una mejora sustancial sobre las soluciones existentes y existe una necesidad real en empresas
 e individuos con un gran volumen de contenido que necesita ser traducido automáticamente.
 
+\subsubsection{¿Quién se beneficiará del uso del proyecto? ¿Hay algún colectivo que puede verse perjudicado por el proyecto? ¿En qué medida?}
+
+Los principales beneficiados son empresas o individuos con la necesidad de una herramienta de traducción. El proyecto podría ser usado como herramienta dentro de una intranet profesional o expuesta al público general. También sería posible monetizar el servicio, en ese caso el dueño del servicio se vería beneficiado.
+
+El colectivo de los traductores profesionales podría verse muy afectado si la herramienta reduce la necesidad de contratación de individuos para la traducción humana. 
+Un amigo que se dedica a la traducción profesional me ha destacado que la mayoría de puestos de trabajo perdidos debido a la traducción automática son de areas específicas de la traducción, por ejemplo, la traducción de documentos técnicos y especialmente de la informática. Pero todavía no es suficientemente buena como para reemplazar la traducción manual en algunos contextos.
+También ha aparecido una nueva forma de trabajar dentro de la traducción profesional llamada postedición, que consiste en pretraducir los textos mediante un traductor automático para después realizar una traducción manual del texto.
+
+\subsubsection{¿En qué medida soluciona el proyecto el problema planteado inicialmente?}
+
+Se ha conseguido implementar todas las funcionalidades satisfactoriamente y el proyecto soluciona los problemas planteados. Específicamente, la herramienta es gratuita, escalable, extensible y dispone de una interfaz web usable por usuarios ajenos al \textit{machine learning}. También implementa un mecanismo de corrección que puede usarse para el entrenamiento de nuevos modelos y soporta documentos pdf, docx y txt además de fragmentos de texto.
+
+\subsubsection{¿Podrían producirse escenarios que hiciesen que el proyecto fuese perjudicial para algún segmento particular de la población?}
+
+En general los riesgos asociados al proyecto son riesgos de la traducción automática, no del trabajo. El proyecto no supone un avance en la traducción automática, es una herramienta que facilita el uso de modelos y técnicas del \textit{machine learning} a individuos y empresas.
+
+\subsubsection{¿Podría crear el proyecto algún tipo de dependencia que dejase a los usuarios en posición de debilidad?}
+
+Siendo el código del proyecto abierto es difícil imaginar una situación de debilidad provocada por una dependencia al proyecto. Pero podría darse el caso que otras herramientas similares, si las hubiera, dejaran de ser mantenidas en favor a este proyecto y los usuarios se vieran obligados a usar este proyecto por falta de alternativas.
 
 \section{Identificación de leyes y regulaciones}
 El trabajo tiene un componente práctico que consiste en la implementación de una herramienta de traducción web.
