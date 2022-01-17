@@ -1,3 +1,30 @@
 \chapter{Conclusiones}
 \section{Conocimiento adquirido}
+% metodos de trat datos, transformers, nlp, métricas traduccion, finetune, transfer, arquitectura
+La elaboración del trabajo de fin de grado me ha servido para aprender sobre areas que desconocía y madurar algunos conocimientos relacionados con el \textit{machine learning}. También ha sido la primera vez que he necesitado leer material de investigación y eso me ha permitido profundizar conocimiento y al mismo tiempo me ha dado acceso a la vanguardia de muchas disciplinas.
+
+Durante el desarrollo del trabajo he aprendido sobre el modelo transformer y he aplicado técnicas como el \textit{finetuning} y el \textit{transfer learning} para el entrenamiento de modelos de traducción. También he aprendido sobre técnicas de tokenización y métricas para el procesamiento del lenguaje natural.
+Además, he podido integrar conocimientos acumulados durante los últimos años procedentes de diversas asignaturas \ref{assigconoci} y proyectos personales. He obtenido una imagen más amplia y profunda sobre el aprendizaje autónomo y creo que estoy más preparado para afrontar labores de mayor complejidad.
+
+El servicio desarrollado durante el trabajo ha requerido una arquitectura moderadamente avanzada para poder usar tecnologías como: Docker, Flask, Pytorch, PostgreSQL y otras de forma concurrente. Debido a ello, he madurado mis conocimientos de diseño de \textit{software} y he podido ver de primera mano la importancia del un buen diseño en proyectos de cierta embergadura.
+
+\section{Conclusión personal}
+% papers, saas, nlp, gep
+Personalmente trabajar en el proyecto me ha servido para consolidar algunos conocimientos que adquirí en la asignatura de aprendizaje automático, otras optativas de la carrera, y varios proyectos personales. Uno de mis objetivos para el trabajo de fin de grado era aprovechar la oportunidad para desarrollar un proyecto que requiriera cierto componente de investigación y me sirviera como introducción a la arquitectura transformer y algunas de las técnicas más usadas del \textit{machine learning}. Creo que ha sido una buena idea enfocar el tema del proyecto con ese objetivo porque he podido dedicar las horas necesarias a un trabajo que he disfrutado y me ha preparado personal y profesionalmente.
+
+También he reflexionado sobre la importancia de la asignatura de gestión de proyectos cursada al inicio del período de desarrollo del trabajo. Me ha ayudado mucho a organizar el tiempo y los objetivos del proyecto, además me facilitó el inicio del documento escrito.
+Considero que todos los pasos para la elaboración del trabajo han sido acertados y han permitido finalizar el proyecto con buenos resultados, si tuviera que hacerlo de nuevo, únicamente cambiaría la distribución de tiempo acorde con las rectificaciones hechas durante la etapa de seguimiento, pero mantendría las tareas que se han llevado a cabo.
+
 \section{Trabajo futuro}
+% aprovechar la web para otras tareas, investigar sobre los lr + transfer
+Se ha conseguido implementar la herramienta descrita y todos los objetivos del trabajo se han conseguido satisfactoriamente, sin embargo, durante la elaboración se han cultivado curiosidades y posibles mejoras que no se han podido explorar por falta de tiempo.
+\begin{itemize}
+    \item La tarea de \textit{Model distillation} para la obtención de modelos más eficientes se descartó debido a que no se encontró el incentivo suficiente además de la falta de tiempo tal como se explica en el apartado \ref{desviaplan}. Sería interesante probar experimentalmente esta técnica y ver si es posible reducir los modelos para ser usados en \textit{hardware} con limitaciones.
+    \item La arquitectura que se ha diseñado es suficientemente genérica para ser usada en otros proyectos de transducción de texto además de la traducción. Además, modificando la interfaz web también sería posible incorporar cualquier tipo de servicio que requiera inferencia asíncrona de modelos de aprendizaje automático. Un trabajo futuro consistiría en el uso de la infraestructura implementada para aplicaciones diversas.
+    \item Durante el entrenamiento del modelo obtenido mediante \textit{transfer learning} se observó que usando un ratio de aprendizaje menor el modelo hacia convergencia más despacio pero el punto de convergencia era similar a pesar de que conservaba mejor el conocimiento del modelo original. Esencialmente, se consiguió implementar un modelo multilin{\"u}e razonablemente bueno debido a este fenómeno. Un trabajo futuro consistiría en validar esta hipótesis y explorar los límites del \textit{transfer learning}.
+    \item Los modelos de traducción se entrenaron hasta la casi-convergencia debido a la falta de recursos computacionales y temporales, sería ideal entrenar los modelos hasta su convergencia e incorporar más modelos de traducción al servicio.
+    \item El servicio se desplegó al público por falta de recursos, pero sería interesante hacerlo en un futuro si es viable económicamente.
+    \item Las correcciones se almacenan en una base de datos y pueden usarse para el \textit{finetuning}, pero podría ser interesante explorar si sería oportuno usar \textit{online learning} para mejorar los modelos en tiempo real.
+    \item El soporte para archivos pdf es mejorable y se podría mejorar, también se podría dar soporte a un mayor número de formatos.
+    \item El nodo de cómputo definido por la arquitectura del servicio utiliza inferencia con CPU y GPU pero no usa optimizaciones para la inferencia disponibles para las tarjetas nvidia.
+\end{itemize}
