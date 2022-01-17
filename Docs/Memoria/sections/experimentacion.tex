@@ -107,7 +107,7 @@ Además, aprovechando que los modelos usados forman parte de la iniciativa \text
 Antes de computar las métricas chrF y BLEU, se revierte la tokenización y se postprocesan las secuencias eliminando espacios al inicio y final de las frases.
 
 
-\section{Finetuning}\label{finetune}
+\section{\textit{Finetuning}}\label{finetune}
 El primer experimento que se llevó a cabo fue el \textit{finetuning} de un modelo de traducción inglés-español para ajustar su registro a un tono más formal.
 El modelo de partida usado es \textbf{Helsinki-NLP/opus-mt-en-es} del repositorio de Huggingface.
 Los modelos del grupo de investigación del procesamiento del lenguaje natural de la universidad de Helsinki publicados en Huggingface usan el \textit{framework} MarianMT \cite{Junczys-Dowmunt2018Apr}, con una arquitectura idéntica al transformer original descrito en el capítulo \ref{transformerchapter} en profundidad.
@@ -119,8 +119,9 @@ El tokenizador del modelo original usa \textit{SentencePiece} con un vocabulario
 En la rutina de optimización Adam \cite{Kingma2014Dec} únicamente se redujo el ratio de aprendizaje debido a que manteniendo el valor original, el modelo era muy inestable y empeoraba de forma visible. Se optó por un ajuste manual del hiperparámetro, de $2\cdot 10^{-3}$ a $2\cdot 10^{-5}$, dos órdenes de magnitud inferior.
 
 \subsection{Entrenamiento}
+Los corpus de entrenamiento elegidos para ajustar el modelo a un registro formal debían pertenecer a un dominio lo más cercano posible al entorno de aplicación. Se usaron dos datasets de textos legislativos y científicos ya que ambos contextos son formales y podrían beneficiarse una traducción automática más específica.
 \subsubsection{JRC-Acquis}
-El entrenamiento se ha realizado con dos datasets, el primer modelo se entrenó con el dataset JRC-Acquis del repositorio OPUS \cite{CORPUS} y es una colección de textos legislativos de la unión europea desde el año 1950 hasta la actualidad. Se ha elegido el par de lenguajes inglés-español alineados por parágrafos con un total de 504.981 pares de secuencias.
+El primer modelo se entrenó con el dataset JRC-Acquis del repositorio OPUS \cite{CORPUS} y es una colección de textos legislativos de la unión europea desde el año 1950 hasta la actualidad. Se ha elegido el par de lenguajes inglés-español alineados por parágrafos con un total de 504.981 pares de secuencias.
 
 Se finalizó el entrenamiento una vez terminado el tercer \textit{epoch} a las 5 horas y media de ejecución debido a que el error de validación empezaba a estabilizarse. No se esperó hasta la convergencia total debido a que el coste temporal y computacional se hubiera disparado y las ganancias probablemente serían mínimas.
 
@@ -131,7 +132,7 @@ De la misma manera que con el dataset anterior, se finalizó el entrenamiento un
 
 
 \subsection{Resultados}
-El modelo inicial para efectuar \textit{finetuning} se evalúa en la tabla \ref{originalfinetune} con los conjuntos de validación de ambos datasets usados y con el dataset de tatoeba propuesto por los creadores del modelo.
+El modelo inicial para efectuar \textit{finetuning} se evalúa en la tabla \ref{originalfinetune} con los conjuntos de validación de ambos datasets usados y con el dataset de Tatoeba propuesto por los creadores del modelo.
 \begin{table}[H]
     \begin{center}
         \begin{tabular}{ l S[table-format=2.4] S[table-format=2.4] }
@@ -139,7 +140,7 @@ El modelo inicial para efectuar \textit{finetuning} se evalúa en la tabla \ref{
         \textbf{Muestra} & \textbf{BLEU} & \textbf{chrF} \\
         Validación JRC-Acquis & 55,2525 & 73,6 \\
         Validación SciELO & 40,2099 & 67,248 \\
-        Tatoeba Challenge & 56,9578 & 73,6682
+        Tatoeba \textit{Challenge} & 56,9578 & 73,6682
         \end{tabular}
         \caption{Métricas del modelo original antes del \textit{finetuning} [Elaboración propia]}\label{originalfinetune}
     \end{center}
@@ -155,7 +156,7 @@ En la tabla \ref{finetuneacquis} se muestran las métricas del \textit{finetunin
         \textbf{Muestra} & \textbf{BLEU} & \textbf{chrF} \\
         Validación JRC-Acquis & 58,6264 & 75,6313 \\
         Test JRC-Acquis & 58,621 & 75,654 \\
-        Tatoeba Challenge & 39,4177 & 61,0986
+        Tatoeba \textit{Challenge} & 39,4177 & 61,0986
         \end{tabular}
         \caption{Métricas del modelo \textit{finetuned} sobre el corpus JRC-Acquis [Elaboración propia]}\label{finetuneacquis}
     \end{center}
@@ -170,7 +171,7 @@ Como es de esperar, el rendimiento en el corpus JRC-Aquis mejora, sin embargo la
         \textbf{Muestra} & \textbf{BLEU} & \textbf{chrF} \\
         Validación SciELO & 43,1173 & 69,0259 \\
         Test SciELO & 43,0942 & 68,9413 \\
-        Tatoeba Challenge & 50,071 & 69,1425
+        Tatoeba \textit{Challenge} & 50,071 & 69,1425
         \end{tabular}
         \caption{Métricas de modelo \textit{finetuned} sobre el corpus SciELO [Elaboración propia]}\label{finetunescielo}
     \end{center}
@@ -210,9 +211,10 @@ Debido a su política de neutralidad, el ejército suizo no participa en conflic
 
 En la figura \ref{ejemplotranslate} se muestra un ejemplo de traducción donde los tres modelos obtienen un resultado aceptable, sin embargo el modelo original confunde la palabra \textit{``gathering''} con ``reunión'', que es incorrecta en el contexto del fragmento, los modelos entrenados usan los verbos ``recopilar'' y ``recolectar'' que sí son correctos.
 El modelo entrenado con SciELO interpreta correctamente que ``2000'' hace referencia a un año y genera una traducción más inteligible.
+También se destaca el uso del verbo ``monitorear'' por el modelo SciELO, que corresponde perfectamente a \textit{``monitor''}, mientras que el modelo original usa el verbo ``vigilar'' y el modelo JRC-Acquis usa ``supervisar'', siendo el segundo más apropiado. Otro ejemplo similar es el uso del sustantivo ``inteligencia'' en lugar de ``información'' por el modelo SciELO, que conserva mejor la riqueza léxica del fragmento original.
 
 
-\section{Transfer learning}
+\section{\textit{Transfer learning}}
 Debido a la escasez de corpus en catalán combinado a la baja calidad de estos, se considera paliar esta limitación mediante el uso de \textit{transfer learning}.
 Este experimento consiste en la implementación de un modelo de traducción catalán-inglés a partir de un modelo español-inglés.
 Como modelo de partida para el \textit{transfer learning} se ha usado \textbf{Helsinki-NLP/opus-mt-es-en} del repositorio de Huggingface. También se ha usado el modelo \textbf{Helsinki-NLP/opus-mt-ca-en} como \textit{baseline} ya que se espera poder superar su calidad.
@@ -245,8 +247,8 @@ Se dio por terminado el entrenamiento una vez concluido el \textit{epoch} 5 desp
         \begin{tabular}{ l S[table-format=2.4] S[table-format=2.4] }
         \multicolumn{3}{l}{\textbf{Helsinki-NLP/opus-mt-es-en}}\\
         \textbf{Muestra} & \textbf{BLEU} & \textbf{chrF} \\
-        Tatoeba Challenge Ca-En & 9,6952 & 28,3868 \\
-        Tatoeba Challenge Es-En & 60,6793 & 74,9145
+        Tatoeba \textit{Challenge} Ca-En & 9,6952 & 28,3868 \\
+        Tatoeba \textit{Challenge} Es-En & 60,6793 & 74,9145
         \end{tabular}
         \caption{Métricas del modelo original español-inglés [Elaboración propia]}\label{transferorigesen}
     \end{center}
@@ -260,8 +262,8 @@ La puntuación obtenida en el test Español-Inglés es muy elevada. Si el test e
         \begin{tabular}{ l S[table-format=2.4] S[table-format=2.4] }
         \multicolumn{3}{l}{\textbf{Helsinki-NLP/opus-mt-ca-en}}\\
         \textbf{Muestra} & \textbf{BLEU} & \textbf{chrF} \\
-        Tatoeba Challenge Ca-En & 48,7704 & 65,7556 \\
-        Tatoeba Challenge Es-En & 17,6634 & 36,9217
+        Tatoeba \textit{Challenge} Ca-En & 48,7704 & 65,7556 \\
+        Tatoeba \textit{Challenge} Es-En & 17,6634 & 36,9217
         \end{tabular}
         \caption{Métricas del modelo \textit{baseline} catalán-ingles [Elaboración propia]}\label{transferorigcaen}
     \end{center}
@@ -277,8 +279,8 @@ Esta conclusión no es sorprendente ya que el equipo de Helsinki describe el pro
         \textbf{Muestra} & \textbf{BLEU} & \textbf{chrF} \\
         Validación & 35,7988 & 55,3232 \\
         Test & 35,8034 & 55,2997 \\
-        Tatoeba Challenge Ca-En & 53,54 & 69,2849 \\
-        Tatoeba Challenge Es-En & 57,049 & 72,4531
+        Tatoeba \textit{Challenge} Ca-En & 53,54 & 69,2849 \\
+        Tatoeba \textit{Challenge} Es-En & 57,049 & 72,4531
         \end{tabular}
         \caption{Métricas del modelo entrenado con \textit{transfer learning} de español-inglés a catalán-inglés [Elaboración propia]}\label{transfercaen}
     \end{center}
@@ -286,7 +288,7 @@ Esta conclusión no es sorprendente ya que el equipo de Helsinki describe el pro
 
 La tabla \ref{transfercaen} muestra las métricas obtenidas en el modelo resultado del \textit{transfer learning} a partir del modelo español-inglés. La puntuación obtenida en los conjuntos de validación y test muestran unos valores aceptables pero es difícil interpretar la calidad del modelo entrenado. Las métricas sobre los conjuntos de Tatoeba superan al modelo \textit{baseline} para la traducción catalán-inglés. Además, conserva una puntuación muy alta en la traducción español-inglés procedente del modelo original.
 
-La diferencia entre la puntuación del modelo en su conjunto de test y el de Tatoeba parece indicar que los datos de tatoeba són más simples. Además, a diferencia de los otros tests procedentes de Tatoeba, el número de ejemplos del test catalán-inglés es un orden de magnitud más pequeño que el resto.
+La diferencia entre la puntuación del modelo en su conjunto de test y el de Tatoeba parece indicar que los datos de Tatoeba són más simples. Además, a diferencia de los otros tests procedentes de Tatoeba, el número de ejemplos del test catalán-inglés es un orden de magnitud más pequeño que el resto.
 
 Se ha decidido realizar un experimento a ciegas tal como se hizo con los modelos de \textit{finetuning} \ref{finetune}. La prueba se ha realizado con los mismos 4 individuos y el objetivo era comparar a ciegas el modelo obtenido mediante \textit{transfer learning} con los modelos catalán-inglés y español-inglés del equipo NLP de Helsinki. Los 4 participantes usaron fragmentos de temática diversa y de libre elección y al finalizar el experimento, coincidieron en que el modelo entrenado mediante \textit{transfer learning} ofrece traducciones generalmente mejores que el modelo catalán-inglés \textit{baseline}. También se cree que usa un vocabulario más apropiado y conserva mejor la semántica con menos erratas.
 
@@ -312,4 +314,4 @@ Sloane Street is a north-south street in London from Knightsbridge to Sloane Squ
 \caption{Ejemplo de traducción [Elaboración propia, fragmento original de \cite{ContributorstoWikimediaprojects2021Aug}]}\label{transferexample}
 \end{figure}
 
-La figura \ref{transferexample} muestra un ejemplo de traducción catalán-inglés. El modelo \textit{baseline} no traduce correctamente la expresión \textit{``més o menys a la meitat''} ya que ``more or less than half'' carece de sentido. La traducción ``Kenston's royal district and Chelsea'' para el fragmento \textit{``districte reial de Kensington i Chelsea''} es incorrecto ya que se trata de un único distrito. Además, la última frase del fragmento es totalmente incorrecta. Por otra parte, la traducción ofrecida por el modelo obtenido mediante \textit{transfer learning} es correcta exceptuando la partícula \textit{``his''} que debería ser \textit{``its''}.
+La figura \ref{transferexample} muestra un ejemplo de traducción catalán-inglés. El modelo \textit{baseline} no traduce correctamente la expresión \textit{``més o menys a la meitat''} ya que ``more or less than half'' carece de sentido. La traducción ``Kenston's royal district and Chelsea'' para el fragmento \textit{``districte reial de Kensington i Chelsea''} es incorrecto ya que se trata de un único distrito. Además, la última frase del fragmento es confusa e incorrecta. Por otra parte, la traducción ofrecida por el modelo obtenido mediante \textit{transfer learning} es correcta exceptuando la partícula \textit{``his''} que debería ser \textit{``its''}.
