@@ -1,5 +1,5 @@
 # Neural Web Translator
-<img src="./Deploy/web/app/static/img/JT_logo_letra_horizontal.svg" alt="Web translation service logo" height="150"/><p>Translate text and .docx, .txt, .pdf documents using the state of the art in machine learning models for neural machine translation</p>
+<img src="./Deploy/web/app/static/img/JT_logo_letra_horizontal.svg" alt="Web translation service logo" height="150"/><p>Translate text and .docx, .txt, .pdf documents using the state of the art in machine learning models for neural machine translation.</p>
 
 ## Instructions
 This software only requires [docker-compose](https://docs.docker.com/compose/install "Install docker-compose") and it should run on any platform supported by docker. Minimal modifications may be required to deploy the system with other orchestration solutions.
