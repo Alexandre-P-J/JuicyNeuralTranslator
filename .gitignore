@@ -140,7 +140,6 @@ dmypy.json
 cython_debug/
 
 ##### Project:
-*.pdf
 /Datasets
 /Checkpoints
 /Deploy/storage
